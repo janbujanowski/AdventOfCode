@@ -1,4 +1,4 @@
-﻿using AdventOfCodeRunner.AdventOfCode2017;
+﻿using AdventOfCode2017;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +11,13 @@ namespace AdventOfCodeRunner
     {
         static void Main(string[] args)
         {
-            Console.WriteLine(Day2.RunDay2());
+            Console.WriteLine(Day1.StarOne());
+            Console.WriteLine(Day1.StarTwo());
+            Console.WriteLine(Day2.StartOneAndTwo());
+            Console.WriteLine(Day3.StartOne());
             Console.ReadKey();
         }
+        
+       
     }
 }
