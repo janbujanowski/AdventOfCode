@@ -1,16 +1,14 @@
-
-//Compiler version 4.0.30319.17929 for Microsoft (R) .NET Framework 4.5
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Day2
+namespace AdventOfCodeRunner.AdventOfCode2017
 {
-    public class Program
+    class Day2
     {
-        public static void RunDay2()
+        public static string RunDay2()
         {
             string text = @"414	382	1515	319	83	1327	116	391	101	749	1388	1046	1427	105	1341	1590
 960	930	192	147	932	621	1139	198	865	820	597	165	232	417	19	183
@@ -30,25 +28,26 @@ namespace Day2
 1704	2194	1753	146	2063	1668	1280	615	163	190	2269	1856	150	158	2250	2459";
             var lines = text.Split('\n');
             int sum = 0;
-            foreach(var line in lines){
+            foreach (var line in lines)
+            {
                 var numbersString = line.Split('\t');
                 List<int> numbersInt = new List<int>();
-                foreach(var number in numbersString)
+                foreach (var number in numbersString)
                 {
                     numbersInt.Add(Int32.Parse(number));
                 }
-                
+
                 numbersInt.Sort();
                 var numbersInt2 = new List<int>(numbersInt);
                 var divided = 0;
-                foreach(var number in numbersInt)
+                foreach (var number in numbersInt)
                 {
                     numbersInt2.Remove(number);
-                    foreach(var number2 in numbersInt2)
+                    foreach (var number2 in numbersInt2)
                     {
-                        if(number%number2==0)
+                        if (number % number2 == 0)
                         {
-                            divided = number/number2;
+                            divided = number / number2;
                         }
                     }
                     numbersInt2.Add(number);
@@ -56,7 +55,8 @@ namespace Day2
                 Console.WriteLine(divided);
                 sum += divided;
             }
-            Console.WriteLine(sum);
+            return sum.ToString();
         }
-    }
+    } 
 }
+

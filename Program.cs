@@ -1,15 +1,18 @@
-﻿using System;
+﻿using AdventOfCodeRunner.AdventOfCode2017;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-
-namespace AdventOfCode
+namespace AdventOfCodeRunner
 {
     class Program
     {
         static void Main(string[] args)
         {
-            Day2.Program.RunDay2();
-            
-            Console.WriteLine("Hello World!");
+            Console.WriteLine(Day2.RunDay2());
+            Console.ReadKey();
         }
     }
 }
