@@ -44,6 +44,8 @@
     <Compile Include="Day1.cs" />
     <Compile Include="Day2.cs" />
     <Compile Include="Day3.cs" />
+    <Compile Include="Day4.cs" />
+    <Compile Include="ExtensionHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

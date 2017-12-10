@@ -8,6 +8,19 @@ namespace AdventOfCode2017Tests
     public class Executor2017
     {
         [TestMethod]
+        public void DayXStarOne()
+        {
+
+            Assert.AreEqual(1034, Day1.StarOne());
+        }
+        [TestMethod]
+        public void DayXStarTwo()
+        {
+
+            Assert.AreEqual(1356, Day1.StarTwo());
+        }
+
+        [TestMethod]
         public void Day1StarOne()
         {
             //The night before Christmas, one of Santa's Elves calls you in a panic. "The printer's broken! We can't print the Naughty or Nice List!" By the time you make it to sub-basement 17, there are only a few minutes until midnight. "We have a big problem," she says; "there must be almost fifty bugs in this system, but nothing else can print The List. Stand in this square, quick! There's no time to explain; if you can convince them to pay you in stars, you'll be able to--" She pulls a lever and the world goes blurry.
@@ -68,7 +81,7 @@ namespace AdventOfCode2017Tests
             //In this example, the spreadsheet's checksum would be 8 + 4 + 6 = 18.
 
             //What is the checksum for the spreadsheet in your puzzle input?
-            
+
             Assert.AreEqual(30994, Day2.StartOneAndTwo());
         }
         [TestMethod]
@@ -141,6 +154,27 @@ namespace AdventOfCode2017Tests
             //What is the first value written that is larger than your puzzle input?
 
             Assert.AreEqual(312453, Day3.StarTwo());
+        }
+        [TestMethod]
+        public void Day4StarOne()
+        {
+            //A new system policy has been put in place that requires all accounts to use a passphrase instead of simply a password. A passphrase consists of a series of words (lowercase letters) separated by spaces.
+
+            //To ensure security, a valid passphrase must contain no duplicate words.
+
+            //For example:
+
+            //aa bb cc dd ee is valid.
+            //aa bb cc dd aa is not valid - the word aa appears more than once.
+            //aa bb cc dd aaa is valid - aa and aaa count as different words.
+            //The system's full passphrase list is available as your puzzle input. How many passphrases are valid?
+            Assert.AreEqual(455, Day4.StarOne());
+        }
+        [TestMethod]
+        public void Day4StarTwo()
+        {
+
+            Assert.AreEqual(186, Day4.StarTwo());
         }
     }
 }
