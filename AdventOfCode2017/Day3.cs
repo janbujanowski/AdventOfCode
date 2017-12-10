@@ -11,6 +11,7 @@ namespace AdventOfCode2017
         static int input = 312051;
         static int[,] square;
         const int squareSize = 561;
+        static int firstMaximumForStartTwo = 0;
         private static int Init()
         {
             square = new int[squareSize, squareSize];
@@ -35,22 +36,22 @@ namespace AdventOfCode2017
                     X--;
                     it++;
 
-                } while (square[X,Y+1] != 0);
+                } while (square[X, Y + 1] != 0);
                 do
                 {
                     square[X, Y] = it;
                     Y++;
                     it++;
-                } while (square[X +1,Y] != 0);
+                } while (square[X + 1, Y] != 0);
                 do
                 {
                     square[X, Y] = it;
                     X++;
                     it++;
-                } while (square[X , Y-1] != 0);
+                } while (square[X, Y - 1] != 0);
             }
-            
-            
+
+
             return 1;
         }
         public static int StarOne()
@@ -65,7 +66,7 @@ namespace AdventOfCode2017
             {
                 for (int j = 0; j < squareSize; j++)
                 {
-                    if (square[j,i] == input)
+                    if (square[j, i] == input)
                     {
                         X2 = j;
                         Y2 = i;
@@ -93,6 +94,77 @@ namespace AdventOfCode2017
                 //Console.WriteLine("X1 = " + X1 + " ,Y1 = " + Y1); //for debuging
             }
             return steps;
+        }
+        private static int InitTwo()
+        {
+            square = new int[squareSize, squareSize];
+            int X = squareSize / 2;
+            int Y = squareSize / 2;
+            int it = 1;
+            square[X, Y] = it;
+            it++;
+            X++;
+            
+            while (it < input)
+            {
+                do
+                {
+                    it = CountValue(X, Y);
+                    if (it > input)
+                        break;
+                    square[X, Y] = it;
+                    it++;
+                    Y--;
+                } while (square[X - 1, Y] != 0);
+                do
+                {
+                    it = CountValue(X, Y);
+                    if (it>input)
+                        break;
+                    square[X, Y] = it;
+                    X--;
+                    it++;
+
+                } while (square[X, Y + 1] != 0);
+                do
+                {
+                    it = CountValue(X, Y);
+                    if (it > input)
+                        break;
+                    square[X, Y] = it;
+                    Y++;
+                    it++;
+                } while (square[X + 1, Y] != 0);
+                do
+                {
+                    it = CountValue(X, Y);
+                    if (it > input)
+                        break;
+                    square[X, Y] = it;
+                    X++;
+                    it++;
+                } while (square[X, Y - 1] != 0);
+            }
+
+
+            return it;
+        }
+
+        private static int CountValue(int X, int Y)
+        {
+            var sum = square[X - 1, Y + 1] + square[X, Y + 1] + square[X + 1, Y + 1]+
+                      square[X - 1, Y    ] + square[X, Y    ] + square[X + 1, Y] +
+                      square[X - 1, Y - 1] + square[X, Y - 1] + square[X + 1, Y - 1];
+            //if (sum > input)
+            //{
+            //    firstMaximumForStartTwo = sum;
+            //}
+            return sum;
+        }
+        public static int StarTwo()
+        {
+            return InitTwo();
+            //return firstMaximumForStartTwo;
         }
     }
 }
