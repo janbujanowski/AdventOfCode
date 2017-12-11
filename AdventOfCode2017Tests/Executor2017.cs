@@ -224,5 +224,17 @@ namespace AdventOfCode2017Tests
             //How many steps does it now take to reach the exit?
             Assert.AreEqual(28178177, Day5.StarTwo());
         }
+        [TestMethod]
+        public void Day6StarOne()
+        {
+
+            Assert.AreEqual(1034, Day6.StarOne());
+        }
+        [TestMethod]
+        public void Day6StarTwo()
+        {
+
+            Assert.AreEqual(1356, Day6.StarTwo());
+        }
     }
 }
