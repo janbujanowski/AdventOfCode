@@ -69,5 +69,10 @@ namespace AdventOfCode2017
 
             return combinations.Count();
         }
+
+        public static int StarTwo()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

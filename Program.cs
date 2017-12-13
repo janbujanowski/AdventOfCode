@@ -11,11 +11,8 @@ namespace AdventOfCodeRunner
     {
         static void Main(string[] args)
         {
-            //Console.WriteLine(Day1.StarOne());
-            //Console.WriteLine(Day1.StarTwo());
-            
-            Console.WriteLine(Day6.StarOne());
-            //Console.WriteLine(Day5.StarTwo());
+            Console.WriteLine(Day8.StarOne());
+            Console.WriteLine(Day8.StarTwo());
             Console.ReadKey();
         }
     }
