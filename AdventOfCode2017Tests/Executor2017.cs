@@ -82,7 +82,7 @@ namespace AdventOfCode2017Tests
 
             //What is the checksum for the spreadsheet in your puzzle input?
 
-            Assert.AreEqual(30994, Day2.StartOneAndTwo());
+            Assert.AreEqual(30994, Day2.StartOne());
         }
         [TestMethod]
         public void Day2StarTwo()
@@ -105,7 +105,7 @@ namespace AdventOfCode2017Tests
 
             //What is the sum of each row's result in your puzzle input?
 
-            Assert.AreEqual(233, Day2.StartOneAndTwo());
+            Assert.AreEqual(233, Day2.StartTwo());
         }
         [TestMethod]
         public void Day3StarOne()
