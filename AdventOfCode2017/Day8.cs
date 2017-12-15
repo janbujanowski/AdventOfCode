@@ -1105,7 +1105,45 @@ w inc -854 if jlg < -1808";
         public static object StarTwo()
         {
             Init();
-            return -2;
+            int maxvalue = 0;
+            foreach (var line in lines)
+            {
+                string[] separators = new string[] { "if" };
+                var lineParams = line.Split(' ');
+                var regnametochange = lineParams[0];
+                if (!registers.ContainsKey(regnametochange))
+                {
+                    registers.Add(lineParams[0], 0);
+                }
+
+                var regnametocheck = lineParams[4];
+                var comparator = lineParams[5];
+                var compareValue = lineParams[6];
+                if (!registers.ContainsKey(regnametocheck))
+                {
+                    registers.Add(regnametocheck, 0);
+                }
+                bool conditionIsTrue = CheckCondition(regnametocheck, comparator, compareValue);
+                if (conditionIsTrue)
+                {
+                    var isIncrease = lineParams[1] == "inc";
+                    var value = Int32.Parse(lineParams[2]);
+                    if (isIncrease)
+                    {
+                        registers[regnametochange] += value;
+                    }
+                    else
+                    {
+                        registers[regnametochange] -= value;
+                    }
+                    var currentmax = registers.Select(x => x.Value).Max();
+                    if (currentmax > maxvalue)
+                    {
+                        maxvalue = currentmax;
+                    }
+                }
+            }
+            return maxvalue;
         }
     }
 }
