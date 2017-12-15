@@ -339,5 +339,17 @@ namespace AdventOfCode2017Tests
             //For example, in the above instructions, the highest value ever held was 10(in register c after the third instruction was evaluated).
             Assert.AreEqual(7184, Day8.StarTwo());
         }
+        [TestMethod]
+        public void Day9StarOne()
+        {
+
+            Assert.AreEqual(1034, Day9.StarOne());
+        }
+        [TestMethod]
+        public void Day9StarTwo()
+        {
+
+            Assert.AreEqual(1356, Day9.StarTwo());
+        }
     }
 }
