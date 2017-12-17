@@ -36,23 +36,60 @@ namespace AdventOfCode2017
         public static object StarOne()
         {
             Init();
-            int i = 0;
+            int currentPosition = 0;
             skipSize = 0;
             foreach (var number in inputLengths)
             {
-                int endindex = HashList(i,number);
-                i = endindex;
+                currentPosition = HashList(currentPosition, number);
             }
-            
+
             return listToHash[0] * listToHash[1];
         }
+        public static object StarTwo(string input)
+        {
+            Init();
+            if (input == null)
+            {
+                input = Input;
+            }
+            var convertedInput = ConvertInputToStarTwoLengths(input);
+            var convertedLengths = new List<int>();
 
+            foreach (var length in convertedInput.Split(',').ToArray())
+            {
+                convertedLengths.Add(Int32.Parse(length));
+            }
+
+            int roundsToRoll = 64;
+            int currentPosition = 0;
+            skipSize = 0;
+            for (int j = 0; j < roundsToRoll; j++)
+            {
+                foreach (var number in convertedLengths)
+                {
+                    currentPosition = HashList(currentPosition, number);
+                }
+            }
+            string outputHash = string.Empty;
+
+            for (int j = 0; j < 16; j++)
+            {
+                int xoredLine = listToHash[j * 16];
+                for (int k = 1; k < 16; k++)
+                {
+                    xoredLine = xoredLine ^ listToHash[k + j * 16];
+                }
+                outputHash += xoredLine.ToString("X2").ToLower();// + ",";
+            }
+
+            return outputHash;
+        }
         private static int HashList(int startIndex, int number)
         {
             List<int> numbers = new List<int>();
             for (int i = 0; i < number; i++)
             {
-                numbers.Add(listToHash[(startIndex + i)%listToHash.Length]);
+                numbers.Add(listToHash[(startIndex + i) % listToHash.Length]);
             }
             numbers.Reverse();
             for (int i = 0; i < number; i++)
@@ -64,41 +101,19 @@ namespace AdventOfCode2017
             return endindex;
         }
 
-        //public static object StarOne(string testDifferentInput)
-        //{
-        //    return CountStarOne(testDifferentInput);
-        //}
-        //private static int CountStarOne(string localPutin)
-        //{
-        //    elements = localPutin.ToArray();
-        //    int i = 0;
-        //    int openedGroups = 0;
-        //    int qualifiedgroups = 0;
-        //    while (i < elements.Count())
-        //    {
-        //        switch (elements[i])
-        //        {
-        //            case '{':
-        //                openedGroups++;
-        //                break;
-        //            case '}':
-        //                openedGroups--;
-        //                qualifiedgroups++;
-        //                break;
-        //            default:
-        //                break;
-        //        }
-        //        i++;
-        //    }
-        //    return qualifiedgroups;
-        //}
-
-        public static int StarTwo()
+        public static string ConvertInputToStarTwoLengths(string input)
         {
-            Init();
-            int sum = 0;
-
-            return sum;
+            List<int> lengths = new List<int>();
+            foreach (var item in input.ToArray())
+            {
+                lengths.Add((int)item);
+            }
+            lengths.Add(17);
+            lengths.Add(31);
+            lengths.Add(73);
+            lengths.Add(47);
+            lengths.Add(23);
+            return string.Join(",", lengths);
         }
     }
 }
