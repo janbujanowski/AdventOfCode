@@ -13,7 +13,6 @@ namespace AdventOfCode2017
             {
                 return ExtensionHelpers.GetString("Day9_Input");
             }
-
         }
 
         private static void Init()

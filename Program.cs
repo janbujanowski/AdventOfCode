@@ -11,10 +11,13 @@ namespace AdventOfCodeRunner
     {
         static void Main(string[] args)
         {
-            Console.WriteLine(Day9.StarOne("{}"));
-            Console.WriteLine(Day9.StarOne("{{{}}}"));
-            Console.WriteLine(Day9.StarOne("{{},{}}"));
-            Console.WriteLine(Day9.StarOne("{{{},{},{{}}}}"));
+            Console.WriteLine(Day10.StarOne());
+            //10920 - too low
+            //40132 - ?
+            //Console.WriteLine(Day9.StarOne("{}"));
+            //Console.WriteLine(Day9.StarOne("{{{}}}"));
+            //Console.WriteLine(Day9.StarOne("{{},{}}"));
+            //Console.WriteLine(Day9.StarOne("{{{},{},{{}}}}"));
             //Console.WriteLine(Day9.StarTwo());
             Console.ReadKey();
         }
