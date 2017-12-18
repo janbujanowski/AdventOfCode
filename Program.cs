@@ -12,7 +12,7 @@ namespace AdventOfCodeRunner
         static void Main(string[] args)
         {
             //Console.WriteLine(Day10.StarOne());
-            Console.WriteLine(Day10.StarTwo(null));
+            Console.WriteLine(Day11.StarOne(null));
             
             Console.ReadKey();
         }

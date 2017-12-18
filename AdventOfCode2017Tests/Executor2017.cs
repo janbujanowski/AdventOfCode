@@ -473,5 +473,17 @@ namespace AdventOfCode2017Tests
             //Yeah - the right answer is below
             Assert.AreEqual("35b028fe2c958793f7d5a61d07a008c8", Day10.StarTwo(null));
         }
+        [TestMethod]
+        public void Day11StarOne()
+        {
+
+            Assert.AreEqual(796, Day11.StarOne(null));
+        }
+        [TestMethod]
+        public void Day11StarTwo()
+        {
+
+            Assert.AreEqual(1356, Day11.StarTwo(null));
+        }
     }
 }
