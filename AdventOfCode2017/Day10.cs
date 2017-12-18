@@ -18,7 +18,6 @@ namespace AdventOfCode2017
                 return @"197,97,204,108,1,29,5,71,0,50,2,255,248,78,254,63";
             }
         }
-
         private static void Init()
         {
             listToHash = new int[256];
@@ -100,7 +99,6 @@ namespace AdventOfCode2017
             skipSize++;
             return endindex;
         }
-
         public static string ConvertInputToStarTwoLengths(string input)
         {
             List<int> lengths = new List<int>();
