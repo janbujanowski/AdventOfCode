@@ -482,7 +482,7 @@ namespace AdventOfCode2017Tests
         [TestMethod]
         public void Day11StarTwo()
         {
-
+            //1872 too high
             Assert.AreEqual(1356, Day11.StarTwo(null));
         }
     }

@@ -45,62 +45,167 @@ namespace AdventOfCode2017
             {
                 directions[step]++;
             }
-            if (directions["n"] >= directions["s"])
+
+            return CountDistanceToCenter(directions);
+        }
+
+        private static int CountDistanceToCenter(Dictionary<string, int> directions)
+        {
+            var dir = new Dictionary<string, int>(directions);
+            if (dir["n"] >= dir["s"])
             {
-                directions["n"] -= directions["s"];
-                directions["s"] = 0;
+                dir["n"] -= dir["s"];
+                dir["s"] = 0;
             }
             else
             {
-                directions["s"] -= directions["n"];
-                directions["n"] = 0;
+                dir["s"] -= dir["n"];
+                dir["n"] = 0;
             }
 
-            if (directions["sw"] >= directions["ne"])
+            if (dir["sw"] >= dir["ne"])
             {
-                directions["sw"] -= directions["ne"];
-                directions["ne"] = 0;
+                dir["sw"] -= dir["ne"];
+                dir["ne"] = 0;
             }
             else
             {
-                directions["ne"] -= directions["sw"];
-                directions["sw"] = 0;
+                dir["ne"] -= dir["sw"];
+                dir["sw"] = 0;
             }
 
-            if (directions["nw"] >= directions["se"])
+            if (dir["nw"] >= dir["se"])
             {
-                directions["nw"] -= directions["se"];
-                directions["se"] = 0;
+                dir["nw"] -= dir["se"];
+                dir["se"] = 0;
             }
             else
             {
-                directions["se"] -= directions["nw"];
-                directions["nw"] = 0;
+                dir["se"] -= dir["nw"];
+                dir["nw"] = 0;
             }
-            var check = directions["nw"];
-            for (int i = 0; i < check; i++)
+            if (dir["nw"] > 0 && dir["s"] > 0)
             {
-                directions["nw"]--;
-                directions["s"]--;
-                directions["sw"]++;
+                if (dir["nw"] <= dir["s"])
+                {
+                    var count = dir["nw"];
+                    for (int i = 0; i < count; i++)
+                    {
+                        dir["nw"]--;
+                        dir["s"]--;
+                        dir["sw"]++;
 
+                    }
+                }
+                else
+                {
+                    var count = dir["s"];
+                    for (int i = 0; i < count; i++)
+                    {
+                        dir["nw"]--;
+                        dir["s"]--;
+                        dir["sw"]++;
+
+                    }
+                }
             }
-            //var lol = directions.OrderByDescending(pair => pair.Value);
-            return directions.Select(x => x.Value).Sum();
+            if (dir["sw"] > 0 && dir["n"] > 0)
+            {
+                if (dir["sw"] <= dir["n"])
+                {
+                    var count = dir["sw"];
+                    for (int i = 0; i < count; i++)
+                    {
+                        dir["sw"]--;
+                        dir["n"]--;
+                        dir["nw"]++;
+
+                    }
+                }
+                else
+                {
+                    var count = dir["n"];
+                    for (int i = 0; i < count; i++)
+                    {
+                        dir["sw"]--;
+                        dir["n"]--;
+                        dir["nw"]++;
+
+                    }
+                } 
+            }
+            if (dir["se"] > 0 && dir["n"] > 0)
+            {
+                if (dir["se"] <= dir["n"])
+                {
+                    var count = dir["se"];
+                    for (int i = 0; i < count; i++)
+                    {
+                        dir["se"]--;
+                        dir["n"]--;
+                        dir["ne"]++;
+
+                    }
+                }
+                else
+                {
+                    var count = dir["n"];
+                    for (int i = 0; i < count; i++)
+                    {
+                        dir["se"]--;
+                        dir["n"]--;
+                        dir["ne"]++;
+
+                    }
+                } 
+            }
+            if (dir["ne"] > 0 && dir["s"] > 0)
+            {
+                if (dir["ne"] <= dir["s"])
+                {
+                    var count = dir["ne"];
+                    for (int i = 0; i < count; i++)
+                    {
+                        dir["ne"]--;
+                        dir["s"]--;
+                        dir["se"]++;
+
+                    }
+                }
+                else
+                {
+                    var count = dir["s"];
+                    for (int i = 0; i < count; i++)
+                    {
+                        dir["ne"]--;
+                        dir["s"]--;
+                        dir["se"]++;
+
+                    }
+                } 
+            }
+            return dir.Select(x => x.Value).Sum();
         }
         public static object StarTwo(string input)
         {
             Init(input);
-            if (input == null)
+            List<int> paths = new List<int>();
+            Dictionary<string, int> directions = new Dictionary<string, int>()
             {
-                input = Input;
+                { "n",0 },
+                { "ne",0 },
+                { "nw",0 },
+                { "s",0 },
+                { "se",0 },
+                { "sw",0 }
+            };
+            foreach (var step in steps)
+            {
+                directions[step]++;
+                paths.Add(CountDistanceToCenter(directions));
             }
-            ///var convertedInput = ConvertInputToStarTwoLengths(input);
 
-            string outputHash = string.Empty;
-
-
-            return outputHash;
+            return paths.Max();
         }
     }
 }
