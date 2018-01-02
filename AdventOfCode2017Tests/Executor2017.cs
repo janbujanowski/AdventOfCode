@@ -524,7 +524,7 @@ namespace AdventOfCode2017Tests
             //At the time the recover operation is executed, the frequency of the last sound played is 4.
 
             //What is the value of the recovered frequency(the value of the most recently played sound) the first time a rcv instruction is executed with a non-zero value?
-            Assert.AreEqual(1034, Day18.StarOne());
+            Assert.AreEqual(9423, Day18.StarOne());
         }
         [TestMethod]
         public void Day18StarTwo()

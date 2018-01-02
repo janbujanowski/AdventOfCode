@@ -8,11 +8,12 @@ namespace AdventOfCode2017
 {
     public class Day18
     {
+        static long lastplayed = 0;
         private static List<string> lines;
         private static Dictionary<string, string> operationConditonDict;
-        private static Dictionary<string, int> registers;
-        private static List<int> soundedFrequencies;
-        private static List<int> recoveredFreqencies;
+        private static Dictionary<string, long> registers;
+        private static List<long> soundedFrequencies;
+        private static List<long> recoveredFreqencies;
         public static string Input
         {
             get
@@ -66,9 +67,9 @@ jgz a -19";
             lines = new List<string>();
             string[] separators = new string[] { "\r\n" };
             lines = Input.Split(separators, StringSplitOptions.None).ToList();
-            registers = new Dictionary<string, int>();
-            soundedFrequencies = new List<int>();
-            recoveredFreqencies = new List<int>();
+            registers = new Dictionary<string, long>();
+            soundedFrequencies = new List<long>();
+            recoveredFreqencies = new List<long>();
             foreach (var line in lines)
             {
                 var args = line.Split(' ');
@@ -83,9 +84,10 @@ jgz a -19";
         {
             Init();
             int currentline = 0;
-
+            int executioncount = 0;
             while (currentline < lines.Count)
             {
+                var line = lines[currentline];
                 var args = lines[currentline].Split(' ');
                 switch (args[0])
                 {
@@ -135,15 +137,15 @@ jgz a -19";
                 {
                     currentline = lines.Count;
                 }
+                executioncount++;
             }
-
             return recoveredFreqencies[0];
         }
 
         private static object Jgz(string[] args)
         {
             var regname = args[1];
-            int value = ParseValue(args[1]);
+            long value = ParseValue(args[1]);
             if (value > 0)
             {
                 return ParseValue(args[2]);
@@ -156,12 +158,14 @@ jgz a -19";
         private static void Snd(string[] args)
         {
             var regname = args[1];
-            int value = ParseValue(args[1]);
+            long value = ParseValue(args[1]);
             soundedFrequencies.Add(value);
+            lastplayed = value;
+
         }
         private static void Rcv(string[] args)
         {
-            int value = ParseValue(args[1]);
+            long value = ParseValue(args[1]);
             if (value > 0)
             {
                 recoveredFreqencies.Add(soundedFrequencies.Last());
@@ -170,22 +174,22 @@ jgz a -19";
         private static void Mod(string[] args)
         {
             var regname = args[1];
-            int value = ParseValue(args[2]);
+            long value = ParseValue(args[2]);
 
             registers[regname] = registers[regname] % value;
         }
         private static void Mul(string[] args)
         {
             var regname = args[1];
-            int value = ParseValue(args[2]);
+            long value = ParseValue(args[2]);
             registers[regname] = registers[regname] * value;
         }
-        private static int ParseValue(string v)
+        private static long ParseValue(string v)
         {
-            int value;
+            long value;
             try
             {
-                value = Int32.Parse(v);
+                value = long.Parse(v);
             }
             catch (Exception)
             {
@@ -196,13 +200,13 @@ jgz a -19";
         private static void Add(string[] args)
         {
             var regname = args[1];
-            int value = ParseValue(args[2]);
+            long value = ParseValue(args[2]);
             registers[regname] += value;
         }
         private static void Set(string[] args)
         {
             var regname = args[1];
-            int value = ParseValue(args[2]);
+            long value = ParseValue(args[2]);
             registers[regname] = value;
         }
         private static bool CheckCondition(string regnametocheck, string comparator, string compareValue)
@@ -245,43 +249,7 @@ jgz a -19";
         {
             Init();
             int maxvalue = 0;
-            foreach (var line in lines)
-            {
-                string[] separators = new string[] { "if" };
-                var lineParams = line.Split(' ');
-                var regnametochange = lineParams[0];
-                if (!registers.ContainsKey(regnametochange))
-                {
-                    registers.Add(lineParams[0], 0);
-                }
-
-                var regnametocheck = lineParams[4];
-                var comparator = lineParams[5];
-                var compareValue = lineParams[6];
-                if (!registers.ContainsKey(regnametocheck))
-                {
-                    registers.Add(regnametocheck, 0);
-                }
-                bool conditionIsTrue = CheckCondition(regnametocheck, comparator, compareValue);
-                if (conditionIsTrue)
-                {
-                    var isIncrease = lineParams[1] == "inc";
-                    var value = Int32.Parse(lineParams[2]);
-                    if (isIncrease)
-                    {
-                        registers[regnametochange] += value;
-                    }
-                    else
-                    {
-                        registers[regnametochange] -= value;
-                    }
-                    var currentmax = registers.Select(x => x.Value).Max();
-                    if (currentmax > maxvalue)
-                    {
-                        maxvalue = currentmax;
-                    }
-                }
-            }
+            
             return maxvalue;
         }
     }
