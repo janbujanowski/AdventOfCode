@@ -10,7 +10,7 @@ namespace AdventOfCode2017
     {
         static int[] blocks;
         static List<string> lines;
-        static Dictionary<string, List<string>> ParentChildrenDict;
+        static Dictionary<int, List<int>> ParentChildrenDict;
         static Dictionary<string, int> ParentMemoryDict;
         static Dictionary<string, bool> ProgramHasParentDict;
         public static string Input
@@ -2024,58 +2024,63 @@ namespace AdventOfCode2017
             lines = new List<string>();
             string[] separators = new string[] { "\r\n" };
             lines = Input.Split(separators, StringSplitOptions.None).ToList();
-            ParentChildrenDict = new Dictionary<string, List<string>>();
-            ParentMemoryDict = new Dictionary<string, int>();
+            ParentChildrenDict = new Dictionary<int, List<int>>();
 
-            string[] separatorLine = new string[] { "->" };
+            string[] separatorLine = new string[] { "<->" };
             foreach (var line in lines)
             {
-                var lol1 = line.Split(separatorLine, StringSplitOptions.None);
-                var parent = lol1[0].Substring(0, lol1[0].IndexOf('(') - 1);
-                List<string> children = null;
-                if (lol1.Length > 1)
-                {
-                    children = lol1[1].Replace(" ", "").Split(',').ToList();
-                }
-                var starti = lol1[0].IndexOf('(') + 1;
-                var memo = Int32.Parse(lol1[0].Substring(starti, lol1[0].IndexOf(')') - starti));
-                ParentChildrenDict.Add(parent, children);
-                ParentMemoryDict.Add(parent, memo);
+                var args = line.Split(separatorLine, StringSplitOptions.None);
+                int key = Int32.Parse(args[0]);
+                var argsnodes = args[1].Split(',');
+                var nodes = new List<int>() { };
             }
         }
         public static object StarOne()
         {
             Init();
-            ProgramHasParentDict = new Dictionary<string, bool>();
-            List<string> AreChildren = new List<string>();
-            foreach (var pair in ParentChildrenDict.Where(x => x.Value != null).ToList())
+            List<int> progsThatContainsZero = new List<int>() { 0 };
+            foreach (var item in ParentChildrenDict)
             {
-                foreach (var children in pair.Value)
+                if (CheckIfHasZeros(item.Key))
                 {
-                    AreChildren.Add(children.Trim());
+                    progsThatContainsZero.Add(item.Key);
                 }
             }
-            foreach (var children in AreChildren)
-            {
-                ParentChildrenDict.Remove(children);
-            }
-
-            return ParentChildrenDict.FirstOrDefault().Key;
+            return progsThatContainsZero.Count;
         }
+
+        private static bool CheckIfHasZeros(int key)
+        {
+            var result = false;
+            foreach (var newkey in ParentChildrenDict[key])
+            {
+                if (newkey == 0)
+                {
+                    result = true;
+                    break;
+                }
+                else
+                {
+                    result = CheckIfHasZeros(newkey);
+                }
+            }
+            return result;
+        }
+
         public static object StarTwo()
         {
             Init();
             Dictionary<string, int> nodeMemoryDict = new Dictionary<string, int>();
-            foreach (var node in ParentChildrenDict.Where(x => x.Value != null).ToList())
-            {
-                var sum = ParentMemoryDict[node.Key];
-                foreach (var child in node.Value.ToList())
-                {
-                    sum += ParentMemoryDict[child];
-                }
-                nodeMemoryDict.Add(node.Key, sum);
+            //foreach (var node in ParentChildrenDict.Where(x => x.Value != null).ToList())
+            //{
+            //    var sum = ParentMemoryDict[node.Key];
+            //    foreach (var child in node.Value.ToList())
+            //    {
+            //        sum += ParentMemoryDict[child];
+            //    }
+            //    nodeMemoryDict.Add(node.Key, sum);
 
-            }
+            //}
             var sorted = nodeMemoryDict.OrderBy(pair => pair.Value);
             return nodeMemoryDict.Max();
         }

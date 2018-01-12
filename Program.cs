@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace AdventOfCodeRunner
 {
@@ -11,11 +12,7 @@ namespace AdventOfCodeRunner
     {
         static void Main(string[] args)
         {
-            //Console.WriteLine(Day10.StarOne());
-            Console.WriteLine(Day18.StarOne());
-            //Console.WriteLine(Day11.StarTwo(null));
-
-            Console.ReadKey();
+            Console.WriteLine(Day12.StarOne());
         }
     }
 }
