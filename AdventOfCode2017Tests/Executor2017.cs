@@ -519,7 +519,7 @@ namespace AdventOfCode2017Tests
             //Therefore, a total of 6 programs are in this group; all but program 1, which has a pipe that connects it to itself.
 
             //How many programs are in the group that contains program ID 0 ?
-            Assert.AreEqual(1034, Day12.StarOne());
+            Assert.AreEqual(175, Day12.StarOne());
         }
         [TestMethod]
         public void Day12StarTwo()

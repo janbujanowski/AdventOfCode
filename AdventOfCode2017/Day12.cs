@@ -2033,20 +2033,41 @@ namespace AdventOfCode2017
                 int key = Int32.Parse(args[0]);
                 var argsnodes = args[1].Split(',');
                 var nodes = new List<int>() { };
+                foreach (var numb in argsnodes)
+                {
+                    nodes.Add(Convert.ToInt32(numb));
+                }
+                ParentChildrenDict.Add(key, nodes);
             }
         }
         public static object StarOne()
         {
             Init();
-            List<int> progsThatContainsZero = new List<int>() { 0 };
-            foreach (var item in ParentChildrenDict)
+            List<int> progsInRelationWithNumber = CheckRelations(0);
+            return progsInRelationWithNumber.Count;
+        }
+
+        private static List<int> CheckRelations(int v)
+        {
+            List<int> progsChecked = new List<int> { v };
+            var opr = new List<int>(ParentChildrenDict[v]);
+            ParentChildrenDict[v] = new List<int>();
+            foreach (var numba in opr)
             {
-                if (CheckIfHasZeros(item.Key))
+                if (!progsChecked.Contains(numba))
                 {
-                    progsThatContainsZero.Add(item.Key);
+                    progsChecked.Add(numba);
+                    var relatedNest = CheckRelations(numba);
+                    foreach (var numba2 in relatedNest)
+                    {
+                        if (!progsChecked.Contains(numba2))
+                        {
+                            progsChecked.Add(numba2);
+                        }
+                    }
                 }
             }
-            return progsThatContainsZero.Count;
+            return progsChecked;
         }
 
         private static bool CheckIfHasZeros(int key)
@@ -2066,7 +2087,6 @@ namespace AdventOfCode2017
             }
             return result;
         }
-
         public static object StarTwo()
         {
             Init();
