@@ -2069,40 +2069,32 @@ namespace AdventOfCode2017
             }
             return progsChecked;
         }
-
-        private static bool CheckIfHasZeros(int key)
-        {
-            var result = false;
-            foreach (var newkey in ParentChildrenDict[key])
-            {
-                if (newkey == 0)
-                {
-                    result = true;
-                    break;
-                }
-                else
-                {
-                    result = CheckIfHasZeros(newkey);
-                }
-            }
-            return result;
-        }
         public static object StarTwo()
         {
             Init();
-            Dictionary<string, int> nodeMemoryDict = new Dictionary<string, int>();
-            //foreach (var node in ParentChildrenDict.Where(x => x.Value != null).ToList())
-            //{
-            //    var sum = ParentMemoryDict[node.Key];
-            //    foreach (var child in node.Value.ToList())
-            //    {
-            //        sum += ParentMemoryDict[child];
-            //    }
-            //    nodeMemoryDict.Add(node.Key, sum);
+            var size = ParentChildrenDict.Count;
+            List<List<int>> groupSizes = new List<List<int>>();
+            for (int i = 0; i < size; i++)
+            {
+                Init();
+                var newList = CheckRelations(i);
+                newList.Sort();
+                var add = true;
+                foreach (var item in groupSizes)
+                {
+                    if (Enumerable.SequenceEqual(newList,item))
+                    {
+                        add = false;
+                        break;
+                    }
+                }
+                if (add)
+                {
+                    groupSizes.Add(newList);
+                }
+            }
 
-            //}
-            var sorted = nodeMemoryDict.OrderBy(pair => pair.Value);
-            return nodeMemoryDict.Max();
+            return groupSizes.Count();
         }
     }
 }

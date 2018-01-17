@@ -525,7 +525,7 @@ namespace AdventOfCode2017Tests
         public void Day12StarTwo()
         {
 
-            Assert.AreEqual(1356, Day12.StarTwo());
+            Assert.AreEqual(213, Day12.StarTwo());
         }
         [TestMethod]
         public void Day18StarOne()
@@ -572,7 +572,7 @@ namespace AdventOfCode2017Tests
         public void Day18StarTwo()
         {
 
-            Assert.AreEqual(1356, Day18.StarTwo());
+            Assert.AreEqual(213, Day18.StarTwo());
         }
     }
 }
