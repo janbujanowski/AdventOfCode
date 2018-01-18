@@ -726,6 +726,18 @@ namespace AdventOfCode2017Tests
             Assert.AreEqual(3966414, Day13.StarTwo());
         }
         [TestMethod]
+        public void Day14StarOne()
+        {
+
+            Assert.AreEqual(8316, Day14.StarOne());
+        }
+        [TestMethod]
+        public void Day14StarTwo()
+        {
+
+            Assert.AreEqual(1356, Day1.StarTwo());
+        }
+        [TestMethod]
         public void Day18StarOne()
         {
             //You discover a tablet containing some strange assembly code labeled simply "Duet".Rather than bother the sound card with it, you decide to run the code yourself.Unfortunately, you don't see any documentation, so you're left to figure out what the instructions mean on your own.
