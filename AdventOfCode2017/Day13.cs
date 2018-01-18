@@ -87,8 +87,8 @@ namespace AdventOfCode2017
         public static object StarOne()
         {
             Init();
+            var time = 0;
             List<int> caughtLayer = new List<int>();
-            int time = 0;
             while (time < firewallLayers.Length)
             {
                 var levels = firewallLayers[time];
@@ -120,15 +120,31 @@ namespace AdventOfCode2017
             return sum;
         }
 
-        private static List<int> CheckRelations(int v)
-        {
-            List<int> progsChecked = new List<int> { v };
-
-            return progsChecked;
-        }
         public static object StarTwo()
         {
-            return null;
+            int delay = -1;
+            List<int> layers = new List<int>();
+            do
+            {
+                delay++;
+                layers = new List<int>();
+                var time = 0;
+                while (time < firewallLayers.Length)
+                {
+                    var levels = firewallLayers[time];
+
+                    if (levels != 0)
+                    {
+                        if ((time + delay) % (2 * levels - 2) == 0)
+                        {
+                            layers.Add(time);
+                            //break;
+                        }
+                    }
+                    time++;
+                }
+            } while (layers.Count > 0);
+            return delay;
         }
     }
 }
