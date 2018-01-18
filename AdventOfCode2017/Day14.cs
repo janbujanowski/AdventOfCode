@@ -10,9 +10,7 @@ namespace AdventOfCode2017
     {
         static List<string> knotHashes;
         static List<string> knotHashesBinary;
-        static Dictionary<int, List<int>> ParentChildrenDict;
-        static Dictionary<string, int> ParentMemoryDict;
-        static Dictionary<string, bool> ProgramHasParentDict;
+     
         public static string Input
         {
             get
@@ -71,29 +69,20 @@ namespace AdventOfCode2017
         public static object StarTwo()
         {
             Init();
-            var size = ParentChildrenDict.Count;
-            List<List<int>> groupSizes = new List<List<int>>();
-            for (int i = 0; i < size; i++)
+            //just not to duplicate -> be sure to generete binary list
+            StarOne();
+            int questSize = 128;
+            int[,] matrx = new int[questSize,questSize];
+            for (int i = 0; i < questSize; i++)
             {
-                Init();
-                var newList = CheckRelations(i);
-                newList.Sort();
-                var add = true;
-                foreach (var item in groupSizes)
+                for (int j = 0; j < questSize; j++)
                 {
-                    if (Enumerable.SequenceEqual(newList, item))
-                    {
-                        add = false;
-                        break;
-                    }
-                }
-                if (add)
-                {
-                    groupSizes.Add(newList);
+                    matrx[i, j] = knotHashesBinary[i][j];
                 }
             }
 
-            return groupSizes.Count();
+
+            return "-milion";
         }
     }
 }
