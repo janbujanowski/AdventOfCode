@@ -122,6 +122,7 @@ namespace AdventOfCode2017
 
         public static object StarTwo()
         {
+            Init();
             int delay = -1;
             List<int> layers = new List<int>();
             do
