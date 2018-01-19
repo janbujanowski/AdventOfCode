@@ -10,11 +10,16 @@ namespace AdventOfCode2017
     {
         static List<string> knotHashes;
         static List<string> knotHashesBinary;
-     
+        static string input;
+
         public static string Input
         {
             get
             {
+                if (!String.IsNullOrEmpty(input))
+                {
+                    return input;
+                }
                 return @"ljoxqyyw";
             }
         }
@@ -23,8 +28,12 @@ namespace AdventOfCode2017
             knotHashes = new List<string>();
             knotHashesBinary = new List<string>();
         }
-        public static object StarOne()
+        public static object StarOne(string differentInput = "")
         {
+            if (!String.IsNullOrEmpty(input))
+            {
+                input = differentInput;
+            }
             Init();
             for (int i = 0; i < 128; i++)
             {
@@ -37,52 +46,84 @@ namespace AdventOfCode2017
                 var binary = string.Empty;
                 for (int i = 0; i < kH.Length; i++)
                 {
-                    binary += Convert.ToString(Convert.ToInt32(kH[i].ToString(), 16), 2);
+                    binary += Convert.ToString(Convert.ToInt32(kH[i].ToString(), 16), 2).PadLeft(4, '0');
                 }
+                binary = binary.Replace('1', 'x');
                 knotHashesBinary.Add(binary);
-                sum += binary.Count(x => x == '1');
+                sum += binary.Count(x => x == 'x');
             }
             return sum;
         }
-        private static List<int> CheckRelations(int v)
+        public static object StarTwo(string differentInput = "")
         {
-            List<int> progsChecked = new List<int> { v };
-            var opr = new List<int>(ParentChildrenDict[v]);
-            ParentChildrenDict[v] = new List<int>();
-            foreach (var numba in opr)
-            {
-                if (!progsChecked.Contains(numba))
-                {
-                    progsChecked.Add(numba);
-                    var relatedNest = CheckRelations(numba);
-                    foreach (var numba2 in relatedNest)
-                    {
-                        if (!progsChecked.Contains(numba2))
-                        {
-                            progsChecked.Add(numba2);
-                        }
-                    }
-                }
-            }
-            return progsChecked;
-        }
-        public static object StarTwo()
-        {
-            Init();
+
             //just not to duplicate -> be sure to generete binary list
-            StarOne();
+            StarOne(differentInput);
             int questSize = 128;
-            int[,] matrx = new int[questSize,questSize];
+            int group = 1;
+            int[,] matrx = new int[questSize, questSize];
             for (int i = 0; i < questSize; i++)
             {
                 for (int j = 0; j < questSize; j++)
                 {
-                    matrx[i, j] = knotHashesBinary[i][j];
+                    if (knotHashesBinary[i][j] == 'x')
+                    {
+
+                        matrx[i, j] = -1;
+                    }
+                    else
+                    {
+                        matrx[i, j] = 0;
+                    }
                 }
             }
 
+            for (int i = 0; i < questSize; i++)
+            {
+                for (int j = 0; j < questSize; j++)
+                {
+                    var origini = i.ToString();
+                    var originj = j.ToString();
+                    if (FollowPath(matrx, i, j, group))
+                    {
+                        group++;
 
-            return "-milion";
+                    }
+                    i = Int32.Parse(origini);
+                    j = Int32.Parse(originj);
+                }
+            }
+            return group - 1;
+        }
+
+        private static bool FollowPath(int[,] matrx, int i, int j, int group)
+        {
+            var x = matrx[i, j];
+            if (matrx[i, j] == -1)
+            {
+                matrx[i, j] = group;
+                if (i > 0)
+                {
+                    FollowPath(matrx, i - 1, j, group);
+                }
+                if (i < 127)
+                {
+                    FollowPath(matrx, i + 1, j, group);
+                }
+                if (j > 0)
+                {
+                    FollowPath(matrx, i, j - 1, group);
+                }
+                if (j < 127)
+                {
+                    FollowPath(matrx, i, j + 1, group);
+                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
