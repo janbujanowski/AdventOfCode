@@ -20,6 +20,7 @@ namespace AdventOfCode2017
                 {
                     return input;
                 }
+
                 return @"ljoxqyyw";
             }
         }
@@ -30,10 +31,7 @@ namespace AdventOfCode2017
         }
         public static object StarOne(string differentInput = "")
         {
-            if (!String.IsNullOrEmpty(input))
-            {
-                input = differentInput;
-            }
+            input = differentInput;
             Init();
             for (int i = 0; i < 128; i++)
             {
@@ -48,9 +46,8 @@ namespace AdventOfCode2017
                 {
                     binary += Convert.ToString(Convert.ToInt32(kH[i].ToString(), 16), 2).PadLeft(4, '0');
                 }
-                binary = binary.Replace('1', 'x');
                 knotHashesBinary.Add(binary);
-                sum += binary.Count(x => x == 'x');
+                sum += binary.Count(x => x == '1');
             }
             return sum;
         }
@@ -66,7 +63,7 @@ namespace AdventOfCode2017
             {
                 for (int j = 0; j < questSize; j++)
                 {
-                    if (knotHashesBinary[i][j] == 'x')
+                    if (knotHashesBinary[i][j] == '1')
                     {
 
                         matrx[i, j] = -1;

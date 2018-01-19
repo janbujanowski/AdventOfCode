@@ -12,7 +12,6 @@ namespace AdventOfCodeRunner
     {
         static void Main(string[] args)
         {
-
             Console.WriteLine(Day14.StarOne());
             //8316
             Console.WriteLine(Day14.StarOne("flqrgnkx"));
