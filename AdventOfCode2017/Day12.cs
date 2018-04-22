@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AdventOfCode.Shared;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AdventOfCode2017
 {
-    public class Day12
+    public class Day12 : DayX
     {
         static int[] blocks;
         static List<string> lines;
@@ -2040,7 +2041,7 @@ namespace AdventOfCode2017
                 ParentChildrenDict.Add(key, nodes);
             }
         }
-        public static object StarOne()
+        public new static object StarOne()
         {
             Init();
             List<int> progsInRelationWithNumber = CheckRelations(0);
@@ -2069,7 +2070,7 @@ namespace AdventOfCode2017
             }
             return progsChecked;
         }
-        public static object StarTwo()
+        public new static object StarTwo()
         {
             Init();
             var size = ParentChildrenDict.Count;

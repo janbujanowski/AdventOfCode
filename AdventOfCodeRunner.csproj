@@ -50,6 +50,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AdventOfCode.Shared\AdventOfCode.Shared.csproj">
+      <Project>{854f1f58-1fcd-4537-9ce6-ec3e36b9b93f}</Project>
+      <Name>AdventOfCode.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="AdventOfCode2017\AdventOfCode2017.csproj">
       <Project>{57cbabb4-0c59-41c7-abbc-733620068bcb}</Project>
       <Name>AdventOfCode2017</Name>

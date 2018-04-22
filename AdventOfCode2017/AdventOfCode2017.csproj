@@ -71,5 +71,11 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\AdventOfCode.Shared\AdventOfCode.Shared.csproj">
+      <Project>{854f1f58-1fcd-4537-9ce6-ec3e36b9b93f}</Project>
+      <Name>AdventOfCode.Shared</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
