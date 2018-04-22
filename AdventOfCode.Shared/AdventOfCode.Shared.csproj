@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{57CBABB4-0C59-41C7-ABBC-733620068BCB}</ProjectGuid>
+    <ProjectGuid>{854F1F58-1FCD-4537-9CE6-EC3E36B9B93F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AdventOfCode2017</RootNamespace>
-    <AssemblyName>AdventOfCode2017</AssemblyName>
+    <RootNamespace>AdventOfCode.Shared</RootNamespace>
+    <AssemblyName>AdventOfCode.Shared</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -41,41 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Day1.cs" />
-    <Compile Include="Day10.cs" />
-    <Compile Include="Day11.cs" />
-    <Compile Include="Day12.cs" />
-    <Compile Include="Day13.cs" />
-    <Compile Include="Day14.cs" />
-    <Compile Include="Day15.cs" />
-    <Compile Include="Day18.cs" />
-    <Compile Include="Day2.cs" />
-    <Compile Include="Day3.cs" />
-    <Compile Include="Day4.cs" />
-    <Compile Include="Day5.cs" />
-    <Compile Include="Day6.cs" />
-    <Compile Include="Day7.cs" />
-    <Compile Include="Day8.cs" />
-    <Compile Include="Day9.cs" />
-    <Compile Include="ExtensionHelpers.cs" />
+    <Compile Include="DayX.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\AdventOfCode.Shared\AdventOfCode.Shared.csproj">
-      <Project>{854f1f58-1fcd-4537-9ce6-ec3e36b9b93f}</Project>
-      <Name>AdventOfCode.Shared</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
