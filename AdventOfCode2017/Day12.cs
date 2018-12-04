@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AdventOfCode2017
 {
-    public class Day12 : DayX
+    public class Day12
     {
         static int[] blocks;
         static List<string> lines;

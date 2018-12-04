@@ -6,17 +6,13 @@ using System.Threading.Tasks;
 
 namespace AdventOfCode.Shared
 {
-    public abstract class DayX
+    public interface IDayX
     {
-        public int DayNumber = -1;
+        int DayNumber();
 
-        public object StarOne()
-        {
-            return -1;
-        }
-        public object StarTwo()
-        {
-            return -1;
-        }
+        object StarOne(string strInput);
+
+        object StarTwo(string strInput);
+
     }
 }
