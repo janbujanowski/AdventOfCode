@@ -4,17 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F2726A7C-2D03-4E79-AE8E-BF0DA8D34744}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>AdventOfCodeRunner</RootNamespace>
-    <AssemblyName>AdventOfCodeRunner</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <ProjectGuid>{1AF1296B-847F-4032-B6EC-33883451FFC8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AdventOfCode2020</RootNamespace>
+    <AssemblyName>AdventOfCode2020</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <TargetFrameworkProfile />
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +23,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -43,24 +41,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="Day1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="AdventOfCode.Shared\AdventOfCode.Shared.csproj">
-      <Project>{854f1f58-1fcd-4537-9ce6-ec3e36b9b93f}</Project>
+    <ProjectReference Include="..\AdventOfCode.Shared\AdventOfCode.Shared.csproj">
+      <Project>{854F1F58-1FCD-4537-9CE6-EC3E36B9B93F}</Project>
       <Name>AdventOfCode.Shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="AdventOfCode2017\AdventOfCode2017.csproj">
-      <Project>{57cbabb4-0c59-41c7-abbc-733620068bcb}</Project>
-      <Name>AdventOfCode2017</Name>
-    </ProjectReference>
-    <ProjectReference Include="AdventOfCode2020\AdventOfCode2020.csproj">
-      <Project>{1af1296b-847f-4032-b6ec-33883451ffc8}</Project>
-      <Name>AdventOfCode2020</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
