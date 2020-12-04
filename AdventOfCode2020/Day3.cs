@@ -18,6 +18,8 @@ namespace AdventOfCode2020
         }
         public Day3(string strInput)
         {
+            //216
+            //6708199680
             string[] separators = new string[] { "\r\n" };
             string[] lines = strInput.Split(separators, StringSplitOptions.None);
             slopeHeight = lines.Length;
