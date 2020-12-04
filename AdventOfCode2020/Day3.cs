@@ -9,21 +9,20 @@ namespace AdventOfCode2020
 {
     public class Day3 : IDayX
     {
+        char[,] pattern;
+        int slopeHeight;
+        int slopeWidth;
         public int DayNumber()
         {
             return 3;
         }
-
-        public object StarOne(string strInput)
+        public Day3(string strInput)
         {
-            //right 3 down 1
-            var stepLengthX = 3;
-            var stepLengthY = 1;
             string[] separators = new string[] { "\r\n" };
             string[] lines = strInput.Split(separators, StringSplitOptions.None);
-            var slopeHeight = lines.Length;
-            var slopeWidth = lines[0].Length;
-            char[,] pattern = new char[slopeHeight, slopeWidth];
+            slopeHeight = lines.Length;
+            slopeWidth = lines[0].Length;
+            pattern = new char[slopeHeight, slopeWidth];
             for (int i = 0; i < lines.Length; i++)
             {
                 for (int j = 0; j < slopeWidth; j++)
@@ -31,13 +30,25 @@ namespace AdventOfCode2020
                     pattern[i, j] = lines[i][j];
                 }
             }
+        }
+        public object StarOne(string strInput)
+        {
+            //right 3 down 1
+            var stepLengthX = 3;
+            var stepLengthY = 1;
 
+            int treesOnWay = CheckTreesInWay(stepLengthX, stepLengthY);
+            return treesOnWay;
+        }
+
+        private int CheckTreesInWay(int stepLengthX, int stepLengthY)
+        {
             int treesOnWay = 0;
             int currentX = 0;
             int currentY = 0;
             while (currentY < slopeHeight)
             {
-                if (pattern[currentY,currentX] == '#')
+                if (pattern[currentY, currentX] == '#')
                 {
                     treesOnWay += 1;
                 }
@@ -51,28 +62,13 @@ namespace AdventOfCode2020
 
         public object StarTwo(string strInput)
         {
-            string[] separators = new string[] { "\n" };
-            string[] lines = strInput.Split(separators, StringSplitOptions.None);
-
-            int validPasswords = 0;
-            foreach (var line in lines)
+            int[,] stepsVariants = { { 1, 1 }, { 3, 1 }, { 5, 1 }, { 7, 1 }, { 1, 2 } };
+            List<long> treesResults = new List<long>();
+            for (int i = 0; i < stepsVariants.Length / 2; i++)
             {
-                var variables = line.Split(' ');
-                var positions = variables[0].Split('-');
-                int positionA = Int32.Parse(positions[0]);
-                int positionB = Int32.Parse(positions[1]);
-                var letter = variables[1][0];
-                var password = variables[2];
-                var letterAtPositionA = password[positionA - 1];
-                var letterAtPositionB = password[positionB - 1];
-                if (letterAtPositionA == letter ^ letterAtPositionB == letter)
-                {
-                    validPasswords++;
-                }
-
+                treesResults.Add(CheckTreesInWay(stepsVariants[i, 0], stepsVariants[i, 1]));
             }
-
-            return validPasswords;
+            return treesResults.Aggregate(1l, (a, b) => a * b);
         }
     }
 }

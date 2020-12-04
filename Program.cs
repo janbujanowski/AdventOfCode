@@ -13,8 +13,7 @@ namespace AdventOfCodeRunner
         static void Main(string[] args)
         {
             //288 too low
-            var day = new Day3();
-            Console.WriteLine(day.StarOne(@"...#....#.#...##......#.#...##.
+            var day = new Day3(@"...#....#.#...##......#.#...##.
 .#..#...##..#....##........##..
 ..##.##...##.#.#....#..#......#
 ....#....#..#..#.#....#..###...
@@ -336,8 +335,10 @@ namespace AdventOfCodeRunner
 .#..##..##..#.....#...#.#.....#
 ...#..#.#.....#..#..##....##..#
 ..#....#.....#........#.....#..
-#.#.#..#..#.#..#...###.#.#....#"));
-            
+#.#.#..#..#.#..#...###.#.#....#");
+            Console.WriteLine(day.StarOne(@""));
+            Console.WriteLine(day.StarTwo(@""));
+
             //1242
             Console.ReadKey();
         }
