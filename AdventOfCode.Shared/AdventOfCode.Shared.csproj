@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="IDayX.cs" />
     <Compile Include="DefaultInputProvider.cs" />
+    <Compile Include="StringExtensions.cs" />
     <Compile Include="IinputProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
