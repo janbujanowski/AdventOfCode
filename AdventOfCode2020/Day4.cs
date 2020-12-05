@@ -79,28 +79,27 @@ namespace AdventOfCode2020
         }
         private bool CheckIfPassportValuesMatchPattern(Dictionary<string, string> passportKeyValuePairs)
         {
-            bool isValid = true;
             if (!CheckIfPassportContainsMandatoryFields(passportKeyValuePairs))
             {
                 return false;
             }
-            // byr(Birth Year) - four digits; at least 1920 and at most 2002.
-            isValid = TryGetIntAndCheckRange(passportKeyValuePairs["byr"], 1920, 2002);
-            // iyr(Issue Year) - four digits; at least 2010 and at most 2020.
-            isValid = TryGetIntAndCheckRange(passportKeyValuePairs["iyr"], 1920, 2002);
-            // eyr(Expiration Year) - four digits; at least 2020 and at most 2030.
-            isValid = TryGetIntAndCheckRange(passportKeyValuePairs["eyr"], 1920, 2002);
-            // hgt(Height) - a number followed by either cm or in:
-            isValid = TryParseHeight(passportKeyValuePairs["hgt"]);
-            // hcl(Hair Color) - a # followed by exactly six characters 0-9 or a-f.
-            isValid = Regex.IsMatch(passportKeyValuePairs["hcl"], "#[0-9 || a-f]{6}");
-            // ecl(Eye Color) - exactly one of: amb blu brn gry grn hzl oth.
             EyeColor resultColor;
-            isValid = Enum.TryParse(passportKeyValuePairs["ecl"], out resultColor);
+            return 
+            // byr(Birth Year) - four digits; at least 1920 and at most 2002.
+            TryGetIntAndCheckRange(passportKeyValuePairs["byr"], 1920, 2002) 
+            // iyr(Issue Year) - four digits; at least 2010 and at most 2020.
+            && TryGetIntAndCheckRange(passportKeyValuePairs["iyr"], 2010, 2020)
+            // eyr(Expiration Year) - four digits; at least 2020 and at most 2030.
+            &&TryGetIntAndCheckRange(passportKeyValuePairs["eyr"], 2020, 2030)
+            // hgt(Height) - a number followed by either cm or in:
+            &&TryParseHeight(passportKeyValuePairs["hgt"])
+            // hcl(Hair Color) - a # followed by exactly six characters 0-9 or a-f.
+            &&Regex.IsMatch(passportKeyValuePairs["hcl"], "#[0-9 || a-f]{6}")
+            // ecl(Eye Color) - exactly one of: amb blu brn gry grn hzl oth.
+            &&Enum.TryParse(passportKeyValuePairs["ecl"], out resultColor)
             // pid(Passport ID) - a nine - digit number, including leading zeroes.
-            isValid = CheckIfPassportIdIsValid(passportKeyValuePairs["pid"]);
-
-            return isValid;
+            &&CheckIfPassportIdIsValid(passportKeyValuePairs["pid"]);
+            //178 too high
         }
 
         private bool TryGetIntAndCheckRange(string input, int minValue, int maxValue)
