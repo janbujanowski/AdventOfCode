@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Day5.cs" />
     <Compile Include="Day4.cs" />
     <Compile Include="Day3.cs" />
     <Compile Include="Day2.cs" />
@@ -52,6 +53,9 @@
       <Project>{854F1F58-1FCD-4537-9CE6-EC3E36B9B93F}</Project>
       <Name>AdventOfCode.Shared</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="inputs_2020\Day5.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
