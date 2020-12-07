@@ -12,7 +12,6 @@ namespace AdventOfCode2020
     public class Day6 : IDayX
     {
         string[] groups;
-        int[] seatsIDs;
 
         public int DayNumber()
         {
@@ -20,24 +19,24 @@ namespace AdventOfCode2020
         }
         public Day6(string strInput)
         {
-            groups = strInput.Split("\r\n\r\n");
+            groups = strInput.Split("\n\n");
         }
 
         public object StarOne(string strInput)
         {
-            return groups.ToList().Select(group => group.Replace("\r\n", "").Distinct().Count()).Sum();
+            return groups.ToList().Select(group => group.Replace("\n", "").Distinct().Count()).Sum();
         }
-        
+
         public object StarTwo(string strInput)
         {
-            var sums = new List<int>();
+            int sum = 0;
             foreach (var group in groups)
             {
-                var personsCount = group.Split("\r\n").Count();
-                var lettersOrderedInput = group.Replace("\r\n", "").OrderBy(letter => letter).ToArray();
+                var personsCount = group.Split("\n").Count();
+                var lettersOrderedInput = group.Replace("\n", "").OrderBy(letter => letter).ToArray();
                 char current = 'A';
                 int counter = 0;
-                int sum = 0;
+                
                 for (int i = 0; i < lettersOrderedInput.Length; i++)
                 {
                     if (current == lettersOrderedInput[i])
@@ -47,18 +46,16 @@ namespace AdventOfCode2020
                     else
                     {
                         current = lettersOrderedInput[i];
-                        if (counter == personsCount)
-                        {
-                            sum += 1;
-                        }
                         counter = 1;
                     }
+
+                    if (counter == personsCount)
+                    {
+                        sum += 1;
+                    }
                 }
-                //3025 too low
-                sums.Add(sum);
             }
-            return sums.Sum();
+            return sum;
         }
-        
     }
 }

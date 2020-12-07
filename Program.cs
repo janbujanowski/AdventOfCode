@@ -14,7 +14,7 @@ namespace AdventOfCodeRunner
         static void Main(string[] args)
         {
             //288 too low
-            var stringInput = File.ReadAllText(@"C:\REPOS\Advent\AdventOfCode2020\inputs_2020\Day6.txt");
+            var stringInput = File.ReadAllText(@"C:\REPOS\AdventOfCode\AdventOfCode2020\inputs_2020\Day6.txt");
             var day = new Day6(stringInput);
             Console.WriteLine(day.StarOne(@""));
             Console.WriteLine(day.StarTwo(@""));
