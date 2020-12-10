@@ -22,26 +22,31 @@ namespace AdventOfCode2020
             inputNumbers = strInput.Split("\n").Select(number => long.Parse(number)).ToArray();
         }
 
-        
-
         public object StarOne(string strInput)
         {
             //1124361034
-            int i = 25;
-            int preambleLength = 25;
+            int startingIndex = 25;
+            return inputNumbers[FindIndexOfFirstInvalidSum(startingIndex)];
+        }
+
+        private int FindIndexOfFirstInvalidSum(int startingIndex)
+        {
+            int i = startingIndex;
+            int preambleLength = startingIndex;
             while (CheckPreviousNSums(preambleLength, inputNumbers, i))
             {
                 i++;
             };
-            return inputNumbers[i];
+            return i;
         }
-        private bool CheckPreviousNSums(int amountOfNumbers, long[] inputNumbers, int index)
+
+        private bool CheckPreviousNSums(int preambleLength, long[] inputNumbers, int index)
         {
-            int i = index - amountOfNumbers;
+            int i = index - preambleLength;
             var isValidSum = false;
             do
             {
-                int j = index - amountOfNumbers;
+                int j = index - preambleLength;
                 do
                 {
                     if (i != j)
@@ -60,10 +65,36 @@ namespace AdventOfCode2020
 
         public object StarTwo(string strInput)
         {
+            //129444555
+            int startingIndex = 25;
+            int invalidSumIndex = FindIndexOfFirstInvalidSum(startingIndex);
+            long encryptionWeakness = FindEncryptionWeaknessValue(invalidSumIndex);
+            return encryptionWeakness;
+        }
 
-            int accumulator = 0;
+        private long FindEncryptionWeaknessValue(int invalidSumIndex)
+        {
+            int i = -1; int j;
+            long sum;
+            var isValidSum = false;
+            do
+            {
+                i++;
+                sum = 0;
+                j = i;
+                do
+                {
+                    sum += inputNumbers[j];
+                    if (sum == inputNumbers[invalidSumIndex])
+                    {
+                        isValidSum = true;
+                    }
+                    j++;
+                } while (!isValidSum && j < invalidSumIndex && sum < inputNumbers[invalidSumIndex]);
+            } while (!isValidSum && i < invalidSumIndex);
 
-            return accumulator;
+            var lol = inputNumbers.Skip(i).Take(j - i);
+            return lol.Min() + lol.Max();
         }
     }
 }
