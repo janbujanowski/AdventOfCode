@@ -72,6 +72,7 @@ namespace AdventOfCode2020
 
         public object StarTwo(string strInput)
         {
+            //944
             int accumulator = 0;
             for (int i = 0; i < initialInstructions.Count; i++)
             {
