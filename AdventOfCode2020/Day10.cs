@@ -9,23 +9,22 @@ using System.Threading.Tasks;
 
 namespace AdventOfCode2020
 {
-    public class Day10 : IDayX
+    public class Day10 : Day66
     {
         int[] inputNumbers;
-
-        public int DayNumber()
+       
+        public Day10()
         {
-            return 10;
+
         }
-        public Day10(string strInput)
+        public override void ParseInput(string strInput)
         {
             strInput += "\r\n0";//add output 0 voltage
             inputNumbers = strInput.Split("\n").Select(number => int.Parse(number)).ToArray();
         }
-
-        public object StarOne(string strInput)
+        public override object StarOne()
         {
-            //1124361034
+            //2059
             int[] joltDifferencesCount = new int[4];
             Array.Sort(inputNumbers);
             for (int i = 0; i < inputNumbers.Length - 1; i++)
@@ -38,14 +37,12 @@ namespace AdventOfCode2020
             return joltDifferencesCount[1] * joltDifferencesCount[3];
         }
 
-        public object StarTwo(string strInput)
+        public override object StarTwo()
         {
             //129444555
             int startingIndex = 25;
 
             return startingIndex;
         }
-
-
     }
 }

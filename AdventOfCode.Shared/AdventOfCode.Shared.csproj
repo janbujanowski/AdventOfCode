@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Day66.cs" />
     <Compile Include="IDayX.cs" />
     <Compile Include="DefaultInputProvider.cs" />
     <Compile Include="StringExtensions.cs" />
