@@ -13,10 +13,6 @@ namespace AdventOfCode2020
     {
         int[] inputNumbers;
        
-        public Day10()
-        {
-
-        }
         public override void ParseInput(string strInput)
         {
             strInput += "\r\n0";//add output 0 voltage
