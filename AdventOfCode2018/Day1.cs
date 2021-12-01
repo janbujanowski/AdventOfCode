@@ -1,9 +1,7 @@
-﻿using System;
+﻿using AdventOfCode.Shared;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AdventOfCode.Shared;
 
 namespace AdventOfCode2018
 {

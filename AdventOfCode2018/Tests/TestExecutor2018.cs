@@ -1,15 +1,14 @@
-﻿using System;
-using AdventOfCode.Shared;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using AdventOfCode2018;
+﻿using AdventOfCode.Shared;
+using NUnit.Framework;
+using System.Threading.Tasks;
 
 namespace AdventOfCode2018.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class TestExecutor2018
     {
         IinputProvider _inputs = new DefaultInputProvider();
-        [TestMethod]
+        [Test]
         public void DayXStarOne()
         {
             string input =
@@ -17,7 +16,7 @@ namespace AdventOfCode2018.Tests
             Assert.AreEqual(1034, new Day1().StarOne(input));
         }
 
-        [TestMethod]
+        [Test]
         public void DayXStarTwo()
         {
             string input =
@@ -25,8 +24,8 @@ namespace AdventOfCode2018.Tests
             Assert.AreEqual(1356, new Day1().StarTwo(input));
         }
 
-        [TestMethod]
-        public void Day1StarOne()
+        [Test]
+        public async Task Day1StarOne()
         {
             //After feeling like you've been falling for a few minutes, you look at the device's tiny screen. "Error: Device must be calibrated before first use. Frequency drift detected.
             //Cannot maintain destination lock." Below the message, the device shows a sequence of changes in frequency(your puzzle input).A value like +6 means the current frequency increases by 6;
@@ -50,7 +49,7 @@ namespace AdventOfCode2018.Tests
             Assert.AreEqual(582, new Day1().StarOne(_inputs.GetInput(2018, 1)));
         }
 
-        [TestMethod]
+        [Test]
         public void Day1StarTwo()
         {
             //You notice that the device repeats the same frequency change list over and over. To calibrate the device, you need to find the first frequency it reaches twice.
