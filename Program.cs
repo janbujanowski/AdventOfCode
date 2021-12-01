@@ -38,8 +38,8 @@ namespace AdventOfCodeRunner
             }
 
             //Execution
-            int year = 2020;
-            int day = 11;
+            int year = 2021;
+            int day = 1;
 
             var wokringDay = solutionContainer.First(riddleSolution => riddleSolution.DayNumber == day && riddleSolution.YearNumber == year);
             if (wokringDay != null)
@@ -55,7 +55,7 @@ namespace AdventOfCodeRunner
         }
         public static string GetDayInput(int year, int day)
         {
-            return File.ReadAllText($@"C:\REPOS\AdventOfCode\AdventOfCode2020\inputs_2020\Day{day}.txt");
+            return File.ReadAllText($@"C:\REPOS\AdventOfCode\AdventOfCode2021\inputs_2021\Day{day}.txt");
         }
 
     }
