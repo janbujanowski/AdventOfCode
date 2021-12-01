@@ -10,8 +10,6 @@ namespace AdventOfCode2021
 {
     public class Day1 : Day66
     {
-        int defaultArrayValue = 0;
-        int increaseEnumValue = 1;
         string[] lines;
         int[] pings;
         public override void ParseInput(string strInput)
@@ -23,14 +21,11 @@ namespace AdventOfCode2021
         public override object StarOne()
         {
             int timesIncreased = 0;
-            //int[] increaseDecreaseEvaluate = new int[pings.Length];
-            //increaseDecreaseEvaluate[0] = defaultArrayValue;
             for (int i = 1; i < pings.Length; i++)
             {
                 if (pings[i] > pings[i - 1])
                 {
                     timesIncreased++;
-                    //increaseDecreaseEvaluate[i] = increaseEnumValue;
                 }
             }
             return timesIncreased;
