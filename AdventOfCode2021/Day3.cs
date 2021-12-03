@@ -68,7 +68,18 @@ namespace AdventOfCode2021
             }
             return replaced;
         }
+       
         public override object StarTwo()
+        {
+            string oxygenRatingBinary = ExecuteSearchLoop(ChooseDominatingBitAsLeadWhenEqualThenOne);
+            string co2ScrubberRatingBinary = ExecuteSearchLoop(ChooseSubmissiveBitAsLeadWhenEqualThenZero);
+            
+            int co2ScrubberRating = Convert.ToInt32(co2ScrubberRatingBinary, 2);
+            int oxygenRating = Convert.ToInt32(oxygenRatingBinary, 2);
+
+            return co2ScrubberRating * oxygenRating;
+        }
+        private string ExecuteSearchLoop(Func<int, int, string> leadingValueConditionFunction)
         {
             int searchingRange = lines.Length;
             List<string> searchingBucket = lines.ToList();
@@ -89,60 +100,38 @@ namespace AdventOfCode2021
                         zerosCount++;
                     }
                 }
-                if (zerosCount > onesCount)
-                {
-                    leadingString += "0";
-                }
-                else
-                {
-                    leadingString += "1";
-                }
+                leadingString += leadingValueConditionFunction(zerosCount, onesCount);
 
                 searchingBucket = searchingBucket.Where(line => line.StartsWith(leadingString)).ToList();
                 searchingRange = searchingBucket.Count;
                 charIndex++;
             }
             string oxygenRatingBinary = searchingBucket.First();
+            return oxygenRatingBinary;
+        }
 
-            searchingRange = lines.Length;
-            searchingBucket = lines.ToList();
-            leadingString = string.Empty;
-            charIndex = 0;
-            while (searchingRange > 1)
+        private string ChooseDominatingBitAsLeadWhenEqualThenOne(int zerosCount, int onesCount)
+        {
+            if (zerosCount > onesCount)
             {
-                int zerosCount = 0;
-                int onesCount = 0;
-                for (int j = 0; j < searchingRange; j++)
-                {
-                    if (searchingBucket.ElementAt(j)[charIndex] == '1')
-                    {
-                        onesCount++;
-                    }
-                    else
-                    {
-                        zerosCount++;
-                    }
-                }
-                if (zerosCount > onesCount)
-                {
-                    leadingString += "1";
-                }
-                else
-                {
-                    leadingString += "0";
-                }
-
-                searchingBucket = searchingBucket.Where(line => line.StartsWith(leadingString)).ToList();
-                searchingRange = searchingBucket.Count;
-                charIndex++;
+                return "0";
             }
-            string co2ScrubberRatingBinary = searchingBucket.First();
-
-            int co2ScrubberRating = Convert.ToInt32(co2ScrubberRatingBinary, 2);
-            int oxygenRating = Convert.ToInt32(oxygenRatingBinary, 2);
-
-            return co2ScrubberRating * oxygenRating;
+            else
+            {
+                return "1";
+            }
+        }
+        private string ChooseSubmissiveBitAsLeadWhenEqualThenZero(int zerosCount, int onesCount)
+        {
+            if (zerosCount > onesCount)
+            {
+                return "1";
+            }
+            else
+            {
+                return "0";
+            }
         }
     }
 }
-//7440311 still too high
+//7440311
