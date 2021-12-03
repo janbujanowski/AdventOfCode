@@ -9,7 +9,35 @@ namespace AdventOfCode2021
         string pathToInputsFolder = @"C:\REPOS\AdventOfCode\AdventOfCode2021\inputs_2021";
         private string GetInput(int day)
         {
-            return File.ReadAllText(Path.Combine(pathToInputsFolder,$"Day{day}.txt"));
+            return File.ReadAllText(Path.Combine(pathToInputsFolder, $"Day{day}.txt"));
+        }
+        [TestMethod]
+        public void Day1StarOne()
+        {
+            var dayObject = new Day1();
+            dayObject.ParseInput(GetInput(1));
+            Assert.AreEqual(1711, dayObject.StarOne());
+        }
+        [TestMethod]
+        public void Day1StarTwo()
+        {
+            var dayObject = new Day1();
+            dayObject.ParseInput(GetInput(1));
+            Assert.AreEqual(1743, dayObject.StarTwo());
+        }
+        [TestMethod]
+        public void Day2StarOne()
+        {
+            var dayObject = new Day2();
+            dayObject.ParseInput(GetInput(2));
+            Assert.AreEqual(1507611, dayObject.StarOne());
+        }
+        [TestMethod]
+        public void Day2StarTwo()
+        {
+            var dayObject = new Day2();
+            dayObject.ParseInput(GetInput(2));
+            Assert.AreEqual(1880593125, dayObject.StarTwo());
         }
         [TestMethod]
         public void Day3StarOne()
