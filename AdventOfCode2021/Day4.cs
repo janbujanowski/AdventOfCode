@@ -16,6 +16,7 @@ namespace AdventOfCode2021
         Dictionary<int, List<int>> boardsMarks;
         Dictionary<int, List<List<int>>> bingoBoardsAsRows;
         Tuple<int, int> winningBoardAndRow;
+        List<Tuple<int, int>> allWinningBoardsAndRows;
         public override void ParseInput(string strInput)
         {
             _strInput = strInput;
@@ -24,6 +25,7 @@ namespace AdventOfCode2021
             lines = linesList.ToArray();
             bingoPickCollection = lines[0].Split(',').Select(number => int.Parse(number)).ToList();
 
+            allWinningBoardsAndRows = new List<Tuple<int, int>>();
             bingoBoardsAsRows = new Dictionary<int, List<List<int>>>();
             List<List<int>> bingoArrayAsRows = new List<List<int>>();
             int bingoArrayCounter = 0;
@@ -81,7 +83,7 @@ namespace AdventOfCode2021
                 }
             }
 
-            int resultSum = GetSumOfUnmarkedNumbers(winningBoardAndRow);
+            int resultSum = GetSumOfUnmarkedNumbers(allWinningBoardsAndRows.First());
             return resultSum * bingoPickCollection[bingoCounter];
         }
 
@@ -121,14 +123,13 @@ namespace AdventOfCode2021
                     if (bingoBoardsAsRows[card.Key][i].Intersect(markedList).Count() == boardSize)
                     {
                         boardHasBingo = true;
-                        winningBoardAndRow = new Tuple<int, int>(card.Key, i);
-                        break;
+                        if (!allWinningBoardsAndRows.Where(x => x.Item1 == card.Key).Any())
+                        {
+                            allWinningBoardsAndRows.Add(new Tuple<int, int>(card.Key, i));
+                        }
                     }
                 }
-                if (boardHasBingo)
-                {
-                    break;
-                }
+
             }
             return boardHasBingo;
         }
@@ -146,8 +147,22 @@ namespace AdventOfCode2021
 
         public override object StarTwo()
         {
+            int boardSize = 5;
+            int bingoCounter = -1;
+            bool boardHasBingo = false;
+            boardsMarks = InitializeBlankMarks(bingoBoardsAsRows.Count);
+            while (allWinningBoardsAndRows.Count < boardsMarks.Count)
+            {
+                bingoCounter++;
+                MarkBoards(bingoPickCollection[bingoCounter]);
+                if (bingoCounter >= boardSize)
+                {
+                    boardHasBingo = EvaluateCards(boardSize);
+                }
+            }
 
-            return 2;
+            int resultSum = GetSumOfUnmarkedNumbers(allWinningBoardsAndRows.Last());
+            return resultSum * bingoPickCollection[bingoCounter];
         }
     }
 }
