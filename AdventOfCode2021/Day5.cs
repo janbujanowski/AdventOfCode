@@ -34,7 +34,7 @@ namespace AdventOfCode2021
         public override object StarOne()
         {
             int[,] diagram = new int[diagramSize, diagramSize];
-            
+
             for (int i = 0; i < pointsLength; i++)
             {
                 int x1 = pointersToLines[i, 0];
@@ -42,14 +42,14 @@ namespace AdventOfCode2021
                 int x2 = pointersToLines[i, 2];
                 int y2 = pointersToLines[i, 3];
 
-                if (IsHorizontalOrVertical(x1,y1,x2,y2))
+                if (IsHorizontalOrVertical(x1, y1, x2, y2))
                 {
                     AddToDiagram(x1, y1, x2, y2, diagram);
                     //PrintDiagram(diagram);
                 }
             }
             int result = CountAllAboveOne(diagram);
-            
+
             return result;
         }
         private bool IsHorizontalOrVertical(int x1, int y1, int x2, int y2)
@@ -86,7 +86,7 @@ namespace AdventOfCode2021
             {
                 for (int j = 0; j < diagramSize; j++)
                 {
-                    if (diagram[i,j] > 1)
+                    if (diagram[i, j] > 1)
                     {
                         sum++;
                     }
@@ -97,10 +97,56 @@ namespace AdventOfCode2021
 
         public override object StarTwo()
         {
-            int boardSize = 5;
-       
-            return boardSize;
+            int[,] diagram = new int[diagramSize, diagramSize];
+
+            for (int i = 0; i < pointsLength; i++)
+            {
+                int x1 = pointersToLines[i, 0];
+                int y1 = pointersToLines[i, 1];
+                int x2 = pointersToLines[i, 2];
+                int y2 = pointersToLines[i, 3];
+                if (IsDiagonalAt45Degrees(x1, y1, x2, y2))
+                {
+                    AddToDiagramDiagonal(x1, y1, x2, y2, diagram);
+                }
+                else
+                {
+
+                    AddToDiagram(x1, y1, x2, y2, diagram);
+                }
+                //PrintDiagram(diagram);
+            }
+            int result = CountAllAboveOne(diagram);
+
+            return result;
         }
+
+        private void AddToDiagramDiagonal(int x1, int y1, int x2, int y2, int[,] diagram)
+        {
+            int yModifier = GetModifier(y1, y2); int xModifier = GetModifier(x1, x2);
+            while (y1 != y2 && x1 != x2)
+            {
+                diagram[y1, x1]++;
+                y1 += yModifier; x1 += xModifier;
+            }
+            diagram[y1, x1]++;
+        }
+
+        private int GetModifier(int posA, int posB)
+        {
+            if (posB>posA)
+            {
+                return 1;
+            }
+            return -1;
+        }
+
+        private bool IsDiagonalAt45Degrees(int x1, int y1, int x2, int y2)
+        {
+            CheckAndReplaceIfNeeded(ref x1, ref y1, ref x2, ref y2);
+            return x2 - x1 == y2 - y1;
+        }
+
         private void PrintDiagram(int[,] diagram)
         {
             for (int i = 0; i < diagramSize; i++)

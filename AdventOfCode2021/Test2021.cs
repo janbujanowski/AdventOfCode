@@ -79,7 +79,7 @@ namespace AdventOfCode2021
         {
             var dayObject = new Day5();
             dayObject.ParseInput(GetInput(5));
-            Assert.AreEqual(5576, dayObject.StarTwo());
+            Assert.AreEqual(18144, dayObject.StarTwo());
         }
 
     }
