@@ -37,26 +37,30 @@ namespace AdventOfCodeRunner
             int year = 2021;
             int day = 6;
 
-            var wokringDay = solutionContainer.First(riddleSolution => riddleSolution.DayNumber == day && riddleSolution.YearNumber == year);
-            if (wokringDay != null)
+            var workingDay = solutionContainer.First(riddleSolution => riddleSolution.DayNumber == day && riddleSolution.YearNumber == year);
+            if (workingDay != null)
             {
                 Stopwatch stopwatch = new Stopwatch();
                 Console.WriteLine($"Day : {day}");
                 
                 var strInput = GetDayInput(year, day);
+                
                 stopwatch.Start();
-                wokringDay.ParseInput(strInput);
+                workingDay.ParseInput(strInput);
                 stopwatch.Stop();
-                Console.WriteLine($"Parsing input took : {stopwatch.ElapsedMilliseconds} milliseconds");
+                Console.WriteLine($"Parsing input took : {stopwatch.ElapsedTicks} ticks");
 
                 stopwatch.Restart();
-                Console.WriteLine($"Star one result: {wokringDay.StarOne()}");
+                var result = workingDay.StarOne();
                 stopwatch.Stop();
-                Console.WriteLine($"It took {stopwatch.ElapsedMilliseconds} milliseconds to run.");
+                Console.WriteLine($"Star one result: {result}");
+                Console.WriteLine($"It took {stopwatch.ElapsedTicks} ticks to run.");
+                
                 stopwatch.Restart();
-                Console.WriteLine($"Star two result: {wokringDay.StarTwo()}");
+                result = workingDay.StarTwo();
                 stopwatch.Stop();
-                Console.WriteLine($"It took {stopwatch.ElapsedMilliseconds} miliseconds to run.");
+                Console.WriteLine($"Star two result: {result}");
+                Console.WriteLine($"It took {stopwatch.ElapsedTicks} ticks to run.");
             }
 
             Console.ReadKey();
