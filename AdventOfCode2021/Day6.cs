@@ -1,12 +1,9 @@
 ﻿using AdventOfCode.Shared;
-using AdventOfCode.Shared.Extensions;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace AdventOfCode2021
 {
-    //44 + jakies 10
     public class Day6 : Day66
     {
         Dictionary<int, ulong> amountOfLanternFishInSpecifiedLifeSpan;

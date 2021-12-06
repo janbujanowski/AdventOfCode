@@ -95,6 +95,5 @@ namespace AdventOfCode2021
             dayObject.ParseInput(GetInput(6));
             Assert.AreEqual(1732821262171UL, dayObject.StarTwo());
         }
-
     }
 }
