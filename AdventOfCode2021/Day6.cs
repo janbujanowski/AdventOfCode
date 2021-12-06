@@ -9,44 +9,62 @@ namespace AdventOfCode2021
     //44 + jakies 10
     public class Day6 : Day66
     {
-        ulong[] amountOfLanternFishInSpecifiedLifeSpan;
+        Dictionary<int, ulong> amountOfLanternFishInSpecifiedLifeSpan;
+        string _strInput;
+
         public override void ParseInput(string strInput)
         {
-            amountOfLanternFishInSpecifiedLifeSpan = new ulong[9];
-            List<ulong> fishLifes = strInput.Split(',').Select(numb => ulong.Parse(numb)).ToList();
-            foreach (var fish in fishLifes)
+            _strInput = strInput;
+            amountOfLanternFishInSpecifiedLifeSpan = CreateEmptyDictionary(9);
+            List<int> fishLifes = strInput.Split(',').Select(numb => int.Parse(numb)).ToList();
+            for (int i = 0; i < fishLifes.Count; i++)
             {
-                amountOfLanternFishInSpecifiedLifeSpan[fish]++;
+                amountOfLanternFishInSpecifiedLifeSpan[fishLifes.ElementAt(i)]++;
             }
         }
+
+        private Dictionary<int, ulong> CreateEmptyDictionary(int size)
+        {
+            Dictionary<int, ulong> dict = new Dictionary<int, ulong>();
+            for (int i = 0; i < size; i++)
+            {
+                dict.Add(i, 0);
+            }
+            return dict;
+        }
+
         public override object StarOne()
         {
             int days = 80;
             RunLifeFor(days);
             return GetSum(amountOfLanternFishInSpecifiedLifeSpan);
         }
-        private ulong GetSum(ulong[] arrayOfNumbs)
-        {
-            ulong sum = 0;
-            for (int i = 0; i < arrayOfNumbs.Length; i++)
-            {
-                sum += arrayOfNumbs[i];
-            }
-            return sum;
-        }
+
         public override object StarTwo()
         {
             int days = 256;
+            ParseInput(_strInput);
             RunLifeFor(days);
             var sum = GetSum(amountOfLanternFishInSpecifiedLifeSpan);
             return sum;
         }
+
+        private ulong GetSum(Dictionary<int, ulong> amountOfLanternFishInSpecifiedLifeSpan)
+        {
+            ulong sum = 0;
+            for (int i = 0; i < amountOfLanternFishInSpecifiedLifeSpan.Count; i++)
+            {
+                sum += amountOfLanternFishInSpecifiedLifeSpan[i];
+            }
+            return sum;
+        }
+
         private void RunLifeFor(int days)
         {
             for (int i = 0; i < days; i++)
             {
                 ulong amountOfNewBorns = amountOfLanternFishInSpecifiedLifeSpan[0];
-                for (int j = 1; j < amountOfLanternFishInSpecifiedLifeSpan.Length; j++)
+                for (int j = 1; j < amountOfLanternFishInSpecifiedLifeSpan.Count; j++)
                 {
                     amountOfLanternFishInSpecifiedLifeSpan[j - 1] = amountOfLanternFishInSpecifiedLifeSpan[j];
                 }
