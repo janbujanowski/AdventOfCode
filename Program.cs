@@ -1,6 +1,7 @@
 ﻿using AdventOfCode.Shared;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -39,11 +40,23 @@ namespace AdventOfCodeRunner
             var wokringDay = solutionContainer.First(riddleSolution => riddleSolution.DayNumber == day && riddleSolution.YearNumber == year);
             if (wokringDay != null)
             {
-                var strInput = GetDayInput(year, day);
-                wokringDay.ParseInput(strInput);
+                Stopwatch stopwatch = new Stopwatch();
                 Console.WriteLine($"Day : {day}");
+                
+                var strInput = GetDayInput(year, day);
+                stopwatch.Start();
+                wokringDay.ParseInput(strInput);
+                stopwatch.Stop();
+                Console.WriteLine($"Parsing input took : {stopwatch.ElapsedMilliseconds} milliseconds");
+
+                stopwatch.Restart();
                 Console.WriteLine($"Star one result: {wokringDay.StarOne()}");
+                stopwatch.Stop();
+                Console.WriteLine($"It took {stopwatch.ElapsedMilliseconds} milliseconds to run.");
+                stopwatch.Restart();
                 Console.WriteLine($"Star two result: {wokringDay.StarTwo()}");
+                stopwatch.Stop();
+                Console.WriteLine($"It took {stopwatch.ElapsedMilliseconds} miliseconds to run.");
             }
 
             Console.ReadKey();
