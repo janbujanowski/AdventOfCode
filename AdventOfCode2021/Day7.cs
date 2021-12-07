@@ -35,14 +35,17 @@ namespace AdventOfCode2021
             {
                 if (!distancesToPositionX.ContainsKey(position.Key))
                 {
-                    distancesToPositionX.Add(position.Key, CalculateDistanceTo(position.Key));
+                    distancesToPositionX.Add(position.Key, CalculateDistanceTo(position.Key,CalculateSingleSubConsumptionStarOne));
                 }
             }
             var minimumFuel = distancesToPositionX.Min(x => x.Value);
             return minimumFuel;
         }
-
-        private uint CalculateDistanceTo(int positionWithMaximumAmountOfSubs)
+        private int CalculateSingleSubConsumptionStarOne(int from, int to)
+        {
+            return Math.Abs(from - to);
+        }
+        private uint CalculateDistanceTo(int positionWithMaximumAmountOfSubs, Func<int,int,int> fuelConsumptionFunction)
         {
             uint fuel = 0;
             int targetPostion = positionWithMaximumAmountOfSubs;
@@ -50,13 +53,11 @@ namespace AdventOfCode2021
             {
                 if (item.Key != targetPostion)
                 {
-                    fuel += Convert.ToUInt32(Math.Abs(item.Key - targetPostion) * item.Value);
+                    fuel += Convert.ToUInt32(fuelConsumptionFunction(item.Key,targetPostion) * item.Value);
                 }
             }
             return fuel;
         }
-        
-
         public override object StarTwo()
         {
             var maxVal = amountOfsubmarinesOnPositionKey.Max(x => x.Value);
@@ -68,30 +69,22 @@ namespace AdventOfCode2021
             {
                 if (!distancesToPositionX.ContainsKey(i))
                 {
-                    distancesToPositionX.Add(i, CalculateDistanceToVersionIncremental(i));
+                    distancesToPositionX.Add(i, CalculateDistanceTo(i,CalculateSingleSubConsumptionStarTwo));
                 }
             }
             
             var minimumFuel = distancesToPositionX.Min(x => x.Value);
             return minimumFuel;
         }
-        private uint CalculateDistanceToVersionIncremental(int positionWithMaximumAmountOfSubs)
+        private int CalculateSingleSubConsumptionStarTwo(int from, int to)
         {
-            uint fuel = 0;
-            int targetPostion = positionWithMaximumAmountOfSubs;
-            foreach (var item in amountOfsubmarinesOnPositionKey)
+            int fuelConsumptionPerSub = 0;
+            for (int i = 1; i <= Math.Abs(from - to); i++)
             {
-                if (item.Key != targetPostion)
-                {
-                    var fuelConsumptionPerSub = 0;
-                    for (int i = 1; i <= Math.Abs(item.Key - targetPostion); i++)
-                    {
-                        fuelConsumptionPerSub += i;
-                    }
-                    fuel += Convert.ToUInt32(fuelConsumptionPerSub * item.Value);
-                }
+                fuelConsumptionPerSub += i;
             }
-            return fuel;
+            return fuelConsumptionPerSub;
         }
+
     }
 }
