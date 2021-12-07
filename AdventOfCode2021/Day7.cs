@@ -9,11 +9,19 @@ namespace AdventOfCode2021
     {
         Dictionary<int, int> amountOfsubmarinesOnPositionKey;
         string _strInput;
+        int _meanLower;
+        int _meanUpper;
+        int _median;
 
         public override void ParseInput(string strInput)
         {
             _strInput = strInput;
             List<int> crabsSubmarinesPositions = _strInput.Split(',').Select(numb => int.Parse(numb)).ToList();
+            crabsSubmarinesPositions.Sort();
+            _median = crabsSubmarinesPositions[crabsSubmarinesPositions.Count / 2];
+            _meanLower = (int)Math.Floor((decimal)crabsSubmarinesPositions.Sum() / crabsSubmarinesPositions.Count);
+            _meanUpper = (int)Math.Ceiling((decimal)crabsSubmarinesPositions.Sum() / crabsSubmarinesPositions.Count);
+
             amountOfsubmarinesOnPositionKey = new Dictionary<int, int>();
             for (int i = 0; i < crabsSubmarinesPositions.Count; i++)
             {
@@ -25,27 +33,33 @@ namespace AdventOfCode2021
             }
         }
 
+        //The problem asks us to minimize a cost.In the first part, the cost of position $p$ is proportional to the sum of distances from $p$ to all crabs.
+        //So, for a given position $p$, the cost is $\sum_x |x-p|$.
+        //The position that minimizes this cost is called the median, the well-known central tendency in statistics.
+
+        //In Python,
+
+        //  def median(xs):
+        //    """ requires: xs is sorted """
+        //    sz = len(xs)
+        //    return (xs[int(sz//2)] + xs[int(0.5+sz//2)]) // 2
+        //For part 2, the cost is given by the n - th triangular number, T_n = n(n + 1) / 2.
+        //We can drop the 2 and say the cost at position $p$ is proportional to $\sum_x | x - p | (| x - p | +1)$
+        //which has a very similar shape to $\sum_x(x - p)2$ the quadradic cost of the distance.
+
+        //The statistic that minimizes the quadratic cost is the mean. Of course, the mean might not be an integer,
+        //and is not the answer. But it will give a starting point to explore the minimal cost we need,
+        //which should be very near this value.
+
         public override object StarOne()
         {
-            var maxVal = amountOfsubmarinesOnPositionKey.Max(x => x.Value);
-            var positionWithMaximumAmountOfSubs = amountOfsubmarinesOnPositionKey.Where(x => x.Value == maxVal).FirstOrDefault();
-
-            Dictionary<int, uint> distancesToPositionX = new Dictionary<int, uint>();
-            foreach (var position in amountOfsubmarinesOnPositionKey)
-            {
-                if (!distancesToPositionX.ContainsKey(position.Key))
-                {
-                    distancesToPositionX.Add(position.Key, CalculateDistanceTo(position.Key,CalculateSingleSubConsumptionStarOne));
-                }
-            }
-            var minimumFuel = distancesToPositionX.Min(x => x.Value);
-            return minimumFuel;
+            return CalculateAllSubsDistanceTo(_median, CalculateSingleSubConsumptionStarOne);
         }
         private int CalculateSingleSubConsumptionStarOne(int from, int to)
         {
             return Math.Abs(from - to);
         }
-        private uint CalculateDistanceTo(int positionWithMaximumAmountOfSubs, Func<int,int,int> fuelConsumptionFunction)
+        private uint CalculateAllSubsDistanceTo(int positionWithMaximumAmountOfSubs, Func<int, int, int> fuelConsumptionFunction)
         {
             uint fuel = 0;
             int targetPostion = positionWithMaximumAmountOfSubs;
@@ -53,28 +67,10 @@ namespace AdventOfCode2021
             {
                 if (item.Key != targetPostion)
                 {
-                    fuel += Convert.ToUInt32(fuelConsumptionFunction(item.Key,targetPostion) * item.Value);
+                    fuel += Convert.ToUInt32(fuelConsumptionFunction(item.Key, targetPostion) * item.Value);
                 }
             }
             return fuel;
-        }
-        public override object StarTwo()
-        {
-            var maxVal = amountOfsubmarinesOnPositionKey.Max(x => x.Value);
-            int fromX = amountOfsubmarinesOnPositionKey.Min(x => x.Key);
-            int toX = amountOfsubmarinesOnPositionKey.Max(x => x.Key);
-
-            Dictionary<int, uint> distancesToPositionX = new Dictionary<int, uint>();
-            for (int i = fromX; i <= toX; i++)
-            {
-                if (!distancesToPositionX.ContainsKey(i))
-                {
-                    distancesToPositionX.Add(i, CalculateDistanceTo(i,CalculateSingleSubConsumptionStarTwo));
-                }
-            }
-            
-            var minimumFuel = distancesToPositionX.Min(x => x.Value);
-            return minimumFuel;
         }
         private int CalculateSingleSubConsumptionStarTwo(int from, int to)
         {
@@ -85,6 +81,16 @@ namespace AdventOfCode2021
             }
             return fuelConsumptionPerSub;
         }
-
+        public override object StarTwo()
+        {
+            var a = CalculateAllSubsDistanceTo(_meanLower, CalculateSingleSubConsumptionStarTwo);
+            var b = CalculateAllSubsDistanceTo(_meanUpper, CalculateSingleSubConsumptionStarTwo);
+            var res = a;
+            if (a > b)
+            {
+                res = b;
+            }
+            return res;
+        }
     }
 }
