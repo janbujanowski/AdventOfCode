@@ -7,15 +7,13 @@ namespace AdventOfCode2021
 {
     public class Day7 : Day66
     {
-
         Dictionary<int, int> amountOfsubmarinesOnPositionKey;
         string _strInput;
 
         public override void ParseInput(string strInput)
         {
             _strInput = strInput;
-            //amountOfLanternFishInSpecifiedLifeSpan = CreateEmptyDictionary(9);
-            List<int> crabsSubmarinesPositions = strInput.Split(',').Select(numb => int.Parse(numb)).ToList();
+            List<int> crabsSubmarinesPositions = _strInput.Split(',').Select(numb => int.Parse(numb)).ToList();
             amountOfsubmarinesOnPositionKey = new Dictionary<int, int>();
             for (int i = 0; i < crabsSubmarinesPositions.Count; i++)
             {
@@ -37,25 +35,22 @@ namespace AdventOfCode2021
             {
                 if (!distancesToPositionX.ContainsKey(position.Key))
                 {
-                    distancesToPositionX.Add(position.Key, CalculateDistanceTo(position));
+                    distancesToPositionX.Add(position.Key, CalculateDistanceTo(position.Key));
                 }
             }
             var minimumFuel = distancesToPositionX.Min(x => x.Value);
-
-            //int fuel = CalculateDistanceTo(positionWithMaximumAmountOfSubs);
-
             return minimumFuel;
         }
 
-        private uint CalculateDistanceTo(KeyValuePair<int, int> positionWithMaximumAmountOfSubs)
+        private uint CalculateDistanceTo(int positionWithMaximumAmountOfSubs)
         {
             uint fuel = 0;
-            int targerPostion = positionWithMaximumAmountOfSubs.Key;
+            int targetPostion = positionWithMaximumAmountOfSubs;
             foreach (var item in amountOfsubmarinesOnPositionKey)
             {
-                if (item.Key != targerPostion)
+                if (item.Key != targetPostion)
                 {
-                    fuel += Convert.ToUInt32(Math.Abs(item.Key - targerPostion) * item.Value);
+                    fuel += Convert.ToUInt32(Math.Abs(item.Key - targetPostion) * item.Value);
                 }
             }
             return fuel;
@@ -67,7 +62,6 @@ namespace AdventOfCode2021
             var maxVal = amountOfsubmarinesOnPositionKey.Max(x => x.Value);
             int fromX = amountOfsubmarinesOnPositionKey.Min(x => x.Key);
             int toX = amountOfsubmarinesOnPositionKey.Max(x => x.Key);
-
 
             Dictionary<int, uint> distancesToPositionX = new Dictionary<int, uint>();
             for (int i = fromX; i <= toX; i++)
@@ -84,13 +78,13 @@ namespace AdventOfCode2021
         private uint CalculateDistanceToVersionIncremental(int positionWithMaximumAmountOfSubs)
         {
             uint fuel = 0;
-            int targerPostion = positionWithMaximumAmountOfSubs;
+            int targetPostion = positionWithMaximumAmountOfSubs;
             foreach (var item in amountOfsubmarinesOnPositionKey)
             {
-                if (item.Key != targerPostion)
+                if (item.Key != targetPostion)
                 {
                     var fuelConsumptionPerSub = 0;
-                    for (int i = 1; i <= Math.Abs(item.Key - targerPostion); i++)
+                    for (int i = 1; i <= Math.Abs(item.Key - targetPostion); i++)
                     {
                         fuelConsumptionPerSub += i;
                     }
