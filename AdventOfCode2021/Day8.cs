@@ -33,14 +33,7 @@ namespace AdventOfCode2021
     }
     public class Day8 : Day66
     {
-        Dictionary<int, int> amountOfsubmarinesOnPositionKey;
         string _strInput;
-        int _meanLower;
-        int _linesCount;
-        int _median;
-
-        int[,] _signalInputsExamples;
-        int[,] _signalOutputs;
         Dictionary<int, string[]> _leftSide;
         Dictionary<int, string[]> _rightSide;
         public override void ParseInput(string strInput)
@@ -48,18 +41,14 @@ namespace AdventOfCode2021
             _strInput = strInput;
 
             string[] lines = _strInput.Split("\r\n");
-            _linesCount = lines.Length;
-            _signalInputsExamples = new int[lines.Length, 10];
-            _signalOutputs = new int[lines.Length, 4];
             _leftSide = new Dictionary<int, string[]>();
             _rightSide = new Dictionary<int, string[]>();
+
             for (int i = 0; i < lines.Length; i++)
             {
                 var line = lines[i].Split(" | ");
                 var leftRow = line[0].Split(" ").Select(number => String.Concat(number.OrderBy(letter => (int)letter))).ToArray();
                 var rightRow = line[1].Split(" ").Select(number => String.Concat(number.OrderBy(letter => (int)letter))).ToArray();
-                //.Select(numbAsString => numbAsString.OrderBy(letter => (int)letter)
-                //order for easier debugging
                 _leftSide.Add(i, leftRow);
                 _rightSide.Add(i, rightRow);
             }
@@ -68,11 +57,12 @@ namespace AdventOfCode2021
         public override object StarOne()
         {
             int sum = 0;
-            for (int i = 0; i < _leftSide.Count; i++)
+            for (int i = 0; i < _rightSide.Count; i++)
             {
-                Dictionary<string, int> numbersDefinitions = DefineNumbers(_leftSide[i].ToList());
-                int rightNumber = GetRightNumber(_rightSide[i], numbersDefinitions);
-                sum += rightNumber;
+                sum += _rightSide[i].Where(number => number.Length == 2 ||
+                                                     number.Length == 3 ||
+                                                     number.Length == 4 ||
+                                                     number.Length == 7).Count();
             }
 
             return sum;
@@ -135,21 +125,18 @@ namespace AdventOfCode2021
                 { nine , 9 }
             };
         }
-        private string[] _workingDefinitions;
 
         public override object StarTwo()
         {
+            int sum = 0;
+            for (int i = 0; i < _leftSide.Count; i++)
+            {
+                Dictionary<string, int> numbersDefinitions = DefineNumbers(_leftSide[i].ToList());
+                int rightNumber = GetRightNumber(_rightSide[i], numbersDefinitions);
+                sum += rightNumber;
+            }
 
-
-            var res = -1;
-            //var a = CalculateAllSubsDistanceTo(_meanLower, CalculateSingleSubConsumptionStarTwo);
-            //var b = CalculateAllSubsDistanceTo(_meanUpper, CalculateSingleSubConsumptionStarTwo);
-            //var res = a;
-            //if (a > b)
-            //{
-            //    res = b;
-            //}
-            return res;
+            return sum;
         }
     }
 }
