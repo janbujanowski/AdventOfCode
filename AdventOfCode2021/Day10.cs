@@ -6,169 +6,122 @@ using System.Linq;
 
 namespace AdventOfCode2021
 {
-  
+
     public class Day10 : Day66
     {
         string _strInput;
-        int[,] _heatMap;
-        int _verticalLength;
-        int _horizontalLength;
-        List<Tuple<int, int>> _ventsPositions;
-        List<List<Tuple<int, int>>> _basins;
+        Dictionary<char, int> _lineStack;
+
+        List<char> _pushingChars = new List<char> { '{', '[', '<', '(' };
+        List<char> _poopingChars = new List<char> { '}', ']', '>', ')' };
+        Dictionary<char, char> _poopingDick = new Dictionary<char, char>() { { '}', '{' }, { ']', '[' }, { '>', '<' }, { ')', '(' } };
+        Dictionary<char, char> _pushingDick = new Dictionary<char, char>() { { '{', '}' }, { '[', ']' }, { '<', '>' }, { '(', ')' } };
+        Dictionary<char, int> _charValues = new Dictionary<char, int>() { { ')', 3 }, { ']', 57 }, { '}', 1197 }, { '>', 25137 } };
+        string[] _lines;
+
+        Dictionary<int, char> _firstInvalidCharInLine;
+
+        Dictionary<int, string> _incompleteLinesClosingSequence;
         public override void ParseInput(string strInput)
         {
             _strInput = strInput;
+            _lines = _strInput.Split("\r\n");
+        }
 
-            string[] lines = _strInput.Split("\r\n");
-            _verticalLength = lines.Length;
-            _horizontalLength = lines[0].Length;
-            _heatMap = new int[_verticalLength, _horizontalLength];
-
-            for (int i = 0; i < _verticalLength; i++)
-            {
-                for (int j = 0; j < _horizontalLength; j++)
-                {
-                    _heatMap[i, j] = int.Parse(lines[i][j].ToString());
-                }
-            }
+        private void ClearLineStack()
+        {
+            _lineStack = new Dictionary<char, int>();
         }
 
         public override object StarOne()
         {
-            _ventsPositions = new List<Tuple<int, int>>();
-            for (int i = 0; i < _verticalLength; i++)
+            _firstInvalidCharInLine = new Dictionary<int, char>();
+            for (int lineNumber = 0; lineNumber < _lines.Length; lineNumber++)
             {
-                for (int j = 0; j < _horizontalLength; j++)
+                string line = _lines[lineNumber];
+                List<char> localStack = new List<char>();
+                for (int i = 0; i < line.Length; i++)
                 {
-                    if (IsLocalMinimum(i, j))
+                    bool popSucceeded = false;
+                    if (_pushingChars.Contains(line[i]))
                     {
-                        _ventsPositions.Add(new Tuple<int, int>(i, j));
+                        Push(localStack, line[i]);
+                    }
+                    if (_poopingChars.Contains(line[i]))
+                    {
+                        popSucceeded = Pop(localStack, line[i]);
+                        if (!popSucceeded)
+                        {
+                            _firstInvalidCharInLine.Add(lineNumber, line[i]);
+                            break;
+                        }
                     }
                 }
             }
-            int result = GetRisk();
-            return result;
-        }
 
-        private bool IsLocalMinimum(int i, int j)
-        {
-            bool isIt = false;
-            int left = 10; int right = 10; int top = 10; int bott = 10;
-            if (j > 0)
-            {
-                left = _heatMap[i, j - 1];
-            }
-            if (i > 0)
-            {
-                top = _heatMap[i - 1, j];
-            }
-            if (i < _verticalLength - 1)
-            {
-                bott = _heatMap[i + 1, j];
-            }
-            if (j < _horizontalLength - 1)
-            {
-                right = _heatMap[i, j + 1];
-            }
-            List<int> toCHeck = new List<int>() { left, right, top, bott };
-            if (_heatMap[i, j] < toCHeck.Min())
-            {
-                isIt = true;
-            }
-
-            return isIt;
-        }
-        private int GetRisk()
-        {
             int sum = 0;
-            foreach (var item in _ventsPositions)
+            foreach (var invalidChar in _firstInvalidCharInLine)
             {
-                sum += 1 + _heatMap[item.Item1, item.Item2];
+                sum += _charValues[invalidChar.Value];
             }
+
+
             return sum;
+        }
+
+        private bool Pop(List<char> localStack, char v)
+        {
+            if (localStack.Last() == _poopingDick[v])
+            {
+                localStack.RemoveAt(localStack.Count - 1);
+                return true;
+            }
+            return false;
+        }
+
+        private void Push(List<char> localStack, char v)
+        {
+            localStack.Add(v);
         }
 
         public override object StarTwo()
         {
-            this.StarOne();
-            _basins = new List<List<Tuple<int, int>>>();
-            //todo check if was initialzed
-            foreach (var vent in _ventsPositions)
+            _incompleteLinesClosingSequence = new Dictionary<int, string>();
+            if (!_firstInvalidCharInLine.Any())
             {
-                List<Tuple<int, int>> basinPositions = new List<Tuple<int, int>>();
-                _basins.Add(GenerateBasinPositions(vent, basinPositions));
+                StarOne();
             }
-            var biggestBassins = _basins.OrderByDescending(list => list.Count).Take(3);
-            //foreach (var bassin in _basins)
-            //{
-            //    PrintBasiN(bassin);
-            //}
-            //mult
-            int multsum = 1;
-            
-            foreach (var item in biggestBassins)
-            {
-                multsum *= item.Distinct().ToList().Count;
-            }
-            return multsum;
-        }
 
-        private void PrintBasiN(List<Tuple<int, int>> bassin)
-        {
-            for (int i = 0; i < _verticalLength; i++)
+            for (int lineNumber = 0; lineNumber < _lines.Length; lineNumber++)
             {
-                for (int j = 0; j < _horizontalLength; j++)
+                bool currentLineIsIncomplete = !_firstInvalidCharInLine.ContainsKey(lineNumber);
+                if (currentLineIsIncomplete)
                 {
-                    if (AlreadyContainsTuple(bassin,i,j))
+                    //TODO - make a cool method from this
+                    string line = _lines[lineNumber];
+                    List<char> localStack = new List<char>();
+                    for (int i = 0; i < line.Length; i++)
                     {
-                        Console.Write(_heatMap[i, j]);
+                        bool popSucceeded = false;
+                        if (_pushingChars.Contains(line[i]))
+                        {
+                            Push(localStack, line[i]);
+                        }
+                        if (_poopingChars.Contains(line[i]))
+                        {
+                            popSucceeded = Pop(localStack, line[i]);
+                            if (!popSucceeded)
+                            {
+                                _firstInvalidCharInLine.Add(lineNumber, line[i]);
+                                break;
+                            }
+                        }
                     }
-                    else
-                    {
-                        Console.Write(0);
-                    }
-                }
-                Console.WriteLine();
-            }
-            Console.WriteLine();
-        }
 
-        private List<Tuple<int, int>> GenerateBasinPositions(Tuple<int, int> currentCenter, List<Tuple<int, int>> basinPositions)
-        {
-            basinPositions.Add(currentCenter);
-            int i = currentCenter.Item1; int j = currentCenter.Item2;
-
-            List<Tuple<int, int>> currentNeighbours = new List<Tuple<int, int>>();
-            if (j > 0 && !AlreadyContainsTuple(basinPositions,i,j-1))
-            {
-                currentNeighbours.Add(new Tuple<int, int>(i, j - 1));
-            }
-            if (i > 0 && !AlreadyContainsTuple(basinPositions, i - 1, j))
-            {
-                currentNeighbours.Add(new Tuple<int, int>(i - 1, j));
-            }
-            if (i < _verticalLength - 1 && !AlreadyContainsTuple(basinPositions, i + 1, j))
-            {
-                currentNeighbours.Add(new Tuple<int, int>(i + 1, j));
-            }
-            if (j < _horizontalLength - 1 && !AlreadyContainsTuple(basinPositions, i, j + 1))
-            {
-                currentNeighbours.Add(new Tuple<int, int>(i, j + 1));
-            }
-
-            foreach (var neighbour in currentNeighbours)
-            {
-                if (_heatMap[neighbour.Item1, neighbour.Item2] < 9)
-                {
-                    GenerateBasinPositions(neighbour,basinPositions);
                 }
             }
+            return 1;
+        }
 
-            return basinPositions;
-        }
-        private bool AlreadyContainsTuple(List<Tuple<int, int>> list, int i, int j)
-        {
-            return list.Any(tupl => tupl.Item1 == i && tupl.Item2 == j);
-        }
     }
 }
