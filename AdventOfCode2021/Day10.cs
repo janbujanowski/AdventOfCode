@@ -6,7 +6,8 @@ using System.Linq;
 
 namespace AdventOfCode2021
 {
-    public class Day9 : Day66
+  
+    public class Day10 : Day66
     {
         string _strInput;
         int[,] _heatMap;
