@@ -4,10 +4,21 @@ using System.Linq;
 
 namespace AdventOfCode2020
 {
-    public class Day9 : IDayX
+    public class Day9 : Day66, IDayX
     {
-        long[] inputNumbers;
+        //AdjustmentForNewDay66
+        string _strInput;
+        public Day9() { }
+        public override object StarOne()
+        {
+            return StarOne(_strInput);
+        }
+        public override object StarTwo()
+        {
+            return StarTwo(_strInput);
+        }
 
+        long[] inputNumbers;
         public int DayNumber()
         {
             return 9;
@@ -16,6 +27,14 @@ namespace AdventOfCode2020
         {
             inputNumbers = strInput.Split("\n").Select(number => long.Parse(number)).ToArray();
         }
+
+        public override void ParseInput(string strInput)
+        {
+            inputNumbers = strInput.Split("\n").Select(number => long.Parse(number)).ToArray();
+            _strInput = strInput;
+        }
+
+        
 
         public object StarOne(string strInput)
         {
