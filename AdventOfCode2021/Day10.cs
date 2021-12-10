@@ -16,7 +16,10 @@ namespace AdventOfCode2021
         List<char> _poopingChars = new List<char> { '}', ']', '>', ')' };
         Dictionary<char, char> _poopingDick = new Dictionary<char, char>() { { '}', '{' }, { ']', '[' }, { '>', '<' }, { ')', '(' } };
         Dictionary<char, char> _pushingDick = new Dictionary<char, char>() { { '{', '}' }, { '[', ']' }, { '<', '>' }, { '(', ')' } };
-        Dictionary<char, int> _charValues = new Dictionary<char, int>() { { ')', 3 }, { ']', 57 }, { '}', 1197 }, { '>', 25137 } };
+        Dictionary<char, int> _charValues = new Dictionary<char, int>()
+        { { ')', 3 }, { ']', 57 }, { '}', 1197 }, { '>', 25137 },
+          { '(', 1 }, { '[', 2 }, { '{', 3 }, { '<', 4 }
+        };
         string[] _lines;
 
         Dictionary<int, char> _firstInvalidCharInLine;
@@ -87,7 +90,7 @@ namespace AdventOfCode2021
         public override object StarTwo()
         {
             _incompleteLinesClosingSequence = new Dictionary<int, string>();
-            if (!_firstInvalidCharInLine.Any())
+            if (_firstInvalidCharInLine is null)
             {
                 StarOne();
             }
@@ -118,10 +121,44 @@ namespace AdventOfCode2021
                         }
                     }
 
+                    List<char> remainingSequence = new List<char>();
+                    for (int i = localStack.Count - 1; i >= 0; i--)
+                    {
+                        remainingSequence.Add(_pushingDick[localStack.ElementAt(i)]);
+                    }
+                    _incompleteLinesClosingSequence.Add(lineNumber, String.Concat(remainingSequence));
                 }
+
+
+
             }
-            return 1;
+            //OMG new char values wtf 
+            _charValues = new Dictionary<char, int>()
+                { { ')', 1 }, { ']', 2 }, { '}', 3 }, { '>', 4 }
+                };
+
+            //OMG not sum but list and middle xD just stop it
+            List<long> sums = new List<long>();
+            foreach (var remainingSequence in _incompleteLinesClosingSequence)
+            {
+                long sum = 0;
+                string lolFixItLater = string.Concat(remainingSequence.Value.Take(remainingSequence.Value.Length));
+                sum += EvaluateSequence(lolFixItLater);
+                sums.Add(sum);
+            }
+            sums.Sort();
+            return sums.ElementAt(sums.Count / 2 );
         }
 
+        private long EvaluateSequence(string value)
+        {
+            long sum = 0;
+            foreach (char letter in value)
+            {
+                sum = sum * 5;
+                sum += _charValues[letter];
+            }
+            return sum;
+        }
     }
 }
