@@ -31,7 +31,7 @@ namespace AdventOfCode2020
 
         public override object StarTwo()
         {
-            //129444555
+            
             int startingIndex = 25;
 
             return startingIndex;

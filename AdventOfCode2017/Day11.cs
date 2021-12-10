@@ -8,9 +8,7 @@ namespace AdventOfCode2017
 {
     public class Day11
     {
-        static int[] listToHash;
         static List<string> steps;
-        static int skipSize;
 
         public static string Input
         {

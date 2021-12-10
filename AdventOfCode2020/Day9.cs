@@ -19,10 +19,7 @@ namespace AdventOfCode2020
         }
 
         long[] inputNumbers;
-        public int DayNumber()
-        {
-            return 9;
-        }
+   
         public Day9(string strInput)
         {
             inputNumbers = strInput.Split("\n").Select(number => long.Parse(number)).ToArray();
@@ -109,6 +106,11 @@ namespace AdventOfCode2020
 
             var lol = inputNumbers.Skip(i).Take(j - i);
             return lol.Min() + lol.Max();
+        }
+
+        int IDayX.DayNumber()
+        {
+            return 9;
         }
     }
 }

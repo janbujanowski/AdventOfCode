@@ -241,7 +241,6 @@ jgz a -19";
                     break;
                 default:
                     throw new NotImplementedException();
-                    break;
             }
             return result;
         }
