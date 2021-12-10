@@ -17,7 +17,6 @@ namespace AdventOfCode2017
         public object StarOne(string input)
         {
             input += input[0];
-            int current = -1;
             var loopArr = input.ToArray();
             int sum = 0;
             for (int i = 0; i < loopArr.Length - 1; i++)
@@ -39,7 +38,6 @@ namespace AdventOfCode2017
                 input += input[i];
             }
 
-            int current = -1;
             var loopArr = input.ToArray();
 
             int sum = 0;

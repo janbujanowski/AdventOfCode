@@ -51,8 +51,7 @@
   <ItemGroup>
     <Compile Include="Test2020.cs" />
     <Compile Include="Test2021.cs" />
-    <Compile Include="TestExecutor2017.cs" />
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="Test2017.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

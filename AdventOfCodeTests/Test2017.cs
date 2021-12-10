@@ -1,11 +1,9 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using AdventOfCode2017;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace AdventOfCode2017.Tests
+namespace AdventOfCode2017
 {
     [TestClass]
-    public class TestExecutor2017
+    public class Test2017
     {
         [TestMethod]
         public void DayXStarOne()

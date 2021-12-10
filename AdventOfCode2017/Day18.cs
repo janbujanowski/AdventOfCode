@@ -10,7 +10,6 @@ namespace AdventOfCode2017
     {
         static long lastplayed = 0;
         private static List<string> lines;
-        private static Dictionary<string, string> operationConditonDict;
         private static Dictionary<string, long> registers;
         private static List<long> soundedFrequencies;
         private static List<long> recoveredFreqencies;
