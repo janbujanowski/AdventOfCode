@@ -1,14 +1,33 @@
 ﻿using AdventOfCode.Shared;
 using AdventOfCode.Shared.Extensions;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace AdventOfCode2020
 {
+    class Node
+    {
+        public int value { get; set; }
+        public override string ToString()
+        {
+            return value.ToString();
+        }
+    }
+    class Edge
+    {
+        public int from { get; set; }
+        public int to { get; set; }
+        public bool counted { get; set; }
+        public override string ToString()
+        {
+            return $"from {from} to {to} {counted}";
+        }
+    }
     public class Day10 : Day66
     {
         int[] inputNumbers;
-       
+
         public override void ParseInput(string strInput)
         {
             strInput += "\r\n0";//add output 0 voltage
@@ -25,16 +44,79 @@ namespace AdventOfCode2020
                 joltDifferencesCount[difference]++;
             }
             joltDifferencesCount[3]++;
-            
+
             return joltDifferencesCount[1] * joltDifferencesCount[3];
         }
 
         public override object StarTwo()
         {
-            
-            int startingIndex = 25;
+            //int permutationsCount = 1;
+            //int nextPossibilitiesCount = 0;
+            //var maxes = inputNumbers.ToList();
+            //maxes.Add(inputNumbers[inputNumbers.Length - 1] + 3);
 
-            return startingIndex;
+            List<int> maxDifference = new List<int>() { 1, 2, 3 };
+            List<Node> nodes = new List<Node>();
+            List<Edge> edges = new List<Edge>();
+
+            for (int i = 0; i < inputNumbers.Length; i++)
+            {
+                nodes.Add(new Node() { value = inputNumbers[i] });
+            }
+            nodes.Add(new Node() { value = inputNumbers[inputNumbers.Length - 1] + 3 });
+            foreach (var node in nodes)
+            {
+                var connectibleTo = nodes.Where(possibility => maxDifference.Contains(possibility.value - node.value));
+
+                edges.AddRange(connectibleTo.Select(possible => new Edge() { from = node.value, to = possible.value, counted = false }));
+            }
+
+            int firstRun = 1;
+            int fromNode = 0;
+            do
+            {
+                int toNode = edges.Where(x => x.from == fromNode).Max(y => y.to);
+                edges.Where(x => x.from == fromNode && x.to == toNode).First().counted = true;
+                fromNode = toNode;
+
+            } while (fromNode != nodes.Last().value);
+            var remaining = edges.Where(x => x.counted == false).Count();
+            return remaining + 1;
         }
+
+        //private int CheckConnectionPossibilities(int i)
+        //{
+        //    List<int> maxDifference = new List<int>() { 1, 2, 3 };
+        //    List<int> nextPossibilites = new List<int>();
+        //    int possibleConn = 1;
+
+        //    for (int j = 1; j <= 3; j++)
+        //    {
+        //        if (i - j >= 0)
+        //        {
+        //            if (maxDifference.Contains(inputNumbers[i] - inputNumbers[i - j]))
+        //            {
+        //                nextPossibilites.Add(i - j);
+        //                //possibleConn++;
+        //            }
+        //        }
+        //    }
+
+        //    if (nextPossibilites.Count == 0)
+        //    {
+        //        bool chainDoesntEndOnZero = inputNumbers[i] != 0;
+        //        if (chainDoesntEndOnZero)
+        //        {
+        //            return 0;
+        //        }
+        //    }
+
+        //    foreach (var next in nextPossibilites)
+        //    {
+        //        possibleConn += CheckConnectionPossibilities(next);
+        //    }
+
+        //    return possibleConn;
+        //}
     }
 }
