@@ -47,6 +47,9 @@ namespace AdventOfCode2020
 
             return joltDifferencesCount[1] * joltDifferencesCount[3];
         }
+        List<Edge> edges;
+        List<int>[] adj;
+
 
         public override object StarTwo()
         {
@@ -57,22 +60,30 @@ namespace AdventOfCode2020
 
             List<int> maxDifference = new List<int>() { 1, 2, 3 };
             List<Node> nodes = new List<Node>();
-            List<Edge> edges = new List<Edge>();
-
+            edges = new List<Edge>();
             for (int i = 0; i < inputNumbers.Length; i++)
             {
                 nodes.Add(new Node() { value = inputNumbers[i] });
             }
             nodes.Add(new Node() { value = inputNumbers[inputNumbers.Length - 1] + 3 });
+            adj = new List<int>[nodes.Last().value + 1];
             foreach (var node in nodes)
             {
                 var connectibleTo = nodes.Where(possibility => maxDifference.Contains(possibility.value - node.value));
 
                 edges.AddRange(connectibleTo.Select(possible => new Edge() { from = node.value, to = possible.value, counted = false }));
+                adj[node.value] = connectibleTo.Select(x => x.value).ToList();
             }
+            foreach (var node in nodes)
+            {
 
+            }
+            int pathCount = 0;
+            int countPaths = countPathsUtil(0, nodes.Last().value + 1, pathCount);
             int firstRun = 1;
             int fromNode = 0;
+
+
             do
             {
                 int toNode = edges.Where(x => x.from == fromNode).Max(y => y.to);
@@ -84,6 +95,23 @@ namespace AdventOfCode2020
             return remaining + 1;
         }
 
+        int countPathsUtil(int u, int d, int pathCount)
+        {
+            if (u == d)
+            {
+                pathCount++;
+            }
+            else
+            {
+                foreach (int i in adj[u])
+                {
+                    int n = i;
+                    pathCount = countPathsUtil(n, d, pathCount);
+                }
+            }
+
+            return pathCount;
+        }
         //private int CheckConnectionPossibilities(int i)
         //{
         //    List<int> maxDifference = new List<int>() { 1, 2, 3 };
