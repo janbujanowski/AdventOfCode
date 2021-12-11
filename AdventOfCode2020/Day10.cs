@@ -74,12 +74,9 @@ namespace AdventOfCode2020
                 edges.AddRange(connectibleTo.Select(possible => new Edge() { from = node.value, to = possible.value, counted = false }));
                 adj[node.value] = connectibleTo.Select(x => x.value).ToList();
             }
-            foreach (var node in nodes)
-            {
-
-            }
+            
             int pathCount = 0;
-            int countPaths = countPathsUtil(0, nodes.Last().value + 1, pathCount);
+            int countPaths = countPathsUtil(0, nodes.Last().value, pathCount);
             int firstRun = 1;
             int fromNode = 0;
 
