@@ -10,6 +10,8 @@ namespace AdventOfCode2021
         string _strInput;
         string[] _lines;
         int[,] dumboOctopusesMap;
+        int _flashes;
+        Queue<string> _queue;
         public override void ParseInput(string strInput)
         {
             _strInput = strInput;
@@ -29,7 +31,6 @@ namespace AdventOfCode2021
             }
             return map;
         }
-        int _flashes;
         public override object StarOne()
         {
             dumboOctopusesMap = GenerateCleanMap();
@@ -40,13 +41,10 @@ namespace AdventOfCode2021
             {
                 ExecuteLifeCycle();
                 ExecuteFlashEffect();
-                //_flashes += CountFlashes();
-                //ClearFlashed();
                 PrintDumbos();
             }
             return _flashes;
         }
-        Queue<string> _queue;
         private void ExecuteLifeCycle()
         {
             for (int y = 0; y < dumboOctopusesMap.GetLength(0); y++)
@@ -57,7 +55,6 @@ namespace AdventOfCode2021
                 }
             }
         }
-
         private void ExecuteFlashEffect()
         {
             for (int y = 0; y < dumboOctopusesMap.GetLength(0); y++)
@@ -110,33 +107,22 @@ namespace AdventOfCode2021
                 }
             }
         }
-        private void ClearFlashed()
+        private bool IsSynced()
         {
-            for (int y = 0; y < dumboOctopusesMap.GetLength(0); y++)
-            {
-                for (int x = 0; x < dumboOctopusesMap.GetLength(1); x++)
-                {
-                    if (dumboOctopusesMap[y, x] > 9)
-                    {
-                        dumboOctopusesMap[y, x] = 0;
-                    }
-                }
-            }
+            return CountZeros() == dumboOctopusesMap.Length;
         }
-
-        private int CountFlashes()
+        private int CountZeros()
         {
             int sum = 0;
             foreach (var number in dumboOctopusesMap)
             {
-                if (number > 9)
+                if (number == 0)
                 {
                     sum++;
                 }
             }
             return sum;
         }
-
         private void PrintDumbos()
         {
             for (int y = 0; y < dumboOctopusesMap.GetLength(0); y++)
@@ -151,8 +137,19 @@ namespace AdventOfCode2021
         }
         public override object StarTwo()
         {
-
-            return -1;
+            dumboOctopusesMap = GenerateCleanMap();
+            _queue = new Queue<string>();
+            int stepsCount = 0;
+            _flashes = 0;
+            bool dumbosSynced = false;
+            while (!dumbosSynced)
+            {
+                stepsCount++;
+                ExecuteLifeCycle();
+                ExecuteFlashEffect();
+                dumbosSynced = IsSynced();
+            }
+            return stepsCount;
         }
     }
 }
