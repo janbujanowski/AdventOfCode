@@ -1,6 +1,7 @@
 ﻿using AdventOfCode.Shared;
 using AdventOfCode.Shared.Extensions;
 using System;
+using System.Collections.Generic;
 
 namespace AdventOfCode2021
 {
@@ -32,18 +33,20 @@ namespace AdventOfCode2021
         public override object StarOne()
         {
             dumboOctopusesMap = GenerateCleanMap();
-            int stepsCount = 3;
+            _queue = new Queue<string>();
+            int stepsCount = 100;
             _flashes = 0;
             for (int i = 0; i < stepsCount; i++)
             {
                 ExecuteLifeCycle();
-                ExecuteHighlighteffect();
-                _flashes += CountFlashes();
-                ClearFlashed();
+                ExecuteFlashEffect();
+                //_flashes += CountFlashes();
+                //ClearFlashed();
                 PrintDumbos();
             }
             return _flashes;
         }
+        Queue<string> _queue;
         private void ExecuteLifeCycle()
         {
             for (int y = 0; y < dumboOctopusesMap.GetLength(0); y++)
@@ -55,17 +58,26 @@ namespace AdventOfCode2021
             }
         }
 
-        private void ExecuteHighlighteffect()
+        private void ExecuteFlashEffect()
         {
             for (int y = 0; y < dumboOctopusesMap.GetLength(0); y++)
             {
                 for (int x = 0; x < dumboOctopusesMap.GetLength(1); x++)
                 {
-                    if (dumboOctopusesMap[y, x] > 9)
+                    if (dumboOctopusesMap[y, x] == 10)
                     {
-                        BumpSurroundings(y, x);
+                        _flashes++;
+                        _queue.Enqueue($"{y},{x}");
                     }
                 }
+            }
+            while (_queue.Count > 0)
+            {
+                string[] dumboKey = _queue.Dequeue().Split(',');
+                int y = int.Parse(dumboKey[0]);
+                int x = int.Parse(dumboKey[1]);
+                dumboOctopusesMap[y, x] = 0;
+                BumpSurroundings(y, x);
             }
         }
         private void BumpSurroundings(int Ypos, int Xpos)
@@ -86,9 +98,14 @@ namespace AdventOfCode2021
             {
                 for (int x = startx; x <= endx; x++)
                 {
-                    if (dumboOctopusesMap[y, x] < 10)
+                    if (dumboOctopusesMap[y, x] > 0)
                     {
                         dumboOctopusesMap[y, x]++;
+                    }
+                    if (dumboOctopusesMap[y, x] == 10)
+                    {
+                        _flashes++;
+                        _queue.Enqueue($"{y},{x}");
                     }
                 }
             }
