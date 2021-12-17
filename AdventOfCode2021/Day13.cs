@@ -49,21 +49,20 @@ namespace AdventOfCode2021
 
         public override object StarOne()
         {
-            foreach (var split in _splits)
+            var split = _splits[0];
+            bool isHorizontal = split.Item1;
+            if (isHorizontal)
             {
-                bool isHorizontal = split.Item1;
-                if (isHorizontal)
-                {
-                    ExecuteHorizontal(split.Item2);
-                }
-                else
-                {
-                    ExecuteVertical(split.Item2);
-                }
-                PrintDots();
-                var count = _points.Distinct().Count();
+                ExecuteHorizontal(split.Item2);
             }
-            
+            else
+            {
+                ExecuteVertical(split.Item2);
+            }
+            PrintDots();
+            var count = _points.Distinct().Count();
+
+
             return _points.Distinct().Count();
         }
 
@@ -90,7 +89,7 @@ namespace AdventOfCode2021
             for (int i = 0; i < _points.Count; i++)
             {
                 var point = _points.ElementAt(i);
-                
+
                 if (point.Item1 > splitPosition)
                 {
                     int difference = point.Item1 - splitPosition;
@@ -99,7 +98,7 @@ namespace AdventOfCode2021
                     _pointsToRemove.Add(i);
                 }
             }
-            var pontsDesc = _pointsToRemove.OrderByDescending(y=> y);
+            var pontsDesc = _pointsToRemove.OrderByDescending(y => y);
             foreach (var pointPos in pontsDesc)
             {
                 _points.RemoveAt(pointPos);
@@ -130,8 +129,22 @@ namespace AdventOfCode2021
 
         public override object StarTwo()
         {
-            int stepsCount = 0;
-            return stepsCount;
+            foreach (var split in _splits)
+            {
+                bool isHorizontal = split.Item1;
+                if (isHorizontal)
+                {
+                    ExecuteHorizontal(split.Item2);
+                }
+                else
+                {
+                    ExecuteVertical(split.Item2);
+                }
+                PrintDots();
+                var count = _points.Distinct().Count();
+            }
+
+            return _points.Distinct().Count();
         }
     }
 }
