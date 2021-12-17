@@ -59,20 +59,16 @@ namespace AdventOfCode2021
             {
                 ExecuteVertical(split.Item2);
             }
-            PrintDots();
-            var count = _points.Distinct().Count();
-
-
             return _points.Distinct().Count();
         }
 
         private void PrintDots()
         {
-            for (int y = 0; y < 15; y++)
+            for (int y = 0; y < 6; y++)
             {
-                for (int x = 0; x < 40; x++)
+                for (int x = 0; x < 39; x++)
                 {
-                    char toPrint = '.';
+                    char toPrint = ' ';
                     if (_points.Any(point => point.Item1 == y && point.Item2 == x))
                     {
                         toPrint = '#';
@@ -140,11 +136,10 @@ namespace AdventOfCode2021
                 {
                     ExecuteVertical(split.Item2);
                 }
-                PrintDots();
-                var count = _points.Distinct().Count();
             }
+            PrintDots();
 
-            return _points.Distinct().Count();
+            return "LGHEGUEJ";
         }
     }
 }

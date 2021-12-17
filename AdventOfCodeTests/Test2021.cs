@@ -191,7 +191,9 @@ namespace AdventOfCode2021
         [TestMethod]
         public void Day13StarTwo()
         {
-            NotYetImplementedDay();
+            var dayObject = new Day13();
+            dayObject.ParseInput(GetInput(13));
+            Assert.AreEqual("LGHEGUEJ", dayObject.StarTwo());
         }
 
         [TestMethod]
