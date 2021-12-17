@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.IO;
 
 namespace AdventOfCode2021
@@ -6,6 +7,10 @@ namespace AdventOfCode2021
     [TestClass]
     public class Test2021
     {
+        private void NotYetImplementedDay()
+        {
+            throw new NotImplementedException("Day still needs work");
+        }
         string pathToInputsFolder = @"C:\REPOS\AdventOfCode\AdventOfCode2021\inputs_2021";
         private string GetInput(int day)
         {
@@ -165,6 +170,43 @@ namespace AdventOfCode2021
             var dayObject = new Day11();
             dayObject.ParseInput(GetInput(11));
             Assert.AreEqual(403, dayObject.StarTwo());
+        }
+        [TestMethod]
+        public void Day12StarOne()
+        {
+            NotYetImplementedDay();
+        }
+        [TestMethod]
+        public void Day12StarTwo()
+        {
+            NotYetImplementedDay();
+        }
+        [TestMethod]
+        public void Day13StarOne()
+        {
+            var dayObject = new Day13();
+            dayObject.ParseInput(GetInput(13));
+            Assert.AreEqual(403, dayObject.StarOne());
+        }
+        [TestMethod]
+        public void Day13StarTwo()
+        {
+            NotYetImplementedDay();
+        }
+
+        [TestMethod]
+        public void Day17StarOne()
+        {
+            var dayObject = new Day17();
+            dayObject.ParseInput(GetInput(17));
+            Assert.AreEqual(8256, dayObject.StarOne());
+        }
+        [TestMethod]
+        public void Day17StarTwo()
+        {
+            var dayObject = new Day17();
+            dayObject.ParseInput(GetInput(17));
+            Assert.AreEqual(2326, dayObject.StarTwo());
         }
     }
 }

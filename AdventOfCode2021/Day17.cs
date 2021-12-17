@@ -10,20 +10,21 @@ namespace AdventOfCode2021
     public class Day17 : Day66
     {
         string _strInput;
-        int minY = -10;
-        int maxY = -5;
-        int minX = 20;
-        int maxX = 30;
+        int minY;
+        int maxY;
+        int minX;
+        int maxX;
 
         public override void ParseInput(string strInput)
         {
             _strInput = strInput;
+            string cleanedInput = strInput.Replace("target area: ", "").Replace(" ", "").Replace("x=", "").Replace("y=", "");
+            string[] stringified = cleanedInput.Split(',').SelectMany(line => line.Split("..")).ToArray();
+            minX = int.Parse(stringified[0]);
+            maxX = int.Parse(stringified[1]);
+            minY = int.Parse(stringified[2]);
+            maxY = int.Parse(stringified[3]);
         }
-        private List<string> ConvertStringToBinaryList(string input)
-        {
-            return input.Select(letter => Convert.ToString(Convert.ToInt32(letter.ToString(), 16), 2).PadLeft(4, '0')).ToList();
-        }
-        string _packetTypeLiteral = "100"; //binary 4;
         Dictionary<int, int> availableHitsWithHeight;
         public override object StarOne()
         {
@@ -31,7 +32,6 @@ namespace AdventOfCode2021
             int accelerationY = -1;
             int Vstart = 0;
             int currentVPosition = 0;
-            int timeFromStart = 0;
             int currentV = Vstart;
             int lastHitY = 0;
             int maxHeight = 0;
@@ -65,36 +65,57 @@ namespace AdventOfCode2021
             return check >= min && check <= max;
         }
 
-        Dictionary<int, int> availableHitsWithMinTime;
         public override object StarTwo()
         {
-            availableHitsWithMinTime = new Dictionary<int, int>();
-            int accelerationY = -1;
-            int Vstart = 0;
-            int currentXPosition = 0;
-            int timeFromStart = 0;
-            int currentXvelocity = Vstart;
-            int minimutTime = 0;
-            int maxHeight = 0;
-            for (int startXvelocity = 1; startXvelocity < 2000; startXvelocity++)
-            {
-                currentXvelocity = startXvelocity;
-                currentXPosition = 0;
-                minimutTime = 0;
-                do
-                {
-                    minimutTime++;
-                    currentXPosition += currentXvelocity;
-                    currentXvelocity--;
+            List<Tuple<int, int>> startingVelocitiesWithSuccessHit = new List<Tuple<int, int>>();
+            int skyIsTheLimit = 2000;
+            // a1 + an etc = maxHeight => maximym start Y velocity
+            int minStartX = SolvePowEquasion(minX);
 
-                } while (currentXvelocity > 0);
-                if (IsBetween(currentXPosition, minX, maxX))
+            for (int startYvelocity = minY; startYvelocity < skyIsTheLimit; startYvelocity++)
+            {
+                for (int startXvelocity = minStartX; startXvelocity <= maxX; startXvelocity++)
                 {
-                    availableHitsWithMinTime.Add(startXvelocity, minimutTime);
+                    if (Simulate(startXvelocity, startYvelocity))
+                    {
+                        startingVelocitiesWithSuccessHit.Add(new Tuple<int, int>(startXvelocity, startYvelocity));
+                    }
                 }
             }
+            return startingVelocitiesWithSuccessHit.Count();
+        }
 
-            return availableHitsWithHeight.Count() * availableHitsWithMinTime.Count();
+        private bool Simulate(int startXvelocity, int startYvelocity)
+        {
+            int XPosition = 0;
+            int YPosition = 0;
+            int XVelocity = startXvelocity;
+            int YVelocity = startYvelocity;
+            do
+            {
+                XPosition += XVelocity; YPosition += YVelocity;
+
+                if (IsBetween(XPosition, minX, maxX) && IsBetween(YPosition, minY, maxY))
+                {
+                    return true;
+                }
+                if (XVelocity > 0)
+                {
+                    XVelocity--;
+                }
+                YVelocity--;
+            } while (XPosition <= maxX && YPosition >= minY);
+            return false;
+        }
+
+        private int SolvePowEquasion(int minX)
+        {
+            //n^2 + n - 2 * minX
+            var delta = Math.Pow(1, 2) - 4 * (-2 * minX);
+            var root = Math.Sqrt(delta);
+            //var x1 = (-1 - root) / 2 * 1;// root will always be big and we need positive so skip x1
+            var x2 = (-1 + root) / 2 * 1;
+            return (int)Math.Ceiling(x2);//get first natural that fits minimum req
         }
     }
 }
