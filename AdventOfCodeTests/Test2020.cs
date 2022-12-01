@@ -7,7 +7,7 @@ namespace AdventOfCode2020
     [TestClass]
     public class Test2020
     {
-        string pathToInputsFolder = @"C:\REPOS\AdventOfCode\AdventOfCode2020\inputs_2020";
+        string pathToInputsFolder = @"C:\REPOS\aoc\AdventOfCode2020\inputs_2020";
         private string GetInput(int day)
         {
             return File.ReadAllText(Path.Combine(pathToInputsFolder, $"Day{day}.txt"));

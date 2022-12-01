@@ -11,7 +11,7 @@ namespace AdventOfCode2021
         {
             throw new NotImplementedException("Day still needs work");
         }
-        string pathToInputsFolder = @"C:\REPOS\AdventOfCode\AdventOfCode2021\inputs_2021";
+        string pathToInputsFolder = @"C:\REPOS\aoc\AdventOfCode2021\inputs_2021";
         private string GetInput(int day)
         {
             return File.ReadAllText(Path.Combine(pathToInputsFolder, $"Day{day}.txt"));

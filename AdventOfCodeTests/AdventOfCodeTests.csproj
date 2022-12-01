@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Test2020.cs" />
+    <Compile Include="Test2022.cs" />
     <Compile Include="Test2021.cs" />
     <Compile Include="Test2017.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
