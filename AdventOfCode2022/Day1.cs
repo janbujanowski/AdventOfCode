@@ -12,37 +12,39 @@ namespace AdventOfCode2022
     {
         string[] lines;
         int[] pings;
+        List<int> sums;
         public override void ParseInput(string strInput)
         {
             lines = strInput.Split("\r\n");
-            pings = lines.Select(line => int.Parse(line)).ToArray();
+            //pings = lines.Select(line => int.Parse(line)).ToArray();
         }
 
         public override object StarOne()
         {
-            int timesIncreased = 0;
-            for (int i = 1; i < pings.Length; i++)
+            sums = new List<int>();
+            int sum = 0;
+            for (int i = 0; i < lines.Length; i++)
             {
-                if (pings[i] > pings[i - 1])
+                int value = 0;
+                if (int.TryParse(lines[i], out value))
                 {
-                    timesIncreased++;
+                    sum += value;
                 }
+                else
+                {
+                    sums.Add(sum);
+                    sum = 0;
+                };
+                
             }
-            return timesIncreased;
+            return sums.Max();
         }
         public override object StarTwo()
         {
-            int timesIncreased = 0;
-            for (int i = 3; i < pings.Length; i++)
-            {
-                int sumA = pings[i] + pings[i - 1] + pings[i - 2];
-                int sumB = pings[i - 3] + pings[i - 1] + pings[i - 2];
-                if (sumA > sumB)
-                {
-                    timesIncreased++;
-                }
-            }
-            return timesIncreased;
+            var sorted = sums.OrderByDescending(x => x);
+
+            return sorted.ElementAt(0) + sorted.ElementAt(1) + sorted.ElementAt(2);
+
         }
 
     }
