@@ -2,7 +2,7 @@
 using System;
 using System.IO;
 
-namespace AdventOfCode2021
+namespace AdventOfCode2022
 {
     [TestClass]
     public class Test2022
@@ -11,7 +11,7 @@ namespace AdventOfCode2021
         {
             throw new NotImplementedException("Day still needs work");
         }
-        string pathToInputsFolder = @"C:\REPOS\aoc\AdventOfCode2021\inputs_2021";
+        string pathToInputsFolder = @"C:\REPOS\aoc\AdventOfCode2022\inputs_2022";
         private string GetInput(int day)
         {
             return File.ReadAllText(Path.Combine(pathToInputsFolder, $"Day{day}.txt"));
@@ -21,14 +21,15 @@ namespace AdventOfCode2021
         {
             var dayObject = new Day1();
             dayObject.ParseInput(GetInput(1));
-            Assert.AreEqual(1711, dayObject.StarOne());
+            Assert.AreEqual(70296, dayObject.StarOne());
         }
         [TestMethod]
         public void Day1StarTwo()
         {
             var dayObject = new Day1();
             dayObject.ParseInput(GetInput(1));
-            Assert.AreEqual(1743, dayObject.StarTwo());
+            dayObject.StarOne();
+            Assert.AreEqual(205381, dayObject.StarTwo());
         }
         
     }
