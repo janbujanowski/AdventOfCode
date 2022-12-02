@@ -35,7 +35,7 @@ namespace AdventOfCodeRunner
 
             //Execution
             int year = 2022;
-            int day = 1;
+            int day = 2;
 
             var workingDay = solutionContainer.First(riddleSolution => riddleSolution.DayNumber == day && riddleSolution.YearNumber == year);
             if (workingDay != null)
