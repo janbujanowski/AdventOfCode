@@ -11,8 +11,6 @@ namespace AdventOfCode2022
     public class Day2 : Day66
     {
         string[] lines;
-        int[] pings;
-        List<int> sums;
         Dictionary<char, int> myChoicesEvaluation = new Dictionary<char, int>() {
             { 'X', 1 },
             { 'Y', 2 },
