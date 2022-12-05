@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Day5.cs" />
     <Compile Include="Day4.cs" />
     <Compile Include="Day3.cs" />
     <Compile Include="Day2.cs" />
@@ -54,6 +55,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="inputs_2022\Day5.txt" />
     <Content Include="inputs_2022\Day4.txt" />
     <Content Include="inputs_2022\Day3.txt" />
     <Content Include="inputs_2022\Day2.txt" />
