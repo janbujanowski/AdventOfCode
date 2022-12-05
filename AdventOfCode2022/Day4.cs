@@ -10,34 +10,39 @@ namespace AdventOfCode2022
 {
     public class Day4 : Day66
     {
-        string[] lines;
-        Dictionary<char, int> _charsPriority = new Dictionary<char, int>() {
-          
-        };
+        string _strInput;
+        string[] _lines;
+
+        public Day4()
+        {
+        }
         public override void ParseInput(string strInput)
         {
-            lines = strInput.Split("\r\n");
-            
+            _strInput = strInput;
+            _lines = _strInput.Replace(',','-').Split("\r\n");
         }
 
         public override object StarOne()
         {
-            var left = lines.Select(line => new Tuple<int, int>(int.Parse(line.Split(',')[0].Split('-')[0]), int.Parse(line.Split(',')[0].Split('-')[1])));
-            var right = lines.Select(line => new Tuple<int, int>(int.Parse(line.Split(',')[1].Split('-')[0]), int.Parse(line.Split(',')[1].Split('-')[1])));
             int sum = 0;
 
-            for (int i = 0; i < left.Count(); i++)
+            for (int i = 0; i < _lines.Count(); i++)
             {
-                var leftRangePositive = left.ElementAt(i).Item2 - left.ElementAt(i).Item1;
-                var rigtRangePositive = right.ElementAt(i).Item2 - right.ElementAt(i).Item1;
-                if (rigtRangePositive - leftRangePositive > 0)
+                int[] lineRanges = _lines[i].Split('-').Select(rangeX => Int32.Parse(rangeX)).ToArray();
+                var leftRangePositiveSize = lineRanges[1] - lineRanges[0];
+                var rigtRangePositiveSize = lineRanges[3] - lineRanges[2];
+                var rightRangeX2 = lineRanges[3];
+                var rightRangeX1 = lineRanges[2];
+                var leftRangeX2 = lineRanges[1];
+                var leftRangeX1 = lineRanges[0];
+                if (rigtRangePositiveSize - leftRangePositiveSize > 0)
                 {
-                    if(CheckRangeFullyContains(right.ElementAt(i).Item1, right.ElementAt(i).Item2, left.ElementAt(i).Item1, left.ElementAt(i).Item2))
+                    if(CheckRangeFullyContains(rightRangeX1, rightRangeX2, leftRangeX1, leftRangeX2))
                         sum++;
                 }
                 else
                 {
-                    if (CheckRangeFullyContains(left.ElementAt(i).Item1, left.ElementAt(i).Item2, right.ElementAt(i).Item1, right.ElementAt(i).Item2))
+                    if (CheckRangeFullyContains(leftRangeX1, leftRangeX2, rightRangeX1, rightRangeX2))
                         sum++;
                 }
                 
@@ -52,23 +57,22 @@ namespace AdventOfCode2022
 
         public override object StarTwo()
         {
-            var left = lines.Select(line => new Tuple<int, int>(int.Parse(line.Split(',')[0].Split('-')[0]), int.Parse(line.Split(',')[0].Split('-')[1])));
-            var right = lines.Select(line => new Tuple<int, int>(int.Parse(line.Split(',')[1].Split('-')[0]), int.Parse(line.Split(',')[1].Split('-')[1])));
             int sumNotOverlapping = 0;
 
-            for (int i = 0; i < left.Count(); i++)
+            for (int i = 0; i < _lines.Count(); i++)
             {
-                var leftX1 = left.ElementAt(i).Item1;
-                var leftX2 = left.ElementAt(i).Item2;
-                var rightX1 = right.ElementAt(i).Item1;
-                var rightX2 = right.ElementAt(i).Item2;
+                int[] lineRanges = _lines[i].Split('-').Select(rangeX => Int32.Parse(rangeX)).ToArray();
+                var leftX1 = lineRanges[0];
+                var leftX2 = lineRanges[1];
+                var rightX1 = lineRanges[2];
+                var rightX2 = lineRanges[3];
 
                 if (leftX2 < rightX1 || leftX1> rightX2)
                 {
                     sumNotOverlapping++;
                 }
             }
-            return left.Count() - sumNotOverlapping;
+            return _lines.Count() - sumNotOverlapping;
         }
 
         private bool CheckRangeOverlaps(int outerX1, int outerX2, int innerX1, int innerX2)
