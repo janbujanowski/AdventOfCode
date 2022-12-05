@@ -75,5 +75,19 @@ namespace AdventOfCode2022
             dayObject.ParseInput(GetInput(4));
             Assert.AreEqual(792, dayObject.StarTwo());
         }
+        [TestMethod]
+        public void Day5StarOne()
+        {
+            var dayObject = new Day5();
+            dayObject.ParseInput(GetInput(5));
+            Assert.AreEqual("BZLVHBWQF", dayObject.StarOne());
+        }
+        [TestMethod]
+        public void Day5StarTwo()
+        {
+            var dayObject = new Day5();
+            dayObject.ParseInput(GetInput(5));
+            Assert.AreEqual("TDGJQTZSL", dayObject.StarTwo());
+        }
     }
 }
