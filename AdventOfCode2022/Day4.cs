@@ -12,10 +12,7 @@ namespace AdventOfCode2022
     {
         string _strInput;
         string[] _lines;
-
-        public Day4()
-        {
-        }
+        delegate bool CheckRangeForCondition(int outerX1, int outerX2, int innerX1, int innerX2);
         public override void ParseInput(string strInput)
         {
             _strInput = strInput;
@@ -24,41 +21,26 @@ namespace AdventOfCode2022
 
         public override object StarOne()
         {
-            int sum = 0;
-
-            for (int i = 0; i < _lines.Count(); i++)
-            {
-                int[] lineRanges = _lines[i].Split('-').Select(rangeX => Int32.Parse(rangeX)).ToArray();
-                var leftRangePositiveSize = lineRanges[1] - lineRanges[0];
-                var rigtRangePositiveSize = lineRanges[3] - lineRanges[2];
-                var rightRangeX2 = lineRanges[3];
-                var rightRangeX1 = lineRanges[2];
-                var leftRangeX2 = lineRanges[1];
-                var leftRangeX1 = lineRanges[0];
-                if (rigtRangePositiveSize - leftRangePositiveSize > 0)
-                {
-                    if(CheckRangeFullyContains(rightRangeX1, rightRangeX2, leftRangeX1, leftRangeX2))
-                        sum++;
-                }
-                else
-                {
-                    if (CheckRangeFullyContains(leftRangeX1, leftRangeX2, rightRangeX1, rightRangeX2))
-                        sum++;
-                }
-                
-            }
+            var sum = CheckRangesWithCondition(CheckRangeFullyContains);
             return sum;
         }
-
-        private bool CheckRangeFullyContains(int outerX1, int outerX2, int innerX1, int innerX2)
+        private bool CheckRangeFullyContains(int leftX1, int leftX2, int rightX1, int rightX2)
         {
-            return outerX1 <= innerX1 && outerX2 >= innerX2;
+            return leftX1 <= rightX1 && leftX2 >= rightX2 ||
+                   rightX1 <= leftX1 && rightX2 >= leftX2  ;
         }
-
         public override object StarTwo()
         {
-            int sumNotOverlapping = 0;
-
+            int sumnotoverlap = CheckRangesWithCondition(CheckRangeOverlaps);
+            return _lines.Count() - sumnotoverlap;
+        }
+        private bool CheckRangeOverlaps(int leftX1, int leftX2, int rightX1, int rightX2)
+        {
+            return leftX2 < rightX1 || leftX1 > rightX2;
+        }
+        private int CheckRangesWithCondition(Func<int, int, int, int, bool> conditionToMeet)
+        {
+            int sumRangesMeetingTheCondition = 0;
             for (int i = 0; i < _lines.Count(); i++)
             {
                 int[] lineRanges = _lines[i].Split('-').Select(rangeX => Int32.Parse(rangeX)).ToArray();
@@ -67,18 +49,12 @@ namespace AdventOfCode2022
                 var rightX1 = lineRanges[2];
                 var rightX2 = lineRanges[3];
 
-                if (leftX2 < rightX1 || leftX1> rightX2)
+                if (conditionToMeet(leftX1, leftX2, rightX1, rightX2))
                 {
-                    sumNotOverlapping++;
+                    sumRangesMeetingTheCondition++;
                 }
             }
-            return _lines.Count() - sumNotOverlapping;
+            return sumRangesMeetingTheCondition;
         }
-
-        private bool CheckRangeOverlaps(int outerX1, int outerX2, int innerX1, int innerX2)
-        {
-            return outerX1 >= innerX2 || outerX2 >= innerX1;
-        }
-
     }
 }
