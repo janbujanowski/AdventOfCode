@@ -9,7 +9,6 @@ namespace AdventOfCode2022
     public class Day6 : Day66
     {
         string _strInput;
-        string[] _lines;
 
         public override void ParseInput(string strInput)
         {
@@ -18,29 +17,17 @@ namespace AdventOfCode2022
 
         public override object StarOne()
         {
-            return FindFirstMarker(_strInput);
+            return FindFirstMarker(_strInput,4);
         }
-        private int FindFirstMarker(string input)
+       
+        private int FindFirstMarker(string input,int amountOfCharsToValidate)
         {
             int marker = 0;
-            for (int i = 3; i < input.Length; i++)
-            {
-                var lastfour = new List<char>() { input[i], input[i - 1], input[i - 2], input[i - 3] };
-                if (lastfour.Count == lastfour.Distinct().Count())
-                {
-                    marker = i+1;
-                    break;
-                }
-            }
-            return marker;
-        }
-        private int FindFirstMarkerStarTwo(string input)
-        {
-            int marker = 0;
-            for (int i = 13; i < input.Length; i++)
+            var startIndex = amountOfCharsToValidate - 1;
+            for (int i = startIndex; i < input.Length; i++)
             {
                 var lastfour = new List<char>();
-                for (int j = i; j >= i-13; j--)
+                for (int j = i; j >= i- startIndex; j--)
                 {
                     lastfour.Add(input[j]);
                 }
@@ -55,7 +42,7 @@ namespace AdventOfCode2022
 
         public override object StarTwo()
         {
-            return FindFirstMarkerStarTwo(_strInput);
+            return FindFirstMarker(_strInput,14);
         }
     }
 }
