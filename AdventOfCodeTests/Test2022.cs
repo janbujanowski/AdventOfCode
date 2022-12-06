@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace AdventOfCode2022
@@ -88,6 +89,36 @@ namespace AdventOfCode2022
             var dayObject = new Day5();
             dayObject.ParseInput(GetInput(5));
             Assert.AreEqual("TDGJQTZSL", dayObject.StarTwo());
+        }
+        [TestMethod]
+        public void Day6StarOne()
+        {
+            var dayObject = new Day6();
+            dayObject.ParseInput("bvwbjplbgvbhsrlpgdmjqwftvncz");
+            Assert.AreEqual(5, dayObject.StarOne());
+            dayObject.ParseInput("nppdvjthqldpwncqszvftbrmjlhg");
+            Assert.AreEqual(6, dayObject.StarOne());
+            dayObject.ParseInput("nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg");
+            Assert.AreEqual(10, dayObject.StarOne());
+            dayObject.ParseInput("zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw");
+            Assert.AreEqual(11, dayObject.StarOne());
+            dayObject.ParseInput(GetInput(6));
+            Assert.AreEqual(1531, dayObject.StarOne());
+        }
+        [TestMethod]
+        public void Day6StarTwo()
+        {
+            var dayObject = new Day6();
+            dayObject.ParseInput("bvwbjplbgvbhsrlpgdmjqwftvncz");
+            Assert.AreEqual(23, dayObject.StarTwo());
+            dayObject.ParseInput("nppdvjthqldpwncqszvftbrmjlhg");
+            Assert.AreEqual(23, dayObject.StarTwo());
+            dayObject.ParseInput("nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg");
+            Assert.AreEqual(29, dayObject.StarTwo());
+            dayObject.ParseInput("zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw");
+            Assert.AreEqual(26, dayObject.StarTwo());
+            dayObject.ParseInput(GetInput(6));
+            Assert.AreEqual(2518, dayObject.StarTwo());
         }
     }
 }
