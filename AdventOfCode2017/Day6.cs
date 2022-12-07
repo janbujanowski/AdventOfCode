@@ -9,6 +9,7 @@ namespace AdventOfCode2017
 {
     public class Day6 : Day66
     {
+        List<List<int>> _combinations;
         string _strInput;
         public override void ParseInput(string strInput)
         {
@@ -18,7 +19,7 @@ namespace AdventOfCode2017
         public override object StarOne()
         {
             var blocks = _strInput.Split('\t').Select(b=> int.Parse(b)).ToArray();
-            var combinations = new List<List<int>>();
+            _combinations = new List<List<int>>();
 
             int indexout = blocks.Length;
             int i = 0;
@@ -37,17 +38,17 @@ namespace AdventOfCode2017
                     i++;
                 }
                 var nextCombination = new List<int>(blocks);
-                foreach (var combination in combinations)
+                foreach (var combination in _combinations)
                 {
                     if (combination.SequenceEqual(nextCombination))
                     {
                         nextCycle = false;
                     }
                 }
-                combinations.Add(nextCombination);
+                _combinations.Add(nextCombination);
             }
 
-            return combinations.Count();
+            return _combinations.Count();
         }
 
         private int FindFirstMax(int[] blocks)
@@ -65,7 +66,17 @@ namespace AdventOfCode2017
 
         public override object StarTwo()
         {
-            return "lol";
+            var last = _combinations.Last();
+            var firstOccurence = 0;
+            for (int i = 0; i < _combinations.Count; i++)
+            {
+                if (_combinations.ElementAt(i).SequenceEqual(last))
+                {
+                    firstOccurence = i;
+                    break;
+                }
+            }
+            return _combinations.Count - 1 - firstOccurence;
         }
     }
 }
