@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AdventOfCode.Shared;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,55 +7,34 @@ using System.Threading.Tasks;
 
 namespace AdventOfCode2017
 {
-    public class Day6
+    public class Day6 : Day66
     {
-        static int[] blocks;
-        static List<List<int>> combinations;
-        public static string Input
+        string _strInput;
+        public override void ParseInput(string strInput)
         {
-            get
-            {
-                return @"14	0	15	12	11	11	3	5	1	6	8	4	9	1	8	4";
-            }
+            this._strInput = strInput;
         }
 
-        private static void Init()
+        public override object StarOne()
         {
-            var values = Input.Split('\t');
-            blocks = new int[values.Length];
-            for (int i = 0; i < values.Length; i++)
-            {
-                blocks[i] = Int32.Parse(values[i]);
-            }
-            combinations = new List<List<int>>();
-        }
+            var blocks = _strInput.Split('\t').Select(b=> int.Parse(b)).ToArray();
+            var combinations = new List<List<int>>();
 
-        public static int StarOne()
-        {
-            Init();
-            int indexout = blocks.Length - 1;
+            int indexout = blocks.Length;
             int i = 0;
             bool nextCycle = true;
             while (nextCycle)
             {
-                //combinations.Add(new List<int>(blocks));
-                int currMax = blocks.ToList().IndexOf(blocks.Max());
+                int currMax = FindFirstMax(blocks);
                 i = currMax;
                 var load = blocks[i];
                 blocks[i] = 0;
-                if (i != indexout)
-                {
-                    i++;
-                }
+                i++;
                 while (load > 0)
                 {
-                    blocks[i]++;
+                    blocks[i % indexout]++;
                     load--;
                     i++;
-                    if (i > indexout)
-                    {
-                        i = 0;
-                    }
                 }
                 var nextCombination = new List<int>(blocks);
                 foreach (var combination in combinations)
@@ -70,9 +50,22 @@ namespace AdventOfCode2017
             return combinations.Count();
         }
 
-        public static int StarTwo()
+        private int FindFirstMax(int[] blocks)
         {
-            throw new NotImplementedException();
+            var max = blocks.Max();
+            for (int i = 0; i < blocks.Length; i++)
+            {
+                if (blocks[i] == max)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        public override object StarTwo()
+        {
+            return "lol";
         }
     }
 }
