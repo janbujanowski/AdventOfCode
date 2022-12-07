@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Policy;
 
 namespace AdventOfCode2022
 {
@@ -119,6 +120,21 @@ namespace AdventOfCode2022
             Assert.AreEqual(26, dayObject.StarTwo());
             dayObject.ParseInput(GetInput(6));
             Assert.AreEqual(2518, dayObject.StarTwo());
+        }
+
+        [TestMethod]
+        public void Day7StarOne()
+        {
+            var dayObject = new Day7();
+            dayObject.ParseInput(GetInput(7));
+            Assert.AreEqual(1325919L, dayObject.StarOne());
+        }
+        [TestMethod]
+        public void Day7StarTwo()
+        {
+            var dayObject = new Day7();
+            dayObject.ParseInput(GetInput(7));
+            Assert.AreEqual(2050735L, dayObject.StarTwo());
         }
     }
 }
