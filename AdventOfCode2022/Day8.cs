@@ -118,9 +118,38 @@ namespace AdventOfCode2022
 
         public override object StarTwo()
         {
-            long totalSpace = 70000000;
+            long maxScenicScore= 1;
+            long currentScenicScore = 1;
+            for (int x = 1; x < xSize-1; x++)
+            {
+                for (int y = 1; y < ySize-1; y++)
+                {
+                    currentScenicScore = CountTrees(x, y, 1, 0) * CountTrees(x, y, -1, 0) * CountTrees(x, y, 0, 1) * CountTrees(x, y, 0, -1);
+                    if (currentScenicScore > maxScenicScore)
+                    {
+                        maxScenicScore = currentScenicScore;
+                    }
+                }
+            }
             
-            return totalSpace;
+            return maxScenicScore;
+        }
+        int CountTrees(int startx, int starty, int directionX, int directionY)
+        {
+            int startHeight = _forestLayers[startx, starty, 0];
+            int currentX = startx; int currentY = starty;
+            int count = 0;
+            bool stop = false;
+            while (currentX + directionX >= 0 && currentX + directionX < xSize && currentY + directionY >= 0 && currentY + directionY < ySize && !stop)
+            {
+                currentX += directionX;currentY += directionY;
+                count++;
+                if (_forestLayers[currentX,currentY,0] >= startHeight)
+                {
+                    stop = true;
+                }
+            }
+            return count;
         }
     }
 }
