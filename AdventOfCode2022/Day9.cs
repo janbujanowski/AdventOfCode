@@ -8,26 +8,82 @@ using System.Net.Http.Headers;
 
 namespace AdventOfCode2022
 {
+    class Knot
+    {
+        public int Id,XPos, YPos;
+        public Knot Parent;
+        public Knot Child;
+        public List<Tuple<int, int>> _visitedPositions;
+        public Knot(int xPos, int yPos)
+        {
+            this.XPos = xPos; this.YPos = yPos;
+            _visitedPositions = new List<Tuple<int, int>>();
+            PositionsUpdate();
+        }
+        public void Move(int xDirection, int yDirection)
+        {
+            XPos += xDirection; YPos += yDirection;
+            PositionsUpdate();
+            Child?.NotifyParentMoved();
+        }
+        public void NotifyParentMoved()
+        {
+            if (TailNeedsToFollow)
+            {
+                int xDirection = Math.Sign(Parent.XPos - XPos);
+                int yDirection = Math.Sign(Parent.YPos - YPos);
+                Move(xDirection, yDirection);
+            }
+        }
+        private bool TailNeedsToFollow
+        {
+            get
+            {
+                return Math.Abs(Parent.XPos - XPos) > 1 || Math.Abs(Parent.YPos - YPos) > 1;
+            }
+        }
+        private void PositionsUpdate()
+        {
+            var tuple = new Tuple<int, int>(XPos, YPos);
+            if (!_visitedPositions.Contains(tuple))
+            {
+                _visitedPositions.Add(tuple);
+            }
+        }
+        public Knot Last
+        {
+            get
+            {
+                if (Child == null)
+                {
+                    return this;
+                }
+                else
+                {
+                    return Child.Last;
+                }
+            }
+        }
+    }
     public class Day9 : Day66
     {
         string _strInput;
-        int _xPos_T;
-        int _yPos_T;
-        int _xPos_H;
-        int _yPos_H;
-        List<Tuple<int, int>> _visited;
+        Knot _firstKnot;
 
         public override void ParseInput(string strInput)
         {
             _strInput = strInput;
-
         }
 
         public override object StarOne()
         {
-            _xPos_H = 0; _yPos_H = 0; _xPos_T = 0; _yPos_T = 0;
-            _visited = new List<Tuple<int, int>>();
-            PositionsUpdate();
+            _firstKnot = GenerateKnots(2);
+            SimulateMovement(_firstKnot);
+            return _firstKnot.Last._visitedPositions.Count;
+        }
+
+        private void SimulateMovement(Knot firstKnot)
+        {
             var instructions = _strInput.SplitWithEnter();
             int xDirection = 0; int yDirection = 0;
             foreach (var instruction in instructions)
@@ -52,52 +108,34 @@ namespace AdventOfCode2022
                     default:
                         break;
                 }
-                int _xPos_H_previous = _xPos_H;
-                int _yPos_H_previous = _yPos_H;
                 for (int i = 0; i < stepsCount; i++)
                 {
-                    _xPos_H += xDirection; _yPos_H += yDirection;
-                    if (TailNeedsToFollow)
-                    {
-                        _yPos_T = _yPos_H_previous;
-                        _xPos_T = _xPos_H_previous;
-                        PositionsUpdate();
-                    }
-                    _xPos_H_previous = _xPos_H;
-                    _yPos_H_previous = _yPos_H;
+                    firstKnot.Move(xDirection, yDirection);
                 }
 
             }
-
-            return _visited.Count;
         }
-        private bool TailNeedsToFollow
-        {
-            get
+
+        private Knot GenerateKnots(int knotsAmount)
+        {   
+            var firstKnot = new Knot(0, 0);
+            Knot current = firstKnot;
+            firstKnot.Id = 0;
+            for (int i = 1; i < knotsAmount; i++)
             {
-
-                return Math.Abs(_xPos_H - _xPos_T) > 1 || Math.Abs(_yPos_H - _yPos_T) > 1;
+                current.Child = new Knot(0, 0);
+                current.Child.Id = i;
+                current.Child.Parent = current;
+                current = current.Child;
             }
-        }
-
-        private void PositionsUpdate()
-        {
-            var tuple = new Tuple<int, int>(_xPos_T, _yPos_T);
-            if (!_visited.Contains(tuple))
-            {
-                _visited.Add(tuple);
-            }
-        }
-        private bool IsDiagonal()
-        {
-            return !(_xPos_H == _xPos_T || _yPos_H == _yPos_T);
+            return firstKnot;
         }
 
         public override object StarTwo()
         {
-            long maxScenicScore = 1;
-
-            return maxScenicScore;
+            _firstKnot = GenerateKnots(10);
+            SimulateMovement(_firstKnot);
+            return _firstKnot.Last._visitedPositions.Count;
         }
     }
 }
