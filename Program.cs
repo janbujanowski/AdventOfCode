@@ -35,7 +35,7 @@ namespace AdventOfCodeRunner
 
             //Execution
             int year = 2022;
-            int day = 8;
+            int day = 10;
 
             var workingDay = solutionContainer.First(riddleSolution => riddleSolution.DayNumber == day && riddleSolution.YearNumber == year);
             if (workingDay != null)
@@ -43,7 +43,7 @@ namespace AdventOfCodeRunner
                 Stopwatch stopwatch = new Stopwatch();
                 Console.WriteLine($"Day : {day}");
                 
-                var strInput = GetDayInput(year, day);
+                var strInput = Inputs.GetDayInput(year, day);
                 
                 stopwatch.Start();
                 workingDay.ParseInput(strInput);
@@ -65,10 +65,5 @@ namespace AdventOfCodeRunner
 
             Console.ReadKey();
         }
-        public static string GetDayInput(int year, int day)
-        {
-            return File.ReadAllText($@"C:\REPOS\aoc\AdventOfCode{year}\inputs_{year}\Day{day}.txt");
-        }
-
     }
 }

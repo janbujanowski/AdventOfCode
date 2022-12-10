@@ -11,10 +11,9 @@ namespace AdventOfCode2021
         {
             throw new NotImplementedException("Day still needs work");
         }
-        string pathToInputsFolder = @"C:\REPOS\aoc\AdventOfCode2021\inputs_2021";
         private string GetInput(int day)
         {
-            return File.ReadAllText(Path.Combine(pathToInputsFolder, $"Day{day}.txt"));
+            return AdventOfCode.Shared.Inputs.GetDayInput(2021, day);
         }
         [TestMethod]
         public void Day1StarOne()

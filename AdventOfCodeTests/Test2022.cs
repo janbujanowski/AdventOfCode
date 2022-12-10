@@ -13,10 +13,9 @@ namespace AdventOfCode2022
         {
             throw new NotImplementedException("Day still needs work");
         }
-        string pathToInputsFolder = @"C:\REPOS\aoc\AdventOfCode2022\inputs_2022";
         private string GetInput(int day)
         {
-            return File.ReadAllText(Path.Combine(pathToInputsFolder, $"Day{day}.txt"));
+            return AdventOfCode.Shared.Inputs.GetDayInput(2022, day);
         }
         [TestMethod]
         public void Day1StarOne()
@@ -151,6 +150,21 @@ namespace AdventOfCode2022
             var dayObject = new Day9();
             dayObject.ParseInput(GetInput(9));
             Assert.AreEqual(2331, dayObject.StarTwo());
+        }
+        [TestMethod]
+        public void Day10StarOne()
+        {
+            var dayObject = new Day10();
+            dayObject.ParseInput(GetInput(10));
+            Assert.AreEqual(13920, dayObject.StarOne());
+        }
+
+        [TestMethod]
+        public void Day10StarTwo()
+        {
+            var dayObject = new Day10();
+            dayObject.ParseInput(GetInput(10));
+            Assert.AreEqual("EGLHBLFJ", dayObject.StarTwo());
         }
     }
 }
