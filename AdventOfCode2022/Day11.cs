@@ -4,8 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Net.Http.Headers;
-using System.Numerics;
 
 namespace AdventOfCode2022
 {
@@ -71,14 +69,19 @@ namespace AdventOfCode2022
 
         }
 
-        private void Round(List<Monkey> monkeys)
+        private void Round(List<Monkey> monkeys, int worryLevelDivider)
         {
+            var largestMultipleDivision = 1L;
+            foreach (var monk in monkeys)
+            {
+                largestMultipleDivision *= monk.DivisibleBy;
+            }
             foreach (var monkey in monkeys)
             {
                 while (monkey.Items.Count > 0)
                 {
                     var item = monkey.Items.Dequeue();
-                    var newitemworryLevel = monkey.Operation(item);
+                    var newitemworryLevel = monkey.Operation(item)/ worryLevelDivider % largestMultipleDivision;
                     monkey.Inspections++;
                     if (newitemworryLevel % monkey.DivisibleBy == 0)
                     {
@@ -93,24 +96,24 @@ namespace AdventOfCode2022
         }
         public override object StarOne()
         {
-            for (long i = 0; i < 20; i++)
-            {
-                Round(_monkeys);
-            }
-            var oredered = _monkeys.OrderByDescending(x => x.Inspections);
-            return oredered.ElementAt(0).Inspections * oredered.ElementAt(1).Inspections;
+            return GetMonkeyBusiness(20, 3);
         }
-        
-        public override object StarTwo()
+
+        private long GetMonkeyBusiness(int rounds, int worryLevelDivider)
         {
             ParseInput(_strInput);
-            for (long i = 0; i < 10000; i++)
+            for (long i = 0; i < rounds; i++)
             {
-                Round(_monkeys);
+                Round(_monkeys, worryLevelDivider);
             }
             var oredered = _monkeys.OrderByDescending(x => x.Inspections);
             var first = oredered.ElementAt(0).Inspections;
             return oredered.ElementAt(0).Inspections * oredered.ElementAt(1).Inspections;
+        }
+
+        public override object StarTwo()
+        {
+            return GetMonkeyBusiness(10000,1);
         }
     }
 }
