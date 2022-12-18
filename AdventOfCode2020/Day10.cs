@@ -6,23 +6,44 @@ using System.Linq;
 
 namespace AdventOfCode2020
 {
-    class Node
+    class Adapter
     {
-        public int value { get; set; }
-        public override string ToString()
+        public Adapter(int jolt)
         {
-            return value.ToString();
+            Jolt = jolt;
+            ConnectableAdapters = new List<Adapter>();
+        }
+        public int Jolt;
+        public List<Adapter> ConnectableAdapters;
+        public void AddConnectableAdapters(int[] availableAdapter)
+        {
+            foreach (var adapter in availableAdapter)
+            {
+                if (AdapterExtensions.acceptableDifferences.Contains(adapter - Jolt))
+                {
+                    Adapter connectableAdapter = new Adapter(adapter);
+                    connectableAdapter.AddConnectableAdapters(availableAdapter);
+                    ConnectableAdapters.Add(connectableAdapter);
+                }
+            }
+        }
+        public long Cunt()
+        {
+            long cunt = 1;
+            foreach (var adapter in ConnectableAdapters)
+            {
+                cunt = cunt * adapter.Cunt();
+            }
+            if (ConnectableAdapters.Count > 0)
+            {
+                cunt = cunt * ConnectableAdapters.Count;
+            }
+            return cunt;
         }
     }
-    class Edge
+    public static class AdapterExtensions
     {
-        public int from { get; set; }
-        public int to { get; set; }
-        public bool counted { get; set; }
-        public override string ToString()
-        {
-            return $"from {from} to {to} {counted}";
-        }
+        public static List<int> acceptableDifferences = new List<int>() { 1, 2, 3 };
     }
     public class Day10 : Day66
     {
@@ -47,101 +68,17 @@ namespace AdventOfCode2020
 
             return joltDifferencesCount[1] * joltDifferencesCount[3];
         }
-        List<Edge> edges;
-        List<int>[] adj;
+
 
 
         public override object StarTwo()
         {
-            //int permutationsCount = 1;
-            //int nextPossibilitiesCount = 0;
-            //var maxes = inputNumbers.ToList();
-            //maxes.Add(inputNumbers[inputNumbers.Length - 1] + 3);
+            Adapter input = new Adapter(0);
+            input.AddConnectableAdapters(inputNumbers);
 
-            List<int> maxDifference = new List<int>() { 1, 2, 3 };
-            List<Node> nodes = new List<Node>();
-            edges = new List<Edge>();
-            for (int i = 0; i < inputNumbers.Length; i++)
-            {
-                nodes.Add(new Node() { value = inputNumbers[i] });
-            }
-            nodes.Add(new Node() { value = inputNumbers[inputNumbers.Length - 1] + 3 });
-            adj = new List<int>[nodes.Last().value + 1];
-            foreach (var node in nodes)
-            {
-                var connectibleTo = nodes.Where(possibility => maxDifference.Contains(possibility.value - node.value));
-
-                edges.AddRange(connectibleTo.Select(possible => new Edge() { from = node.value, to = possible.value, counted = false }));
-                adj[node.value] = connectibleTo.Select(x => x.value).ToList();
-            }
-            
-            int pathCount = 0;
-            int countPaths = countPathsUtil(0, nodes.Last().value, pathCount);
-            int firstRun = 1;
-            int fromNode = 0;
-
-
-            do
-            {
-                int toNode = edges.Where(x => x.from == fromNode).Max(y => y.to);
-                edges.Where(x => x.from == fromNode && x.to == toNode).First().counted = true;
-                fromNode = toNode;
-
-            } while (fromNode != nodes.Last().value);
-            var remaining = edges.Where(x => x.counted == false).Count();
-            return remaining + 1;
+            return input.Cunt();
         }
 
-        int countPathsUtil(int u, int d, int pathCount)
-        {
-            if (u == d)
-            {
-                pathCount++;
-            }
-            else
-            {
-                foreach (int i in adj[u])
-                {
-                    int n = i;
-                    pathCount = countPathsUtil(n, d, pathCount);
-                }
-            }
 
-            return pathCount;
-        }
-        //private int CheckConnectionPossibilities(int i)
-        //{
-        //    List<int> maxDifference = new List<int>() { 1, 2, 3 };
-        //    List<int> nextPossibilites = new List<int>();
-        //    int possibleConn = 1;
-
-        //    for (int j = 1; j <= 3; j++)
-        //    {
-        //        if (i - j >= 0)
-        //        {
-        //            if (maxDifference.Contains(inputNumbers[i] - inputNumbers[i - j]))
-        //            {
-        //                nextPossibilites.Add(i - j);
-        //                //possibleConn++;
-        //            }
-        //        }
-        //    }
-
-        //    if (nextPossibilites.Count == 0)
-        //    {
-        //        bool chainDoesntEndOnZero = inputNumbers[i] != 0;
-        //        if (chainDoesntEndOnZero)
-        //        {
-        //            return 0;
-        //        }
-        //    }
-
-        //    foreach (var next in nextPossibilites)
-        //    {
-        //        possibleConn += CheckConnectionPossibilities(next);
-        //    }
-
-        //    return possibleConn;
-        //}
     }
 }
