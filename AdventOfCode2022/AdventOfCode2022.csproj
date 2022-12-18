@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Day11.cs" />
     <Compile Include="Day10.cs" />
+    <Compile Include="Day14.cs" />
     <Compile Include="Day9.cs" />
     <Compile Include="Day8.cs" />
     <Compile Include="Day7.cs" />
@@ -63,6 +64,7 @@
   <ItemGroup>
     <Content Include="inputs_2022\Day11.txt" />
     <Content Include="inputs_2022\Day10.txt" />
+    <Content Include="inputs_2022\Day14.txt" />
     <Content Include="inputs_2022\Day9.txt" />
     <Content Include="inputs_2022\Day8.txt" />
     <Content Include="inputs_2022\Day7.txt" />
@@ -72,9 +74,6 @@
     <Content Include="inputs_2022\Day3.txt" />
     <Content Include="inputs_2022\Day2.txt" />
     <Content Include="inputs_2022\Day1.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
