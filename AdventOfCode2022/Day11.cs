@@ -81,8 +81,12 @@ namespace AdventOfCode2022
                 while (monkey.Items.Count > 0)
                 {
                     var item = monkey.Items.Dequeue();
-                    var newitemworryLevel = monkey.Operation(item)/ worryLevelDivider % largestMultipleDivision;
+                    var newitemworryLevel = monkey.Operation(item) / (worryLevelDivider % largestMultipleDivision);
                     monkey.Inspections++;
+                    if (worryLevelDivider == 1)
+                    {
+                        newitemworryLevel = monkey.Operation(item) / worryLevelDivider % largestMultipleDivision;
+                    }
                     if (newitemworryLevel % monkey.DivisibleBy == 0)
                     {
                         monkeys.Find(monkeyThrow => monkeyThrow.Id== monkey.TrueThrowTo).Items.Enqueue(newitemworryLevel);
