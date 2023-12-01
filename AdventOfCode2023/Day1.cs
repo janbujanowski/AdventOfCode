@@ -79,42 +79,56 @@ namespace AdventOfCode2023
 
             foreach (var line in lines)
             {
-                int i = 0;
-                while (i < line.Length)
-                {
-                    if (char.IsDigit(line[i]))
-                    {
-                        sum += 10 * Int32.Parse(line[i].ToString());
-                        break;
-                    }
-                    var digitCheck = IsSpelledDigit(line, i);
-                    if (digitCheck > 0)
-                    {
-                        sum += 10 * digitCheck;
-                        break;
-                    }
-                    i++;
-                }
-                var lastDigit = 0;
-                
-                while (i < line.Length)
-                {
-                    if (char.IsDigit(line[i]))
-                    {
-                        lastDigit = Int32.Parse(line[i].ToString());
+                int calibrationNumber = GetCalibrationNumber(line);
 
-                    }
-                    var digitCheck = IsSpelledDigit(line, i);
-                    if (digitCheck > 0)
-                    {
-                        lastDigit = digitCheck;
-                    }
-                    i++;
-                }
-                sum += lastDigit;
+                sum += calibrationNumber;
 
             }
             return sum;
+        }
+
+        public int GetCalibrationNumber(string line)
+        {
+            int firstDigit = 0;
+            int i = 0;
+            int calibrationNumber = 0;
+            while (i < line.Length)
+            {
+                if (char.IsDigit(line[i]))
+                {
+                    firstDigit = Int32.Parse(line[i].ToString());
+                    break;
+                }
+                var digitCheck = IsSpelledDigit(line, i);
+                if (digitCheck > 0)
+                {
+                    firstDigit = digitCheck;
+                    if (i >= 1)
+                    {
+                        break;
+                    }
+                }
+                i++;
+            }
+            calibrationNumber += 10 * firstDigit;
+            var lastDigit = 0;
+
+            while (i < line.Length)
+            {
+                if (char.IsDigit(line[i]))
+                {
+                    lastDigit = Int32.Parse(line[i].ToString());
+
+                }
+                var digitCheck = IsSpelledDigit(line, i);
+                if (digitCheck > 0)
+                {
+                    lastDigit = digitCheck;
+                }
+                i++;
+            }
+            calibrationNumber += lastDigit;
+            return calibrationNumber;
         }
     }
 }
