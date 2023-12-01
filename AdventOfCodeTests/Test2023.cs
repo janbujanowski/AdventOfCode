@@ -22,7 +22,7 @@ namespace AdventOfCode2023
         {
             var dayObject = new Day1();
             dayObject.ParseInput(GetInput(1));
-            Assert.AreEqual(70296, dayObject.StarOne());
+            Assert.AreEqual(54605, dayObject.StarOne());
         }
         [TestMethod]
         public void Day1StarTwo()
@@ -30,18 +30,27 @@ namespace AdventOfCode2023
             var dayObject = new Day1();
             dayObject.ParseInput(GetInput(1));
             dayObject.StarOne();
-            Assert.AreEqual(205381, dayObject.StarTwo());
+            Assert.AreEqual(55489, dayObject.StarTwo());
         }
         [TestMethod]
         public void Day1StarTwoLineTestCases()
         {
             var dayObject = new Day1();
            
-            Assert.AreEqual(39, dayObject.GetCalibrationNumber("v3one9"));
-            Assert.AreEqual(12, dayObject.GetCalibrationNumber("1two1two"));
             Assert.AreEqual(21, dayObject.GetCalibrationNumber("two1two1"));
+            Assert.AreEqual(12, dayObject.GetCalibrationNumber("1two1two"));
+            Assert.AreEqual(39, dayObject.GetCalibrationNumber("v3one9"));
+            Assert.AreEqual(41, dayObject.GetCalibrationNumber("46one"));
+        }
+        [TestMethod]
+        public void Day1StarTwoLineTestCases2()
+        {
+            var dayObject = new Day1();
+
             Assert.AreEqual(83, dayObject.GetCalibrationNumber("eighthree"));
             Assert.AreEqual(79, dayObject.GetCalibrationNumber("sevenine"));
+            Assert.AreEqual(71, dayObject.GetCalibrationNumber("7twoonev"));
+            
         }
 
 

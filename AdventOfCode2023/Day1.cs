@@ -53,7 +53,7 @@ namespace AdventOfCode2023
             }
             return sum;
         }
-        private int IsSpelledDigit(string line, int i)
+        private int IsSpelledDigitForward(string line, int i)
         {
             if (i >= 0)
             {
@@ -62,6 +62,25 @@ namespace AdventOfCode2023
                     word = string.Join("", line[i], line[i + 1], line[i + 2]);
                 if (i < line.Length - 4)
                     word = string.Join("", line[i], line[i + 1], line[i + 2], line[i + 3], line[i + 4]);
+                foreach (var digit in spelledDigitsPairs)
+                {
+                    if (word.Contains(digit.Key))
+                    {
+                        return digit.Value;
+                    }
+                }
+            }
+            return 0;
+        }
+        private int IsSpelledDigitBackward(string line, int i)
+        {
+            if (i >= 0)
+            {
+                string word = String.Empty;
+                if (i >= 2)
+                    word = string.Join("", line[i - 2], line[i - 1], line[i]);
+                if (i >= 4)
+                    word = string.Join("", line[i - 4], line[i - 3], line[i - 2], line[i - 1], line[i]);
                 foreach (var digit in spelledDigitsPairs)
                 {
                     if (word.Contains(digit.Key))
@@ -90,29 +109,24 @@ namespace AdventOfCode2023
         public int GetCalibrationNumber(string line)
         {
             int firstDigit = 0;
-            int i = 0;
+            int i = line.Length - 1;
             int calibrationNumber = 0;
-            while (i < line.Length)
+            while (i >= 0)
             {
-                if (char.IsDigit(line[i]))
-                {
-                    firstDigit = Int32.Parse(line[i].ToString());
-                    break;
-                }
-                var digitCheck = IsSpelledDigit(line, i);
+                var digitCheck = IsSpelledDigitBackward(line, i);
                 if (digitCheck > 0)
                 {
                     firstDigit = digitCheck;
-                    if (i >= 1)
-                    {
-                        break;
-                    }
                 }
-                i++;
+                if (char.IsDigit(line[i]))
+                {
+                    firstDigit = Int32.Parse(line[i].ToString());
+                }
+                i--;
             }
             calibrationNumber += 10 * firstDigit;
             var lastDigit = 0;
-
+            i = 0;
             while (i < line.Length)
             {
                 if (char.IsDigit(line[i]))
@@ -120,7 +134,7 @@ namespace AdventOfCode2023
                     lastDigit = Int32.Parse(line[i].ToString());
 
                 }
-                var digitCheck = IsSpelledDigit(line, i);
+                var digitCheck = IsSpelledDigitForward(line, i);
                 if (digitCheck > 0)
                 {
                     lastDigit = digitCheck;
