@@ -2,6 +2,7 @@
 using AdventOfCode.Shared.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,40 +12,109 @@ namespace AdventOfCode2023
     public class Day1 : Day66
     {
         string[] lines;
-        int[] pings;
-        List<int> sums;
+        Dictionary<string, int> spelledDigitsPairs = new Dictionary<string, int>() {
+            { "one" , 1 },
+            { "two" , 2 },
+            { "three" , 3 },
+            { "four" , 4 },
+            { "five" , 5 },
+            { "six" , 6 },
+            { "seven" , 7 },
+            { "eight" , 8 },
+            { "nine" , 9 }
+        };
         public override void ParseInput(string strInput)
         {
             lines = strInput.Split("\r\n");
-            //pings = lines.Select(line => int.Parse(line)).ToArray();
         }
 
         public override object StarOne()
         {
-            sums = new List<int>();
             int sum = 0;
-            for (int i = 0; i < lines.Length; i++)
+            foreach (var line in lines)
             {
-                int value = 0;
-                if (int.TryParse(lines[i], out value))
-                {
-                    sum += value;
-                }
-                else
-                {
-                    sums.Add(sum);
-                    sum = 0;
-                };
 
+                for (int i = 0; i < line.Length; i++)
+                {
+                    if (char.IsDigit(line[i]))
+                    {
+                        sum += 10 * Int32.Parse(line[i].ToString());
+                        i = line.Length;
+                    }
+                }
+                for (int i = line.Length - 1; i >= 0; i--)
+                {
+                    if (char.IsDigit(line[i]))
+                    {
+                        sum += Int32.Parse(line[i].ToString());
+                        i = 0;
+                    }
+                }
             }
-            return sums.Max();
+            return sum;
         }
+        private int IsSpelledDigit(string line, int i)
+        {
+            if (i >= 0)
+            {
+                string word = String.Empty;
+                if (i < line.Length - 2)
+                    word = string.Join("", line[i], line[i + 1], line[i + 2]);
+                if (i < line.Length - 4)
+                    word = string.Join("", line[i], line[i + 1], line[i + 2], line[i + 3], line[i + 4]);
+                foreach (var digit in spelledDigitsPairs)
+                {
+                    if (word.Contains(digit.Key))
+                    {
+                        return digit.Value;
+                    }
+                }
+            }
+            return 0;
+        }
+
         public override object StarTwo()
         {
-            var sorted = sums.OrderByDescending(x => x);
+            int sum = 0;
 
-            return sorted.ElementAt(0) + sorted.ElementAt(1) + sorted.ElementAt(2);
+            foreach (var line in lines)
+            {
+                int i = 0;
+                while (i < line.Length)
+                {
+                    if (char.IsDigit(line[i]))
+                    {
+                        sum += 10 * Int32.Parse(line[i].ToString());
+                        break;
+                    }
+                    var digitCheck = IsSpelledDigit(line, i);
+                    if (digitCheck > 0)
+                    {
+                        sum += 10 * digitCheck;
+                        break;
+                    }
+                    i++;
+                }
+                var lastDigit = 0;
+                
+                while (i < line.Length)
+                {
+                    if (char.IsDigit(line[i]))
+                    {
+                        lastDigit = Int32.Parse(line[i].ToString());
 
+                    }
+                    var digitCheck = IsSpelledDigit(line, i);
+                    if (digitCheck > 0)
+                    {
+                        lastDigit = digitCheck;
+                    }
+                    i++;
+                }
+                sum += lastDigit;
+
+            }
+            return sum;
         }
     }
 }
