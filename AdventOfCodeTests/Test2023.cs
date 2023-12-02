@@ -53,6 +53,14 @@ namespace AdventOfCode2023
             
         }
 
+        [TestMethod]
+        public void Day2StarOne()
+        {
+            var dayObject = new Day2();
+            dayObject.ParseInput(GetInput(2));
+            Assert.AreEqual(2439, dayObject.StarOne());
+        }
+
 
     }
 }
