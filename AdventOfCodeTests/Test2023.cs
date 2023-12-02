@@ -30,7 +30,7 @@ namespace AdventOfCode2023
             var dayObject = new Day1();
             dayObject.ParseInput(GetInput(1));
             dayObject.StarOne();
-            Assert.AreEqual(55489, dayObject.StarTwo());
+            Assert.AreEqual(55429, dayObject.StarTwo());
         }
         [TestMethod]
         public void Day1StarTwoLineTestCases()

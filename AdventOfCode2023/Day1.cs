@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace AdventOfCode2023
@@ -33,74 +34,40 @@ namespace AdventOfCode2023
             int sum = 0;
             foreach (var line in lines)
             {
-
-                for (int i = 0; i < line.Length; i++)
-                {
-                    if (char.IsDigit(line[i]))
-                    {
-                        sum += 10 * Int32.Parse(line[i].ToString());
-                        i = line.Length;
-                    }
-                }
-                for (int i = line.Length - 1; i >= 0; i--)
-                {
-                    if (char.IsDigit(line[i]))
-                    {
-                        sum += Int32.Parse(line[i].ToString());
-                        i = 0;
-                    }
-                }
+                sum += GetCalibrationNumberStarOne(line);
             }
             return sum;
         }
-        private int IsSpelledDigitForward(string line, int i)
+        private int GetCalibrationNumberStarOne(string line)
         {
-            if (i >= 0)
+            int calibration = 0;
+            for (int i = 0; i < line.Length; i++)
             {
-                string word = String.Empty;
-                if (i < line.Length - 2)
-                    word = string.Join("", line[i], line[i + 1], line[i + 2]);
-                if (i < line.Length - 4)
-                    word = string.Join("", line[i], line[i + 1], line[i + 2], line[i + 3], line[i + 4]);
-                foreach (var digit in spelledDigitsPairs)
+                if (char.IsDigit(line[i]))
                 {
-                    if (word.Contains(digit.Key))
-                    {
-                        return digit.Value;
-                    }
+                    calibration += 10 * Int32.Parse(line[i].ToString());
+                    i = line.Length;
                 }
             }
-            return 0;
-        }
-        private int IsSpelledDigitBackward(string line, int i)
-        {
-            if (i >= 0)
+            for (int i = line.Length - 1; i >= 0; i--)
             {
-                string word = String.Empty;
-                if (i >= 2)
-                    word = string.Join("", line[i - 2], line[i - 1], line[i]);
-                if (i >= 4)
-                    word = string.Join("", line[i - 4], line[i - 3], line[i - 2], line[i - 1], line[i]);
-                foreach (var digit in spelledDigitsPairs)
+                if (char.IsDigit(line[i]))
                 {
-                    if (word.Contains(digit.Key))
-                    {
-                        return digit.Value;
-                    }
+                    calibration += Int32.Parse(line[i].ToString());
+                    i = 0;
                 }
             }
-            return 0;
+            return calibration;
         }
 
         public override object StarTwo()
         {
+           
             int sum = 0;
 
             foreach (var line in lines)
             {
-                int calibrationNumber = GetCalibrationNumber(line);
-
-                sum += calibrationNumber;
+                sum += GetCalibrationNumber(line);
 
             }
             return sum;
@@ -108,41 +75,32 @@ namespace AdventOfCode2023
 
         public int GetCalibrationNumber(string line)
         {
-            int firstDigit = 0;
-            int i = line.Length - 1;
-            int calibrationNumber = 0;
-            while (i >= 0)
-            {
-                var digitCheck = IsSpelledDigitBackward(line, i);
-                if (digitCheck > 0)
-                {
-                    firstDigit = digitCheck;
-                }
-                if (char.IsDigit(line[i]))
-                {
-                    firstDigit = Int32.Parse(line[i].ToString());
-                }
-                i--;
-            }
-            calibrationNumber += 10 * firstDigit;
-            var lastDigit = 0;
-            i = 0;
-            while (i < line.Length)
-            {
-                if (char.IsDigit(line[i]))
-                {
-                    lastDigit = Int32.Parse(line[i].ToString());
+            string regex = @"\d|one|two|three|four|five|six|seven|eight|nine";
+            var firstRegex = Regex.Match(line, regex);
+            var lastRegex = Regex.Match(line, regex, RegexOptions.RightToLeft);
 
-                }
-                var digitCheck = IsSpelledDigitForward(line, i);
-                if (digitCheck > 0)
-                {
-                    lastDigit = digitCheck;
-                }
-                i++;
+            var firstDigit = 0;
+            var lastDigit = 0;
+            if (firstRegex.Length == 1)
+            {
+                firstDigit = int.Parse(firstRegex.Value);
             }
-            calibrationNumber += lastDigit;
-            return calibrationNumber;
+            else
+            {
+                firstDigit = spelledDigitsPairs[firstRegex.Value];
+            }
+            if (lastRegex.Length == 1)
+            {
+                lastDigit = int.Parse(lastRegex.Value);
+            }
+            else
+            {
+                lastDigit = spelledDigitsPairs[lastRegex.Value];
+            }
+
+
+            ;
+            return firstDigit * 10 + lastDigit;
         }
     }
 }
