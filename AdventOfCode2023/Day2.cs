@@ -58,7 +58,7 @@ namespace AdventOfCode2023
                             default:
                                 break;
                         }
-                        
+
                     }
                     game.CubeDraws.Add(cubeDraw);
                 }
@@ -82,46 +82,22 @@ namespace AdventOfCode2023
             }
             return sum;
         }
-        private int GetCalibrationNumberStarOne(string line)
+        private int GetGamePowerOfSet(Game game)
         {
-            int calibration = 0;
-            for (int i = 0; i < line.Length; i++)
-            {
-                if (char.IsDigit(line[i]))
-                {
-                    calibration += 10 * Int32.Parse(line[i].ToString());
-                    i = line.Length;
-                }
-            }
-            for (int i = line.Length - 1; i >= 0; i--)
-            {
-                if (char.IsDigit(line[i]))
-                {
-                    calibration += Int32.Parse(line[i].ToString());
-                    i = 0;
-                }
-            }
-            return calibration;
+            return game.CubeDraws.Select(draw => draw.Red).Max() *
+                   game.CubeDraws.Select(draw => draw.Blue).Max() *
+                   game.CubeDraws.Select(draw => draw.Green).Max();
         }
-       
+
 
         public override object StarTwo()
         {
-
             int sum = 0;
-
-            foreach (var line in lines)
+            foreach (var game in games)
             {
-                sum += GetCalibrationNumber(line);
-
+                sum += GetGamePowerOfSet(game);
             }
             return sum;
-        }
-
-        public int GetCalibrationNumber(string line)
-        {
-
-            return 1;
         }
     }
 }
