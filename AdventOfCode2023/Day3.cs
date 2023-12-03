@@ -85,8 +85,6 @@ namespace AdventOfCode2023
                     }
                 }
             }
-
-
             return isAdjacentToSymbol;
         }
 
@@ -96,11 +94,80 @@ namespace AdventOfCode2023
             return engineSymbols.Contains(currentChar);
         }
 
-
         public override object StarTwo()
         {
-            return 1;
-        }
+            int sum = 0;
+            string regex = @"\d+";
+            bool isadjacent = false;
+            Dictionary<(int, int), List<int>> GearsOfWar = new Dictionary<(int, int), List<int>>();
+            for (int y = 0; y < lineLength; y++)
+            {
+                var line = lines[y];
+                var matches = Regex.Matches(line.ToString(), regex);
+                foreach (Match match in matches)
+                {
 
+                    isadjacent = false;
+                    (int, int) gearCoords = (-1, -1);
+                    for (int i = 0; i < match.Length; i++)
+                    {
+                        int x = match.Index + i;
+                        gearCoords = IsPartOfGear(y, x);
+                        if (gearCoords.Item1 != -1 && gearCoords.Item2 != -1)
+                        {
+                            isadjacent = true;
+                            i = 3;
+                        }
+                    }
+                    if (isadjacent)
+                    {
+                        if (!GearsOfWar.ContainsKey(gearCoords))
+                        {
+                            GearsOfWar.Add(gearCoords, new List<int>() { int.Parse(match.Value) });
+                        }
+                        else
+                        {
+                            GearsOfWar[gearCoords].Add(int.Parse(match.Value));
+                        }
+                    }
+                }
+            }
+
+            var lol = GearsOfWar.Where(pair => pair.Value.Count == 2).Select(ppair => ppair.Value);
+
+            foreach (var pair in lol)
+            {
+                sum += pair[0] * pair[1];
+            }
+            return sum;
+        }
+        private (int, int) IsPartOfGear(int y, int x)
+        {
+            for (int i = -1; i <= 1; i++)
+            {
+                for (int j = -1; j <= 1; j++)
+                {
+                    try
+                    {
+                        var validatingX = x + i;
+                        var validatingY = y + j;
+                        if (validatingX >= 0 && validatingX < lineLength && validatingY >= 0 && validatingY < lineLength)
+                        {
+                            var charToCheck = 'x';
+                            charToCheck = inputArray[validatingY][validatingX];
+                            if (charToCheck == '*')
+                            {
+                                return (validatingY, validatingX);
+                            }
+                        }
+                    }
+                    catch (Exception)
+                    {
+
+                    }
+                }
+            }
+            return (-1, -1);
+        }
     }
 }
