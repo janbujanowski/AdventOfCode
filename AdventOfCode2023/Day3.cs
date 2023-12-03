@@ -14,53 +14,53 @@ namespace AdventOfCode2023
     {
         List<char> engineSymbols = new List<char>() { '$', '*', '#', '%', '@', '=', '+', '-', '/', '!' };
         string[] lines;
-        int maxLength = 0;
+        int lineLength = 0;
+        string _strInput = string.Empty;
+        char[][] inputArray;
         public override void ParseInput(string strInput)
         {
+            _strInput = strInput.Replace("\r\n", "");
             lines = strInput.Split("\r\n");
-            maxLength = lines.Length;
+            inputArray = new char[lines.Length][];
+            for (int i = 0; i < lines.Length; i++)
+            {
+                inputArray[i] = lines[i].ToCharArray();
+            }
+            lineLength = lines.Length;
         }
 
         public override object StarOne()
         {
-            List<int> numberToSum = new List<int>();
-            for (int x = 0; x < lines.Length; x++)
+            int sum = 0;
+            string regex = @"\d+";
+            bool isadjacent = false;
+            for (int y = 0; y < lineLength; y++)
             {
-                string currentNumberString = string.Empty;
-                bool isAdjacentToSymbol = false;
-                for (int y = 0; y < lines.Length; y++)
+                var line = lines[y];
+                var matches = Regex.Matches(line.ToString(), regex);
+                foreach (Match match in matches)
                 {
-                    char currentChar = lines[x][y];
-                    if(IsEngineSymbol(currentChar) && !string.IsNullOrEmpty(currentNumberString))
+                    isadjacent = false;
+                    for (int i = 0; i < match.Length; i++)
                     {
-                        currentChar = '.';
-                    }
-                    if (char.IsNumber(currentChar))
-                    {
-                        currentNumberString += currentChar;
-                        if (IsAdjacentToSymbol(x, y))
+                        int x = match.Index + i;
+                        if (IsAdjacentToSymbol(y, x))
                         {
-                            isAdjacentToSymbol = true;
+                            isadjacent = true;
                         }
                     }
-                    if (currentChar == '.')
+                    if (isadjacent)
                     {
-                        if (isAdjacentToSymbol && !string.IsNullOrEmpty(currentNumberString))
-                        {
-                            numberToSum.Add(int.Parse(currentNumberString));
-                        }
-                        currentNumberString = string.Empty;
-                        isAdjacentToSymbol = false;
+                        sum += int.Parse(match.Value);
                     }
                 }
             }
-
-            return numberToSum.Sum();
+            return sum;
         }
-
-        private bool IsAdjacentToSymbol(int x, int y)
+        private bool IsAdjacentToSymbol(int y, int x)
         {
             bool isAdjacentToSymbol = false;
+
             for (int i = -1; i <= 1; i++)
             {
                 for (int j = -1; j <= 1; j++)
@@ -69,11 +69,14 @@ namespace AdventOfCode2023
                     {
                         var validatingX = x + i;
                         var validatingY = y + j;
-                        var charToCheck = 'x';
-                        charToCheck = lines[x + i][y + j];
-                        if (IsEngineSymbol(charToCheck))
+                        if (validatingX >= 0 && validatingX < lineLength && validatingY >= 0 && validatingY < lineLength)
                         {
-                            isAdjacentToSymbol = true;
+                            var charToCheck = 'x';
+                            charToCheck = inputArray[validatingY][validatingX];
+                            if (IsEngineSymbol(charToCheck))
+                            {
+                                return true;
+                            }
                         }
                     }
                     catch (Exception)
@@ -83,8 +86,10 @@ namespace AdventOfCode2023
                 }
             }
 
+
             return isAdjacentToSymbol;
         }
+
 
         private bool IsEngineSymbol(char currentChar)
         {
