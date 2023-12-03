@@ -12,7 +12,7 @@ namespace AdventOfCode2023
 {
     public class Day3 : Day66
     {
-        List<char> engineSymbols = new List<char>() { '$', '*', '#', '%', '@', '=', '+', '-', '/', '!' };
+        List<char> engineSymbols = new List<char>() { '$', '*', '#', '%', '@', '=', '+', '-', '/', '&' };
         string[] lines;
         int lineLength = 0;
         bool[,] _numberConfirmed;
@@ -20,7 +20,7 @@ namespace AdventOfCode2023
         {
             lines = strInput.Split("\r\n");
             lineLength = lines.Length;
-            _numberConfirmed = new bool[lineLength,lineLength];
+            _numberConfirmed = new bool[lineLength, lineLength];
         }
 
         public override object StarOne()
@@ -33,17 +33,36 @@ namespace AdventOfCode2023
                 {
                     if (IsEngineSymbol(line[x]))
                     {
-                        List<int> numbers = MarkAdjacentNumbers(y, x);
-                        sum += numbers.Sum();
+                        MarkAdjacentNumbers(y, x);
                     }
                 }
             }
+
+            for (int y = 0; y < lineLength; y++)
+            {
+                string number = string.Empty;
+                for (int x = 0; x < lineLength; x++)
+                {
+                    if (char.IsDigit(lines[y][x]) && _numberConfirmed[y, x])
+                    {
+                        number += lines[y][x];
+                    }
+                    if (!char.IsDigit(lines[y][x]))
+                    {
+                        if (!string.IsNullOrEmpty(number))
+                        {
+                            sum += int.Parse(number);
+                            number = string.Empty;
+                        }
+                    }
+                }
+            }
+
             return sum;
         }
 
-        private List<int> MarkAdjacentNumbers(int y, int x)
+        private void MarkAdjacentNumbers(int y, int x)
         {
-            List<int> numbers = new List<int>();
             for (int i = -1; i <= 1; i++)
             {
                 for (int j = -1; j <= 1; j++)
@@ -54,16 +73,14 @@ namespace AdventOfCode2023
                     {
                         if (char.IsDigit(lines[validatingY][validatingX]))
                         {
-                            int foundNumber = FindFullNumber(validatingY, validatingX);
-                            numbers.Add(foundNumber);
+                            MarkFullNumber(validatingY, validatingX);
                         }
                     }
                 }
             }
-            return numbers.ToList();
         }
 
-        private int FindFullNumber(int validatingY, int validatingX)
+        private void MarkFullNumber(int validatingY, int validatingX)
         {
             var y = validatingY; var x = validatingX;
             string number = string.Empty;
@@ -74,10 +91,9 @@ namespace AdventOfCode2023
             x++;
             while (CoordsInBound(y, x) && char.IsDigit(lines[y][x]))
             {
-                number += lines[y][x];
+                _numberConfirmed[y, x] = true;
                 x++;
             }
-            return int.Parse(number);
         }
 
         private bool CoordsInBound(int y, int x)
