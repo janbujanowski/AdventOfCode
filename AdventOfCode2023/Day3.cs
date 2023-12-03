@@ -12,7 +12,7 @@ namespace AdventOfCode2023
 {
     public class Day3 : Day66
     {
-        List<char> engineSymbols = new List<char>() { '$', '*', '#', '%', '@', '=', '+', '-', '/', '!' };
+        List<char> engineSymbols = new List<char>() { '$', '*', '#', '%', '@', '=', '+', '-', '/', '&' };
         string[] lines;
         int lineLength = 0;
         string _strInput = string.Empty;
