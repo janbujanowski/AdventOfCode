@@ -15,92 +15,82 @@ namespace AdventOfCode2023
         List<char> engineSymbols = new List<char>() { '$', '*', '#', '%', '@', '=', '+', '-', '/', '!' };
         string[] lines;
         int lineLength = 0;
-        string _strInput = string.Empty;
-        char[][] inputArray;
+        bool[,] _numberConfirmed;
         public override void ParseInput(string strInput)
         {
-            _strInput = strInput.Replace("\r\n", "");
             lines = strInput.Split("\r\n");
-            inputArray = new char[lines.Length][];
-            for (int i = 0; i < lines.Length; i++)
-            {
-                inputArray[i] = lines[i].ToCharArray();
-            }
             lineLength = lines.Length;
+            _numberConfirmed = new bool[lineLength,lineLength];
         }
 
         public override object StarOne()
         {
             int sum = 0;
-            string regex = @"\d+";
-            bool isadjacent = false;
             for (int y = 0; y < lineLength; y++)
             {
                 var line = lines[y];
-                var matches = Regex.Matches(line.ToString(), regex);
-                foreach (Match match in matches)
+                for (int x = 0; x < lineLength; x++)
                 {
-                    isadjacent = false;
-                    for (int i = 0; i < match.Length; i++)
+                    if (IsEngineSymbol(line[x]))
                     {
-                        int x = match.Index + i;
-                        if (IsAdjacentToSymbol(y, x))
-                        {
-                            isadjacent = true;
-                        }
-                    }
-                    if (isadjacent)
-                    {
-                        sum += int.Parse(match.Value);
+                        List<int> numbers = MarkAdjacentNumbers(y, x);
+                        sum += numbers.Sum();
                     }
                 }
             }
             return sum;
         }
-        private bool IsAdjacentToSymbol(int y, int x)
-        {
-            bool isAdjacentToSymbol = false;
 
+        private List<int> MarkAdjacentNumbers(int y, int x)
+        {
+            List<int> numbers = new List<int>();
             for (int i = -1; i <= 1; i++)
             {
                 for (int j = -1; j <= 1; j++)
                 {
-                    try
+                    var validatingX = x + i;
+                    var validatingY = y + j;
+                    if (CoordsInBound(validatingY, validatingX))
                     {
-                        var validatingX = x + i;
-                        var validatingY = y + j;
-                        if (validatingX >= 0 && validatingX < lineLength && validatingY >= 0 && validatingY < lineLength)
+                        if (char.IsDigit(lines[validatingY][validatingX]))
                         {
-                            var charToCheck = 'x';
-                            charToCheck = inputArray[validatingY][validatingX];
-                            if (IsEngineSymbol(charToCheck))
-                            {
-                                return true;
-                            }
+                            int foundNumber = FindFullNumber(validatingY, validatingX);
+                            numbers.Add(foundNumber);
                         }
-                    }
-                    catch (Exception)
-                    {
-
                     }
                 }
             }
-
-
-            return isAdjacentToSymbol;
+            return numbers.ToList();
         }
 
+        private int FindFullNumber(int validatingY, int validatingX)
+        {
+            var y = validatingY; var x = validatingX;
+            string number = string.Empty;
+            while (CoordsInBound(y, x) && char.IsDigit(lines[y][x]))
+            {
+                x--;
+            }
+            x++;
+            while (CoordsInBound(y, x) && char.IsDigit(lines[y][x]))
+            {
+                number += lines[y][x];
+                x++;
+            }
+            return int.Parse(number);
+        }
 
+        private bool CoordsInBound(int y, int x)
+        {
+            return x >= 0 && x < lineLength && y >= 0 && y < lineLength;
+        }
         private bool IsEngineSymbol(char currentChar)
         {
             return engineSymbols.Contains(currentChar);
         }
-
-
         public override object StarTwo()
         {
             return 1;
         }
-
     }
 }
