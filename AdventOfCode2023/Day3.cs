@@ -133,13 +133,9 @@ namespace AdventOfCode2023
                 }
             }
 
-            var lol = GearsOfWar.Where(pair => pair.Value.Count == 2).Select(ppair => ppair.Value);
-
-            foreach (var pair in lol)
-            {
-                sum += pair[0] * pair[1];
-            }
-            return sum;
+            return GearsOfWar.Where(pair => pair.Value.Count == 2)
+                             .Select(ppair => ppair.Value)
+                             .Aggregate(0, (autosum, listOfValues) => autosum += listOfValues.Aggregate(1, (x, y) => x *= y));
         }
         private (int, int) IsPartOfGear(int y, int x)
         {
