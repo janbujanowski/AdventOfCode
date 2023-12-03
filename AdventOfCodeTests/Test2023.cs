@@ -89,6 +89,18 @@ namespace AdventOfCode2023
             var dayObject = new Day3();
             dayObject.ParseInput(AdventOfCode.Shared.Inputs.GetSpecificFileNameFromInputs(2023, 3, "Day3_maciej.txt"));
             Assert.AreEqual(81721933, dayObject.StarTwo());
+
+            dayObject = new Day3();
+            dayObject.ParseInput(GetInput(3));
+            Assert.AreEqual(72553319, dayObject.StarTwo());
+
+            dayObject = new Day3();
+            dayObject.ParseInput(AdventOfCode.Shared.Inputs.GetSpecificFileNameFromInputs(2023, 3, "Day3_sometestcase.txt"));
+            Assert.AreEqual(6756, dayObject.StarTwo());
+
+            dayObject = new Day3();
+            dayObject.ParseInput(AdventOfCode.Shared.Inputs.GetSpecificFileNameFromInputs(2023, 3, "Day3_aoctestcase.txt"));
+            Assert.AreEqual(467835, dayObject.StarTwo());
         }
 
     }
