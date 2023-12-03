@@ -49,6 +49,9 @@
   <ItemGroup>
     <Content Include="inputs_2023\Day1.txt" />
     <Content Include="inputs_2023\Day2.txt" />
+    <Content Include="inputs_2023\Day3_aoctestcase.txt" />
+    <Content Include="inputs_2023\Day3_sometestcase.txt" />
+    <Content Include="inputs_2023\Day3_maciej.txt" />
     <Content Include="inputs_2023\Day3.txt" />
     <Content Include="inputs_2023\Day4.txt" />
     <Content Include="inputs_2023\Day5.txt" />

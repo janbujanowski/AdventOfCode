@@ -9,5 +9,9 @@ namespace AdventOfCode.Shared
         {
             return File.ReadAllText($@"{homeDirectory}\AdventOfCode{year}\inputs_{year}\Day{day}.txt");
         }
+        public static string GetSpecificFileNameFromInputs(int year, int day,string fileName)
+        {
+            return File.ReadAllText($@"{homeDirectory}\AdventOfCode{year}\inputs_{year}\{fileName}");
+        }
     }
 }
