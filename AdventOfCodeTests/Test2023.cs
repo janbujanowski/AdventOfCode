@@ -21,37 +21,31 @@ namespace AdventOfCode2023
         public void Day1StarOne()
         {
             var dayObject = new Day1();
+
+            Assert.AreEqual(83, dayObject.GetCalibrationNumber("eighthree"));
+            Assert.AreEqual(79, dayObject.GetCalibrationNumber("sevenine"));
+            Assert.AreEqual(71, dayObject.GetCalibrationNumber("7twoonev"));
+            dayObject = new Day1();
             dayObject.ParseInput(GetInput(1));
             Assert.AreEqual(54605, dayObject.StarOne());
         }
         [TestMethod]
         public void Day1StarTwo()
         {
-            var dayObject = new Day1();
-            dayObject.ParseInput(GetInput(1));
-            dayObject.StarOne();
-            Assert.AreEqual(55429, dayObject.StarTwo());
-        }
-        [TestMethod]
-        public void Day1StarTwoLineTestCases()
-        {
-            var dayObject = new Day1();
            
+
+            var dayObject = new Day1();
+
             Assert.AreEqual(21, dayObject.GetCalibrationNumber("two1two1"));
             Assert.AreEqual(12, dayObject.GetCalibrationNumber("1two1two"));
             Assert.AreEqual(39, dayObject.GetCalibrationNumber("v3one9"));
             Assert.AreEqual(41, dayObject.GetCalibrationNumber("46one"));
+            dayObject = new Day1();
+            dayObject.ParseInput(GetInput(1));
+            dayObject.StarOne();
+            Assert.AreEqual(55429, dayObject.StarTwo());
         }
-        [TestMethod]
-        public void Day1StarTwoLineTestCases2()
-        {
-            var dayObject = new Day1();
-
-            Assert.AreEqual(83, dayObject.GetCalibrationNumber("eighthree"));
-            Assert.AreEqual(79, dayObject.GetCalibrationNumber("sevenine"));
-            Assert.AreEqual(71, dayObject.GetCalibrationNumber("7twoonev"));
-            
-        }
+       
 
         [TestMethod]
         public void Day2StarOne()
@@ -101,6 +95,20 @@ namespace AdventOfCode2023
             dayObject = new Day3();
             dayObject.ParseInput(AdventOfCode.Shared.Inputs.GetSpecificFileNameFromInputs(2023, 3, "Day3_aoctestcase.txt"));
             Assert.AreEqual(467835, dayObject.StarTwo());
+        }
+        [TestMethod]
+        public void Day4StarOne()
+        {
+            var dayObject = new Day4();
+            dayObject.ParseInput(GetInput(4));
+            Assert.AreEqual(25174, dayObject.StarOne());
+        }
+        [TestMethod]
+        public void Day4StarTwo()
+        {
+            var dayObject = new Day4();
+            dayObject.ParseInput(GetInput(4));
+            Assert.AreEqual(6420979, dayObject.StarTwo());
         }
 
     }

@@ -54,10 +54,29 @@ namespace AdventOfCode2023
             }
             return cards;
         }
-       
+
         public override object StarTwo()
         {
-            int sum = 0;
+            List<ScratchCard> cards = ParseScratchCards();
+
+            Dictionary<int,int> cardsWithWinsDict = cards
+                .Select(scratchcard => (scratchcard.Id, scratchcard.WinningNumbers.Intersect(scratchcard.SelectedNumbers).Count()))
+                .ToDictionary(item => item.Id, item => item.Item2);
+
+            Dictionary<int, int> cardsCount = cards.ToDictionary(item => item.Id, item => 1);
+
+            foreach (var scratchCard in cardsWithWinsDict)
+            {
+                int cardId = scratchCard.Key;
+                int cardWinsCount = scratchCard.Value;
+                int currentScratchCardCount = cardsCount[cardId];
+                for (int i = cardId; i < cardId + cardWinsCount; i++)
+                {
+                    cardsCount[i + 1] += currentScratchCardCount;
+                }
+            }
+                
+            int sum = cardsCount.Values.Sum();
             return sum;
         }
      
