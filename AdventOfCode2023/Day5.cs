@@ -31,6 +31,7 @@ namespace AdventOfCode2023
         class EntryRange
         {
             public ulong SourceRangeStart, DestinationRangeStart, RangeLength;
+            public CategoryName SourceCategory;
         }
         string[] _lines;
         List<ulong> _seeds;
@@ -72,6 +73,7 @@ namespace AdventOfCode2023
                 }
                 i++;
             }
+            currentEntry.Ranges = currentEntry.Ranges.OrderBy(x => x.SourceRangeStart).ToList();
             _mapEntries.Add(currentEntry);
         }
 
@@ -117,42 +119,149 @@ namespace AdventOfCode2023
                 seedRanges.Add(_seeds[i], _seeds[i + 1]);
             }
 
+            List<ulong> minimumLocations = new List<ulong>();
 
 
-            Dictionary<ulong, ulong> seedToLocation = new Dictionary<ulong, ulong>();
             foreach (var seedRange in seedRanges)
             {
-                for (ulong i = seedRange.Key; i < seedRange.Key + seedRange.Value; i++)
-                {
-                    ulong location = FindSeedLocation(i);
-                    seedToLocation.Add(i, location);
-                }
-                
+                minimumLocations.Add(FindSeedRangeLowestLocation(seedRange.Key, seedRange.Value));
+
             }
-            return seedToLocation.Values.Min();
+            return minimumLocations.Min();
         }
-        private ulong FindSeedRangeLowestLocation(ulong startSeed, ulong currentRange)
+        private ulong FindSeedRangeLowestLocation(ulong startSeed, ulong seedRange)
         {
             Dictionary<ulong, ulong> seedRanges = new Dictionary<ulong, ulong>();
-            ulong currentIdentifier = startSeed;
-            CategoryName sourceCategory = CategoryName.seed;
-            do
-            {
-                var mapEntry = _mapEntries.Find(entry => entry.SourceCategory == sourceCategory);
-                foreach (var range in mapEntry.Ranges)
-                {
-                    if (range.SourceRangeStart <= currentIdentifier && currentIdentifier < range.SourceRangeStart + range.RangeLength)
-                    {
-                        var offset = currentIdentifier - range.SourceRangeStart;
-                        currentIdentifier = range.DestinationRangeStart + offset;
-                        break;
-                    }
-                }
-                sourceCategory = mapEntry.DestinationCategory;
 
-            } while (sourceCategory != CategoryName.location);
-            return currentIdentifier;
+            Queue<EntryRange> queue = new Queue<EntryRange>();
+            queue.Enqueue(new EntryRange() { SourceCategory = CategoryName.seed, SourceRangeStart = startSeed, RangeLength = seedRange });
+
+            while (queue.Count > 0)
+            {
+
+                EntryRange currentChainRange = queue.Dequeue();
+                if (currentChainRange.SourceCategory == CategoryName.location)
+                {
+                    seedRanges.Add(currentChainRange.SourceRangeStart, currentChainRange.RangeLength);
+                }
+                else
+                {
+                    CategoryName sourceCategory = currentChainRange.SourceCategory;
+                    MapEntry mapEntry = _mapEntries.Find(entry => entry.SourceCategory == sourceCategory);
+
+                    ulong currentChainRangeStart = currentChainRange.SourceRangeStart;
+                    ulong currentChainRangeEnd = currentChainRange.SourceRangeStart + currentChainRange.RangeLength;
+
+                    for (int i = 0; i < 2; i++)
+                    {
+
+                    }
+                    foreach (var currentMappingRange in mapEntry.Ranges)
+                    {
+                        ulong currentMappingRangeStart = currentMappingRange.SourceRangeStart;
+                        ulong currentMappingRangeEnd = currentMappingRange.SourceRangeStart + currentMappingRange.RangeLength;
+
+                        if (currentChainRangeStart < currentMappingRangeStart)
+                        {
+                            if (currentChainRangeEnd > currentMappingRangeStart)
+                            {
+                                queue.Enqueue(new EntryRange()
+                                {
+                                    SourceCategory = mapEntry.DestinationCategory,
+                                    SourceRangeStart = currentMappingRange.DestinationRangeStart,
+                                    RangeLength = currentMappingRangeStart - currentChainRangeStart
+                                });
+                                if (currentChainRangeEnd < currentMappingRangeEnd)
+                                {
+                                    queue.Enqueue(new EntryRange()
+                                    {
+                                        SourceCategory = mapEntry.DestinationCategory,
+                                        SourceRangeStart = currentMappingRange.DestinationRangeStart,
+                                        RangeLength = currentChainRangeEnd - currentMappingRangeStart
+                                    });
+                                }
+                                else
+                                {
+                                    queue.Enqueue(new EntryRange()
+                                    {
+                                        SourceCategory = mapEntry.DestinationCategory,
+                                        SourceRangeStart = currentMappingRange.DestinationRangeStart,
+                                        RangeLength = currentChainRange.RangeLength
+                                    });
+                                    currentChainRangeStart = currentMappingRangeStart+ currentMappingRange.RangeLength;
+                                }
+                            }
+                            else
+                            {
+                                //when range is below and need to forward to next mapping
+                                queue.Enqueue(new EntryRange()
+                                {
+                                    SourceCategory = mapEntry.DestinationCategory,
+                                    SourceRangeStart = currentChainRangeStart,
+                                    RangeLength = currentChainRange.RangeLength
+                                });
+                            }
+
+                        }
+                        else if (currentChainRangeStart < currentMappingRangeEnd)
+                        {
+
+                            if (currentChainRangeEnd < currentMappingRangeEnd)
+                            {
+                                queue.Enqueue(new EntryRange()
+                                {
+                                    SourceCategory = mapEntry.DestinationCategory,
+                                    SourceRangeStart = currentMappingRange.DestinationRangeStart,
+                                    RangeLength = currentChainRange.RangeLength
+                                });
+
+                            }
+                            else
+                            {
+                                queue.Enqueue(new EntryRange()
+                                {
+                                    SourceCategory = mapEntry.DestinationCategory,
+                                    SourceRangeStart = currentMappingRange.DestinationRangeStart,
+                                    RangeLength = currentChainRange.RangeLength
+                                });
+                                currentChainRangeStart = currentMappingRangeEnd;
+                            }
+
+                        }
+                        else
+                        {
+                            //if it's last mapentry -> forward
+                        }
+
+                        bool rangesOverlapping = IsRangeOverlapping(currentChainRange.SourceRangeStart, currentChainRange.RangeLength, currentMappingRange.SourceRangeStart, currentMappingRange.RangeLength);
+                        if (rangesOverlapping)
+                        {
+
+                        }
+
+                        //if (currentMappingRange.SourceRangeStart <= currentIdentifier && currentIdentifier < currentMappingRange.SourceRangeStart + currentMappingRange.RangeLength)
+                        //{
+                        //    var offset = currentIdentifier - currentMappingRange.SourceRangeStart;
+                        //    currentIdentifier = currentMappingRange.DestinationRangeStart + offset;
+                        //    break;
+                        //}
+                    }
+                    sourceCategory = mapEntry.DestinationCategory;
+                }
+
+
+            }
+            return seedRange;
         }
 
+        private bool IsRangeOverlapping(ulong sourceRangeStart1, ulong rangeLength1, ulong sourceRangeStart2, ulong rangeLength2)
+        {
+            var x1 = sourceRangeStart1;
+            var x2 = sourceRangeStart2;
+            var y1 = sourceRangeStart1 + rangeLength1;
+            var y2 = sourceRangeStart2 + rangeLength2;
+
+            return x1 < y2 || x2 < y1;
+        }
     }
 }
