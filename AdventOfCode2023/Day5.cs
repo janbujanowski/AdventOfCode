@@ -117,6 +117,8 @@ namespace AdventOfCode2023
                 seedRanges.Add(_seeds[i], _seeds[i + 1]);
             }
 
+
+
             Dictionary<ulong, ulong> seedToLocation = new Dictionary<ulong, ulong>();
             foreach (var seedRange in seedRanges)
             {
@@ -129,7 +131,28 @@ namespace AdventOfCode2023
             }
             return seedToLocation.Values.Min();
         }
+        private ulong FindSeedRangeLowestLocation(ulong startSeed, ulong currentRange)
+        {
+            Dictionary<ulong, ulong> seedRanges = new Dictionary<ulong, ulong>();
+            ulong currentIdentifier = startSeed;
+            CategoryName sourceCategory = CategoryName.seed;
+            do
+            {
+                var mapEntry = _mapEntries.Find(entry => entry.SourceCategory == sourceCategory);
+                foreach (var range in mapEntry.Ranges)
+                {
+                    if (range.SourceRangeStart <= currentIdentifier && currentIdentifier < range.SourceRangeStart + range.RangeLength)
+                    {
+                        var offset = currentIdentifier - range.SourceRangeStart;
+                        currentIdentifier = range.DestinationRangeStart + offset;
+                        break;
+                    }
+                }
+                sourceCategory = mapEntry.DestinationCategory;
 
+            } while (sourceCategory != CategoryName.location);
+            return currentIdentifier;
+        }
 
     }
 }
