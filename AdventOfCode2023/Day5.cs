@@ -84,8 +84,6 @@ namespace AdventOfCode2023
                 ulong location = FindSeedLocation(seed);
                 seedToLocation.Add(seed, location);
             }
-
-
             return seedToLocation.Values.Min();
         }
 
@@ -107,17 +105,29 @@ namespace AdventOfCode2023
                 }
                 sourceCategory = mapEntry.DestinationCategory;
 
-
-
             } while (sourceCategory != CategoryName.location);
             return currentIdentifier;
         }
 
         public override object StarTwo()
         {
+            Dictionary<ulong, ulong> seedRanges = new Dictionary<ulong, ulong>();
+            for (int i = 0; i < _seeds.Count; i += 2)
+            {
+                seedRanges.Add(_seeds[i], _seeds[i + 1]);
+            }
 
-            int sum = 1;
-            return sum;
+            Dictionary<ulong, ulong> seedToLocation = new Dictionary<ulong, ulong>();
+            foreach (var seedRange in seedRanges)
+            {
+                for (ulong i = seedRange.Key; i < seedRange.Key + seedRange.Value; i++)
+                {
+                    ulong location = FindSeedLocation(i);
+                    seedToLocation.Add(i, location);
+                }
+                
+            }
+            return seedToLocation.Values.Min();
         }
 
 
