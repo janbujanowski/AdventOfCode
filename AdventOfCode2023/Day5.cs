@@ -113,6 +113,7 @@ namespace AdventOfCode2023
 
         public override object StarTwo()
         {
+            throw new NotImplementedException("still work to do");
             Dictionary<ulong, ulong> seedRanges = new Dictionary<ulong, ulong>();
             for (int i = 0; i < _seeds.Count; i += 2)
             {
@@ -138,7 +139,6 @@ namespace AdventOfCode2023
 
             while (queue.Count > 0)
             {
-
                 EntryRange currentChainRange = queue.Dequeue();
                 if (currentChainRange.SourceCategory == CategoryName.location)
                 {
