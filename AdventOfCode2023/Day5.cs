@@ -152,12 +152,10 @@ namespace AdventOfCode2023
                     ulong currentChainRangeStart = currentChainRange.SourceRangeStart;
                     ulong currentChainRangeEnd = currentChainRange.SourceRangeStart + currentChainRange.RangeLength;
 
-                    for (int i = 0; i < 2; i++)
+                    int lastRangeId = mapEntry.Ranges.Count - 1;
+                    for (int i = 0; i < mapEntry.Ranges.Count; i++)
                     {
-
-                    }
-                    foreach (var currentMappingRange in mapEntry.Ranges)
-                    {
+                        var currentMappingRange = mapEntry.Ranges[i];
                         ulong currentMappingRangeStart = currentMappingRange.SourceRangeStart;
                         ulong currentMappingRangeEnd = currentMappingRange.SourceRangeStart + currentMappingRange.RangeLength;
 
@@ -188,18 +186,20 @@ namespace AdventOfCode2023
                                         SourceRangeStart = currentMappingRange.DestinationRangeStart,
                                         RangeLength = currentChainRange.RangeLength
                                     });
-                                    currentChainRangeStart = currentMappingRangeStart+ currentMappingRange.RangeLength;
+                                    currentChainRangeStart = currentMappingRangeStart + currentMappingRange.RangeLength;
                                 }
                             }
                             else
                             {
-                                //when range is below and need to forward to next mapping
-                                queue.Enqueue(new EntryRange()
+                                if (i == lastRangeId)
                                 {
-                                    SourceCategory = mapEntry.DestinationCategory,
-                                    SourceRangeStart = currentChainRangeStart,
-                                    RangeLength = currentChainRange.RangeLength
-                                });
+                                    queue.Enqueue(new EntryRange()
+                                    {
+                                        SourceCategory = mapEntry.DestinationCategory,
+                                        SourceRangeStart = currentChainRangeStart,
+                                        RangeLength = currentChainRange.RangeLength
+                                    });
+                                }
                             }
 
                         }
@@ -225,43 +225,30 @@ namespace AdventOfCode2023
                                     RangeLength = currentChainRange.RangeLength
                                 });
                                 currentChainRangeStart = currentMappingRangeEnd;
+
                             }
 
                         }
                         else
                         {
-                            //if it's last mapentry -> forward
+                            if (i == lastRangeId)
+                            {
+                                queue.Enqueue(new EntryRange()
+                                {
+                                    SourceCategory = mapEntry.DestinationCategory,
+                                    SourceRangeStart = currentChainRangeStart,
+                                    RangeLength = currentChainRangeEnd - currentChainRangeStart
+                                });
+                            }
                         }
-
-                        bool rangesOverlapping = IsRangeOverlapping(currentChainRange.SourceRangeStart, currentChainRange.RangeLength, currentMappingRange.SourceRangeStart, currentMappingRange.RangeLength);
-                        if (rangesOverlapping)
-                        {
-
-                        }
-
-                        //if (currentMappingRange.SourceRangeStart <= currentIdentifier && currentIdentifier < currentMappingRange.SourceRangeStart + currentMappingRange.RangeLength)
-                        //{
-                        //    var offset = currentIdentifier - currentMappingRange.SourceRangeStart;
-                        //    currentIdentifier = currentMappingRange.DestinationRangeStart + offset;
-                        //    break;
-                        //}
                     }
-                    sourceCategory = mapEntry.DestinationCategory;
+                    //sourceCategory = mapEntry.DestinationCategory;
                 }
 
 
             }
-            return seedRange;
+            return seedRanges.Keys.Min();
         }
 
-        private bool IsRangeOverlapping(ulong sourceRangeStart1, ulong rangeLength1, ulong sourceRangeStart2, ulong rangeLength2)
-        {
-            var x1 = sourceRangeStart1;
-            var x2 = sourceRangeStart2;
-            var y1 = sourceRangeStart1 + rangeLength1;
-            var y2 = sourceRangeStart2 + rangeLength2;
-
-            return x1 < y2 || x2 < y1;
-        }
     }
 }
