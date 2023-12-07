@@ -100,16 +100,10 @@ namespace AdventOfCode2023
                     return Card.Ace;
                 default:
                     throw new ArgumentOutOfRangeException();
-                    
+
             }
         }
-        class HandComparer : IComparer<Hand>
-        {
-            public int Compare(Hand x, Hand y)
-            {
-                throw new NotImplementedException();
-            }
-        }
+
         public override void ParseInput(string strInput)
         {
             _lines = strInput.Split("\r\n");
@@ -118,8 +112,6 @@ namespace AdventOfCode2023
             {
                 _arrayOfHands[i] = ParseHand(_lines[i]);
             }
-            
-            
         }
 
         private Hand ParseHand(string line)
@@ -128,30 +120,28 @@ namespace AdventOfCode2023
             hand.Bid = ulong.Parse(line.Split(' ')[1]);
             hand.Cards = line.Split(' ')[0].Select(eachCard => CharToEnum(eachCard)).ToArray();
             hand.CardType = DefineHandType(hand.Cards);
-            //_times = Regex.Matches(_lines[0], @"\d+").Cast<Match>().Select(match => int.Parse(match.Value)).ToArray();
-
             return hand;
         }
 
         private CardType DefineHandType(Card[] cards)
         {
             Card[] distinctCards = cards.Distinct().ToArray();
-            
+
             switch (distinctCards.Count())
             {
                 case 1:
                     return CardType.FiveOfKind;
                 case 2:
-                    if (cards.Where(x=> x== distinctCards[0]).Count() == 4 ||
+                    if (cards.Where(x => x == distinctCards[0]).Count() == 4 ||
                         cards.Where(x => x == distinctCards[1]).Count() == 4)
                     {
                         return CardType.FourOfKind;
                     }
                     return CardType.FullHouse;
                 case 3:
-                    if (cards.Where(x=> x== distinctCards[0]).Count() == 3 ||
+                    if (cards.Where(x => x == distinctCards[0]).Count() == 3 ||
                         cards.Where(x => x == distinctCards[1]).Count() == 3 ||
-                        cards.Where(x => x == distinctCards[2]).Count() == 3 )
+                        cards.Where(x => x == distinctCards[2]).Count() == 3)
                     {
                         return CardType.ThreeOfKind;
                     }
@@ -180,8 +170,89 @@ namespace AdventOfCode2023
 
         public override object StarTwo()
         {
+            ulong totalWinnings = 0;
+            foreach (var hand in _arrayOfHands)
+            {
+                hand.CardType = DefineHandTypeStarTwoRules(hand.Cards);
+            }
+            Array.Sort(_arrayOfHands, new HandComparerStarTwo());
+            for (int i = 0; i < _arrayOfHands.Length; i++)
+            {
+                var rank = i + 1;
+                totalWinnings += (ulong)rank * _arrayOfHands[i].Bid;
+            }
 
-            return 1;
+            return totalWinnings;
         }
+
+        private CardType DefineHandTypeStarTwoRules(Card[] cards)
+        {
+            if (!cards.Contains(Card.Jack))
+            {
+                return DefineHandType(cards);
+            }
+            else
+            {
+                //Card.Jack is now Joker
+                int jokerCount = cards.Count(x => x == Card.Jack);
+                Card[] distinctCards = cards.Distinct().ToArray();
+                Card[] distinCardsWithoutJoker = cards.Where(card => card != Card.Jack).Distinct().ToArray();
+
+                switch (distinctCards.Count())
+                {
+                    case 1:
+                        return CardType.FiveOfKind;
+                    case 2:
+                        return CardType.FiveOfKind;
+                    case 3:
+                        if (cards.Where(x => x == distinCardsWithoutJoker[0]).Count() + jokerCount == 4 ||
+                            cards.Where(x => x == distinCardsWithoutJoker[1]).Count() + jokerCount == 4)
+                        {
+                            return CardType.FourOfKind;
+                        }
+                        return CardType.FullHouse;
+                    case 4:
+                        if (cards.Where(x => x == distinCardsWithoutJoker[0]).Count() + jokerCount == 3 ||
+                            cards.Where(x => x == distinCardsWithoutJoker[1]).Count() + jokerCount == 3 ||
+                            cards.Where(x => x == distinCardsWithoutJoker[2]).Count() + jokerCount == 3)
+                        {
+                            return CardType.ThreeOfKind;
+                        }
+                        return CardType.TwoPair;
+                    case 5:
+                        return CardType.OnePair;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+
+                }
+            }
+        }
+        class HandComparerStarTwo : Comparer<Hand>
+        {
+            public override int Compare(Hand x, Hand y)
+            {
+                CardType CardType = x.CardType;
+
+                if (CardType == y.CardType)
+                {
+                    for (int i = 0; i < x.Cards.Length; i++)
+                    {
+                        int leftCard = x.Cards[i] == Card.Jack ? 1 : (int)x.Cards[i];
+                        int rightCard = y.Cards[i] == Card.Jack ? 1 : (int)y.Cards[i];
+                        int comparison = leftCard.CompareTo(rightCard);
+                        if (comparison != 0)
+                        {
+                            return comparison;
+                        }
+                    }
+                }
+                else
+                {
+                    return CardType.CompareTo(y.CardType);
+                }
+                return 0;
+            }
+        }
+
     }
 }

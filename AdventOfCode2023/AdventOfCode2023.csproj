@@ -60,6 +60,7 @@
     <Content Include="inputs_2023\Day4.txt" />
     <Content Include="inputs_2023\Day5.txt" />
     <Content Include="inputs_2023\Day6.txt" />
+    <Content Include="inputs_2023\Day7_edgecases.txt" />
     <Content Include="inputs_2023\Day7.txt" />
     <Content Include="inputs_2023\Day8.txt" />
     <Content Include="inputs_2023\Day9.txt" />

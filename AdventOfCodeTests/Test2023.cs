@@ -140,6 +140,28 @@ namespace AdventOfCode2023
             dayObject.ParseInput(GetInput(6));
             Assert.AreEqual(46173809UL, dayObject.StarTwo());
         }
+        [TestMethod]
+        public void Day7StarOne()
+        {
+            var dayObject = new Day7();
+            dayObject.ParseInput(GetInput(7));
+            Assert.AreEqual(249204891UL, dayObject.StarOne());
+            dayObject = new Day7();
+            dayObject.ParseInput(AdventOfCode.Shared.Inputs.GetSpecificFileNameFromInputs(2023, 7, "Day7_edgecases.txt"));
+            Assert.AreEqual(3542UL, dayObject.StarOne());
+        }
+        [TestMethod]
+        public void Day7StarTwo()
+        {
+            var dayObject = new Day7();
+            dayObject.ParseInput(GetInput(7));
+            Assert.AreEqual(249666369UL, dayObject.StarTwo());
+            new Day7();
+            dayObject.ParseInput(AdventOfCode.Shared.Inputs.GetSpecificFileNameFromInputs(2023, 7, "Day7_edgecases.txt"));
+            Assert.AreEqual(3667UL, dayObject.StarTwo());
+            
+        }
+
 
     }
 }
