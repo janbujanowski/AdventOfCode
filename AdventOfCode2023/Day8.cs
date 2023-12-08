@@ -28,9 +28,7 @@ namespace AdventOfCode2023
         {
             _lines = strInput.Split("\r\n");
             _instructions = _lines[0].Select(instruction => (Instruction)Convert.ToInt32(instruction)).ToArray();
-
             _mapNodes = ParseMap(_lines);
-           
         }
 
         private Dictionary<string, CamelMapNode> ParseMap(string[] lines)
@@ -39,7 +37,7 @@ namespace AdventOfCode2023
             int i = 2;
             while (i < _lines.Length)
             {
-                var line = _lines[i].Replace(" ","").Replace("(","").Replace(")", "");
+                var line = _lines[i].Replace(" ", "").Replace("(", "").Replace(")", "");
                 var key = line.Split('=')[0];
                 var left = line.Split('=')[1].Split(',')[0];
                 var right = line.Split('=')[1].Split(',')[1];
@@ -78,9 +76,24 @@ namespace AdventOfCode2023
 
         public override object StarTwo()
         {
-           
+            string[] currentNodes = _mapNodes.Keys.Where(x => x[2] == 'A').ToArray();
+            List<int> stepsToEnd = new List<int>();
+            foreach (var node in currentNodes)
+            {
+                int steps = 0;
+                string currentNode = node; ;
+                while (currentNode[2] != 'Z')
+                {
+                    currentNode = GetNext(_instructions[steps % _instructions.Length], currentNode);
+                    steps++;
+                }
 
-            return 1;
+                stepsToEnd.Add(steps);
+            }
+
+            ulong LCM = CommonHelpers.FindLCM(stepsToEnd);
+
+            return LCM;
         }
     }
 }

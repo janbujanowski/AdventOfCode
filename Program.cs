@@ -13,7 +13,7 @@ namespace AdventOfCodeRunner
         static void Main(string[] args)
         {
             int year = 2023;
-            int day = 7;
+            int day = 8;
 
             List<Day66> solutionContainer = new List<Day66>();
             LoadRiddleSolutions(solutionContainer);
@@ -42,12 +42,14 @@ namespace AdventOfCodeRunner
                 stopwatch.Stop();
                 Console.WriteLine($"Star one result: {result}");
                 Console.WriteLine($"It took {stopwatch.ElapsedTicks} ticks to run.");
+                Console.WriteLine($"It took {stopwatch.ElapsedMilliseconds} miliseconds to run.");
 
                 stopwatch.Restart();
                 result = workingDay.StarTwo();
                 stopwatch.Stop();
                 Console.WriteLine($"Star two result: {result}");
                 Console.WriteLine($"It took {stopwatch.ElapsedTicks} ticks to run.");
+                Console.WriteLine($"It took {stopwatch.ElapsedMilliseconds} miliseconds to run.");
             }
         }
 
