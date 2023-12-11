@@ -28,6 +28,8 @@ namespace AdventOfCode2023
         }
         string[] _lines;
         TileType[][] _map;
+        bool[,] _mapVisited;
+        int[,] _stepOfKnot;
         class NextMove
         {
             public int X;
@@ -46,6 +48,8 @@ namespace AdventOfCode2023
         public override void ParseInput(string strInput)
         {
             _map = strInput.Split("\r\n").Select(line => line.Select(tile => (TileType)tile).ToArray()).ToArray();
+            _mapVisited = new bool[_map.Length, _map.Length];
+            _stepOfKnot = new int[_map.Length, _map.Length];
         }
         public override object StarOne()
         {
@@ -61,8 +65,10 @@ namespace AdventOfCode2023
                 List<NextMove> possibleMoves = GetPossibleMoves(currentY, currentX);
                 foreach (var nextMove in possibleMoves)
                 {
-                    if (MoveCanBeExecuted(currentY,currentX, nextMove) && !(nextMove.Y == visitedY && nextMove.X == visitedX))
+                    if (MoveCanBeExecuted(currentY, currentX, nextMove) && !(nextMove.Y == visitedY && nextMove.X == visitedX))
                     {
+                        _mapVisited[currentY, currentX] = true;
+                        _stepOfKnot[currentY, currentX] = (int)steps + 1;
                         visitedY = currentY;
                         visitedX = currentX;
                         currentY = nextMove.Y;
@@ -165,7 +171,54 @@ namespace AdventOfCode2023
 
         public override object StarTwo()
         {
-            return 1;
+            int amountInsidePlane = 0;
+            for (int y = 0; y < _map.Length-1; y++)
+            {
+                for (int x = 0; x < _map.Length; x++)
+                {
+                    int windingNumber;
+                    if (_stepOfKnot[y, x] == 0)
+                    {
+                        windingNumber = CalculateWindingForPosition(y, x);
+                        if (windingNumber != 0)
+                        {
+                            //Console.Write("I");
+                            amountInsidePlane++;
+                        }
+                        else
+                        {
+                           // Console.Write(".");
+                        }
+                    }
+                    else
+                    {
+                        //Console.Write((char)_map[y][x]);
+                    }
+                }
+                //Console.WriteLine();
+            }
+            return amountInsidePlane;
+        }
+
+        private int CalculateWindingForPosition(int y, int x)
+        {
+            
+            int winding = 0;
+            for (int xn = x + 1; xn < _map.Length; xn++)
+            {
+                if (_stepOfKnot[y, xn] != 0 && _stepOfKnot[y + 1, xn] != 0)
+                {
+                    if (_stepOfKnot[y, xn] - _stepOfKnot[y + 1, xn] == 1)
+                    {
+                        winding++;
+                    }
+                    else if(_stepOfKnot[y, xn] - _stepOfKnot[y + 1, xn] == -1)
+                    {
+                        winding--;
+                    }
+                }
+            }
+            return winding;
         }
     }
 }
