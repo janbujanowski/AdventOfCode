@@ -20,14 +20,7 @@ namespace AdventOfCode2023
             public int X;
             public int Y;
         }
-        class Distance
-        {
-            public int From;
-            public int To;
-            public int Value;
-        }
         char _galaxyMark = '#';
-
         string[] _lines;
         char[][] _galaxyImage;
         int _yLength;
@@ -38,29 +31,27 @@ namespace AdventOfCode2023
             _yLength = _lines.Length;
             _galaxyImage = strInput.Split("\r\n").Select(line => line.ToArray()).ToArray();
             _galaxyList = new List<Galaxy>();
-            int y = 0;
             int galaxyId = 1;
-            while (y < _yLength)
+            for (int x = 0; x < _yLength; x++)
             {
-                if (!_galaxyImage[y].Contains(_galaxyMark))
+                if (!_galaxyImage[x].Contains(_galaxyMark))
                 {
-                    _emptyRows.Add(y, true);
+                    _emptyRows.Add(x, true);
                 }
                 bool columnContainsGalaxy = false;
-                for (int x = 0; x < _yLength; x++)
+                for (int y = 0; y < _yLength; y++)
                 {
-                    if (_galaxyImage[x][y] == _galaxyMark)
+                    if (_galaxyImage[y][x] == _galaxyMark)
                     {
                         columnContainsGalaxy = true;
-                        _galaxyList.Add(new Galaxy() { Id = galaxyId, Y = x, X = y });
+                        _galaxyList.Add(new Galaxy() { Id = galaxyId, Y = y, X = x });
                         galaxyId++;
                     }
                 }
                 if (!columnContainsGalaxy)
                 {
-                    _emptyColumns.Add(y, true);
+                    _emptyColumns.Add(x, true);
                 }
-                y++;
             }
         }
         string GetDistanceKey(int from, int to)
