@@ -208,7 +208,16 @@ namespace AdventOfCode2023
         {
             var dayObject = new Day11();
             dayObject.ParseInput(GetInput(11));
-            Assert.AreEqual(9605127, dayObject.StarOne());
+            Assert.AreEqual(9605127L, dayObject.StarOne());
         }
+        [TestMethod]
+        public void Day11StarTwo()
+        {
+            var dayObject = new Day11();
+            dayObject.ParseInput(GetInput(11));
+            Assert.AreEqual(458191688761L, dayObject.StarTwo());
+        }
+
+        
     }
 }

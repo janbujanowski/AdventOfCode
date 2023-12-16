@@ -12,6 +12,8 @@ namespace AdventOfCode2023
 {
     public class Day11 : Day66
     {
+        Dictionary<int, bool> _emptyRows = new Dictionary<int, bool>();
+        Dictionary<int, bool> _emptyColumns = new Dictionary<int, bool>();
         class Galaxy
         {
             public int Id;
@@ -36,52 +38,31 @@ namespace AdventOfCode2023
             _yLength = _lines.Length; _xLength = _lines.Length;
             _galaxyImage = strInput.Split("\r\n").Select(line => line.ToArray()).ToArray();
             int y = 0;
-            List<char[]> newImage = new List<char[]>();
             while (y < _yLength)
             {
-                newImage.Add(_galaxyImage[y]);
                 if (!_galaxyImage[y].Contains(_galaxyMark))
                 {
-                    newImage.Add(_galaxyImage[y]);
+                    _emptyRows.Add(y, true);
                 }
                 y++;
             }
-            _galaxyImage = newImage.ToArray();
-            _yLength = newImage.Count;
             int x = 0;
-            y = _yLength;
-            List<List<char>> transponedImage = new List<List<char>>();
+
             while (x < _xLength)
             {
                 bool containsGalaxy = false;
-                List<char> newTransponed = new List<char>();
                 for (int i = 0; i < _yLength; i++)
                 {
-                    newTransponed.Add(_galaxyImage[i][x]);
                     if (_galaxyImage[i][x] == _galaxyMark)
                     {
                         containsGalaxy = true;
                     }
                 }
-                transponedImage.Add(newTransponed);
                 if (!containsGalaxy)
                 {
-                    transponedImage.Add(newTransponed);
+                    _emptyColumns.Add(x, true);
                 }
                 x++;
-            }
-            _xLength = transponedImage.Count;
-            _galaxyImage = new char[_yLength][];
-            for (int i = 0; i < _yLength; i++)
-            {
-                _galaxyImage[i] = new char[_xLength];
-            }
-            for (int i = 0; i < _yLength; i++)
-            {
-                for (int j = 0; j < _xLength; j++)
-                {
-                    _galaxyImage[i][j] = transponedImage[j][i];
-                }
             }
 
             int id = 1;
@@ -97,19 +78,49 @@ namespace AdventOfCode2023
                     }
                 }
             }
-
         }
         string GetDistanceKey(int from, int to)
         {
             return string.Join("-", from, to);
         }
-        int GetDistance(Galaxy from, Galaxy to)
+        long GetDistance(Galaxy from, Galaxy to, int emptyGalaxyMultiplier)
         {
-            return Math.Abs(to.Y - from.Y) + Math.Abs(to.X - from.X);
+            long xDistance = GetDistance(from.X, to.X, emptyGalaxyMultiplier, _emptyColumns);
+            long yDistance = GetDistance(from.Y, to.Y, emptyGalaxyMultiplier, _emptyRows);
+            return xDistance + yDistance;
         }
+
+        private long GetDistance(int x1, int x2, int emptyGalaxyMultiplier, Dictionary<int, bool> _emptyDictionary)
+        {
+            long distance = 0;
+            var difference = Math.Sign(x2 - x1);
+            while (x1 != x2)
+            {
+                x1 += difference;
+                if (_emptyDictionary.ContainsKey(x1))
+                {
+                    distance += emptyGalaxyMultiplier;
+                }
+                else
+                {
+                    distance++;
+                }
+
+            }
+            return distance;
+        }
+
         public override object StarOne()
         {
-            Dictionary<string, int> distances = new Dictionary<string, int>();
+
+            Dictionary<string, long> distances = GetSumOfDistances(2);
+            long sum = distances.Values.Sum();
+            return sum;
+        }
+
+        private Dictionary<string, long> GetSumOfDistances(int emptyGalaxyMultiplier)
+        {
+            Dictionary<string, long> distances = new Dictionary<string, long>();
             foreach (var galaxyFrom in _galaxyList)
             {
                 foreach (var galaxyTo in _galaxyList)
@@ -120,18 +131,19 @@ namespace AdventOfCode2023
                         int to = from == galaxyFrom.Id ? galaxyTo.Id : galaxyFrom.Id;
                         if (!distances.ContainsKey(GetDistanceKey(from, to)))
                         {
-                            distances.Add(GetDistanceKey(from, to), GetDistance(galaxyFrom, galaxyTo));
+                            distances.Add(GetDistanceKey(from, to), GetDistance(galaxyFrom, galaxyTo, emptyGalaxyMultiplier));
                         }
                     }
                 }
             }
-            int sum = distances.Values.Sum();
 
-            return sum;
+            return distances;
         }
+
         public override object StarTwo()
         {
-            int sum = 0;
+            Dictionary<string, long> distances = GetSumOfDistances(1000000);
+            long sum = distances.Values.Sum();
             return sum;
         }
     }
