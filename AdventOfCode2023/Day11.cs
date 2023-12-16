@@ -30,53 +30,37 @@ namespace AdventOfCode2023
 
         string[] _lines;
         char[][] _galaxyImage;
-        int _yLength; int _xLength;
+        int _yLength;
         List<Galaxy> _galaxyList;
         public override void ParseInput(string strInput)
         {
             _lines = strInput.Split("\r\n");
-            _yLength = _lines.Length; _xLength = _lines.Length;
+            _yLength = _lines.Length;
             _galaxyImage = strInput.Split("\r\n").Select(line => line.ToArray()).ToArray();
+            _galaxyList = new List<Galaxy>();
             int y = 0;
+            int galaxyId = 1;
             while (y < _yLength)
             {
                 if (!_galaxyImage[y].Contains(_galaxyMark))
                 {
                     _emptyRows.Add(y, true);
                 }
+                bool columnContainsGalaxy = false;
+                for (int x = 0; x < _yLength; x++)
+                {
+                    if (_galaxyImage[x][y] == _galaxyMark)
+                    {
+                        columnContainsGalaxy = true;
+                        _galaxyList.Add(new Galaxy() { Id = galaxyId, Y = x, X = y });
+                        galaxyId++;
+                    }
+                }
+                if (!columnContainsGalaxy)
+                {
+                    _emptyColumns.Add(y, true);
+                }
                 y++;
-            }
-            int x = 0;
-
-            while (x < _xLength)
-            {
-                bool containsGalaxy = false;
-                for (int i = 0; i < _yLength; i++)
-                {
-                    if (_galaxyImage[i][x] == _galaxyMark)
-                    {
-                        containsGalaxy = true;
-                    }
-                }
-                if (!containsGalaxy)
-                {
-                    _emptyColumns.Add(x, true);
-                }
-                x++;
-            }
-
-            int id = 1;
-            _galaxyList = new List<Galaxy>();
-            for (int i = 0; i < _yLength; i++)
-            {
-                for (int j = 0; j < _xLength; j++)
-                {
-                    if (_galaxyImage[i][j] == _galaxyMark)
-                    {
-                        _galaxyList.Add(new Galaxy() { Id = id, Y = i, X = j });
-                        id++;
-                    }
-                }
             }
         }
         string GetDistanceKey(int from, int to)
