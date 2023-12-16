@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Day11.cs" />
     <Compile Include="Day10.cs" />
     <Compile Include="Day9.cs" />
     <Compile Include="Day8.cs" />
@@ -55,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="inputs_2023\Day1.txt" />
+    <Content Include="inputs_2023\Day11.txt" />
     <Content Include="inputs_2023\Day2.txt" />
     <Content Include="inputs_2023\Day3_aoctestcase.txt" />
     <Content Include="inputs_2023\Day3_sometestcase.txt" />
