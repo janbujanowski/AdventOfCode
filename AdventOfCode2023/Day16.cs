@@ -27,7 +27,6 @@ namespace AdventOfCode2023
             FromRight,
             FromTop
         }
-        string[] _lines;
         ContraptionType[][] _map;
         List<MoveType>[,] _visitedCount;
         int _mapDimension;
@@ -45,7 +44,6 @@ namespace AdventOfCode2023
                 this.TileType = tileType;
             }
         }
-        int _arbitraryCycleLimitCount = 60;
         public override void ParseInput(string strInput)
         {
             _map = strInput.Split("\r\n").Select(line => line.Select(tile => (ContraptionType)tile).ToArray()).ToArray();
@@ -54,21 +52,9 @@ namespace AdventOfCode2023
         }
         public override object StarOne()
         {
-            double steps = 0;
-            int startX = 0;
-            int startY = 0;
             Move startMove = new Move(0, 0, MoveType.FromLeft, _map[0][0]);
             StartBeam(startMove);
 
-
-            //for (int y = 0; y < _mapDimension; y++)
-            //{
-            //    for (int x = 0; x < _mapDimension; x++)
-            //    {
-            //        Console.Write(_visitedCount[y, x]);
-            //    }
-            //    Console.WriteLine();
-            //}
 
             return CountEnergized(_visitedCount);
         }
@@ -93,16 +79,14 @@ namespace AdventOfCode2023
         {
             if (nextMove != null)
             {
-                int x = nextMove.X; int y = nextMove.Y;
                 Move move = nextMove;
                 if (_visitedCount[move.Y, move.X] == null)
                 {
                     _visitedCount[move.Y, move.X] = new List<MoveType>();
                 }
-                //bool[,] visited = new bool[_mapDimension, _mapDimension];
                 while (move != null && !_visitedCount[move.Y, move.X].Contains(move.Type))
                 {
-                    
+
                     _visitedCount[move.Y, move.X].Add(move.Type);
 
                     move = GetNextMove(move);
@@ -151,19 +135,15 @@ namespace AdventOfCode2023
                     switch (move.Type)
                     {
                         case MoveType.FromBottom:
-                            //move.X--;
                             move.Type = MoveType.FromRight;
                             return JustExecute(move);
                         case MoveType.FromLeft:
-                            //move.Y++;
                             move.Type = MoveType.FromTop;
                             return JustExecute(move);
                         case MoveType.FromRight:
-                            //move.Y--;
                             move.Type = MoveType.FromBottom;
                             return JustExecute(move);
                         case MoveType.FromTop:
-                            //move.X++;
                             move.Type = MoveType.FromLeft;
                             return JustExecute(move);
                         default:
@@ -174,19 +154,15 @@ namespace AdventOfCode2023
                     switch (move.Type)
                     {
                         case MoveType.FromBottom:
-                            //move.X++;
                             move.Type = MoveType.FromLeft;
                             return JustExecute(move);
                         case MoveType.FromLeft:
-                            //move.Y--;
                             move.Type = MoveType.FromBottom;
                             return JustExecute(move);
                         case MoveType.FromRight:
-                            //move.Y++;
                             move.Type = MoveType.FromTop;
                             return JustExecute(move);
                         case MoveType.FromTop:
-                            //move.X--;
                             move.Type = MoveType.FromRight;
                             return JustExecute(move);
                         default:
@@ -196,8 +172,6 @@ namespace AdventOfCode2023
                 default:
                     break;
             }
-
-
             return null;
         }
 
@@ -231,31 +205,34 @@ namespace AdventOfCode2023
         private bool IsInMap(int newY, int newX)
         {
             return newY >= 0 && newX >= 0 && newX < _map.Length && newY < _map.Length;
-            if (newY >= 0)
-            {
-                return true;
-            }
-            if (newY < _map.Length)
-            {
-                return true;
-            }
-            if (newX >= 0)
-            {
-                return true;
-            }
-            if (newX < _map.Length)
-            {
-                return true;
-            }
-
-            return false;
         }
 
         public override object StarTwo()
         {
-            int amountInsidePlane = 0;
+            List<int> possibleMaxEnergies = new List<int>();
+            for (int i = 0; i < _mapDimension; i++)
+            {
+                _visitedCount = new List<MoveType>[_map.Length, _map.Length];
+                Move startMove = new Move(i, 0, MoveType.FromLeft, _map[i][0]);
+                StartBeam(startMove);
+                possibleMaxEnergies.Add(CountEnergized(_visitedCount));
 
-            return amountInsidePlane;
+                _visitedCount = new List<MoveType>[_map.Length, _map.Length];
+                startMove = new Move(0, i, MoveType.FromTop, _map[0][i]);
+                StartBeam(startMove);
+                possibleMaxEnergies.Add(CountEnergized(_visitedCount));
+
+                _visitedCount = new List<MoveType>[_map.Length, _map.Length];
+                startMove = new Move(i, _map.Length - 1, MoveType.FromRight, _map[i][_map.Length - 1]);
+                StartBeam(startMove);
+                possibleMaxEnergies.Add(CountEnergized(_visitedCount));
+                _visitedCount = new List<MoveType>[_map.Length, _map.Length];
+                startMove = new Move(_map.Length - 1, i, MoveType.FromBottom, _map[_map.Length - 1][i]);
+                StartBeam(startMove);
+                possibleMaxEnergies.Add(CountEnergized(_visitedCount));
+
+            }
+            return possibleMaxEnergies.Max();
         }
     }
 }
