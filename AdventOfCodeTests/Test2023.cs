@@ -123,7 +123,7 @@ namespace AdventOfCode2023
         {
             var dayObject = new Day5();
             dayObject.ParseInput(GetInput(5));
-            Assert.AreEqual(214922730, dayObject.StarTwo());
+            Assert.AreEqual(148041808UL, dayObject.StarTwo());
         }
         
         [TestMethod]
