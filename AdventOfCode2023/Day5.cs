@@ -26,12 +26,60 @@ namespace AdventOfCode2023
         class MapEntry
         {
             public CategoryName SourceCategory, DestinationCategory;
-            public List<EntryRange> Ranges;
+            public List<Range> Ranges;
         }
-        class EntryRange
+        class Range
         {
             public ulong SourceRangeStart, DestinationRangeStart, RangeLength;
             public CategoryName SourceCategory;
+
+            internal bool IsOverlapping(Range unMapped)
+            {
+                return (unMapped.SourceRangeStart >= this.SourceRangeStart && unMapped.SourceRangeStart < this.SourceRangeStart + this.RangeLength) ||
+                    (unMapped.SourceRangeStart + unMapped.RangeLength >= this.SourceRangeStart && unMapped.SourceRangeStart + unMapped.RangeLength < this.SourceRangeStart + this.RangeLength);
+            }
+
+            internal Range MapTo(Range mapping, CategoryName destinationCategory)
+            {
+                Range range = new Range() { SourceCategory = destinationCategory };
+                range.SourceRangeStart = mapping.DestinationRangeStart;
+                range.RangeLength = RangeLength;
+                if (RangeLength + SourceRangeStart > mapping.SourceRangeStart + mapping.RangeLength)
+                {
+                    range.RangeLength = mapping.RangeLength;
+                }
+                switch (Math.Sign((double)mapping.SourceRangeStart - SourceRangeStart))
+                {
+                    case 0:
+                        break;
+                    case 1:
+                        range.RangeLength -= (mapping.SourceRangeStart - SourceRangeStart);
+                        break;
+                    case -1:
+                        range.SourceRangeStart -= (mapping.SourceRangeStart - SourceRangeStart);
+                        break;
+                    default:
+                        break;
+                }
+
+                return range;
+            }
+
+            internal List<Range> GetNotMapped(Range mapping)
+            {
+                List<Range> notMapped = new List<Range>();
+                if (SourceRangeStart < mapping.SourceRangeStart && SourceRangeStart + RangeLength > mapping.SourceRangeStart)
+                {
+                    notMapped.Add(new Range() { SourceRangeStart = SourceRangeStart, SourceCategory = SourceCategory, RangeLength = mapping.SourceRangeStart - SourceRangeStart });
+                }
+                if (SourceRangeStart < mapping.SourceRangeStart + mapping.RangeLength && SourceRangeStart + RangeLength > mapping.SourceRangeStart + mapping.RangeLength)
+                {
+
+                    notMapped.Add(new Range() { SourceRangeStart = mapping.SourceRangeStart + mapping.RangeLength, SourceCategory = SourceCategory, RangeLength = SourceRangeStart + RangeLength - mapping.SourceRangeStart + mapping.RangeLength });
+                }
+
+                return notMapped;
+            }
         }
         string[] _lines;
         List<ulong> _seeds;
@@ -45,7 +93,7 @@ namespace AdventOfCode2023
 
             _mapEntries = new List<MapEntry>();
             int i = 2;
-            MapEntry currentEntry = new MapEntry() { Ranges = new List<EntryRange>() };
+            MapEntry currentEntry = new MapEntry() { Ranges = new List<Range>() };
             while (i < _lines.Length)
             {
                 string currentLine = _lines[i];
@@ -59,21 +107,21 @@ namespace AdventOfCode2023
                 if (string.IsNullOrEmpty(currentLine))
                 {
                     _mapEntries.Add(currentEntry);
-                    currentEntry = new MapEntry() { Ranges = new List<EntryRange>() };
+                    currentEntry = new MapEntry() { Ranges = new List<Range>() };
                 }
                 else if (char.IsDigit(currentLine[0]))
                 {
                     ulong[] rangeDefinition = Regex.Matches(_lines[i], @"\d+").Cast<Match>().Select(match => ulong.Parse(match.Value)).ToArray();
-                    currentEntry.Ranges.Add(new EntryRange()
+                    currentEntry.Ranges.Add(new Range()
                     {
                         DestinationRangeStart = rangeDefinition[0],
                         SourceRangeStart = rangeDefinition[1],
                         RangeLength = rangeDefinition[2]
                     });
                 }
+                currentEntry.Ranges = currentEntry.Ranges.OrderBy(x => x.SourceRangeStart).ToList();
                 i++;
             }
-            currentEntry.Ranges = currentEntry.Ranges.OrderBy(x => x.SourceRangeStart).ToList();
             _mapEntries.Add(currentEntry);
         }
 
@@ -113,33 +161,99 @@ namespace AdventOfCode2023
 
         public override object StarTwo()
         {
-            throw new NotImplementedException("still work to do");
-            Dictionary<ulong, ulong> seedRanges = new Dictionary<ulong, ulong>();
+            List<Range> ranges = new List<Range>();
+
             for (int i = 0; i < _seeds.Count; i += 2)
             {
-                seedRanges.Add(_seeds[i], _seeds[i + 1]);
+                ulong rangeStart = _seeds[i];
+                ulong rangeLength = _seeds[i + 1];
+                ranges.Add(new Range()
+                {
+                    SourceCategory = CategoryName.seed,
+                    SourceRangeStart = rangeStart,
+                    RangeLength = rangeLength
+                });
             }
-
-            List<ulong> minimumLocations = new List<ulong>();
-
-
-            foreach (var seedRange in seedRanges)
+            while (ranges.First().SourceCategory != CategoryName.location)
             {
-                minimumLocations.Add(FindSeedRangeLowestLocation(seedRange.Key, seedRange.Value));
+                ranges = MapRanges(ranges);
+            }
+
+            return ranges.Select( range => range.SourceRangeStart).Min();
+        }
+
+        private List<Range> MapRanges(List<Range> ranges)
+        {
+            List<Range> newRanges = new List<Range>();
+            foreach (Range range in ranges)
+            {
+                newRanges.AddRange(MapSingleRange(range));
+            }
+            return newRanges;
+        }
+
+        private IEnumerable<Range> MapSingleRange(Range range)
+        {
+            List<Range> mappedRanges = new List<Range>();
+
+            List<Range> unMappedRemains = new List<Range>() { range };
+
+            MapEntry mapEntry = _mapEntries.Find(entry => entry.SourceCategory == range.SourceCategory);
+
+            bool shouldReRunMapping = true;
+            while (shouldReRunMapping)
+            {
+                shouldReRunMapping = false;
+                foreach (var mapping in mapEntry.Ranges)
+                {
+                    foreach (var unMapped in unMappedRemains)
+                    {
+                        if (mapping.IsOverlapping(unMapped))
+                        {
+                            shouldReRunMapping = true;
+                            mappedRanges.Add(unMapped.MapTo(mapping, mapEntry.DestinationCategory));
+                            unMappedRemains = unMapped.GetNotMapped(mapping);
+                        }
+                        if (shouldReRunMapping)
+                        {
+                            break;
+                        }
+                    }
+                    if (shouldReRunMapping)
+                    {
+                        break;
+                    }
+                }
 
             }
-            return minimumLocations.Min();
+
+            if (unMappedRemains.Any())
+            {
+                foreach (var unmapped in unMappedRemains)
+                {
+                    //fast forward
+                    mappedRanges.Add(new Range()
+                    {
+                        SourceCategory = mapEntry.DestinationCategory,
+                        SourceRangeStart = unmapped.SourceRangeStart,
+                        RangeLength = unmapped.RangeLength,
+                    });
+                }
+            }
+
+            return mappedRanges;
         }
+
         private ulong FindSeedRangeLowestLocation(ulong startSeed, ulong seedRange)
         {
             Dictionary<ulong, ulong> seedRanges = new Dictionary<ulong, ulong>();
 
-            Queue<EntryRange> queue = new Queue<EntryRange>();
-            queue.Enqueue(new EntryRange() { SourceCategory = CategoryName.seed, SourceRangeStart = startSeed, RangeLength = seedRange });
+            Queue<Range> queue = new Queue<Range>();
+            queue.Enqueue(new Range() { SourceCategory = CategoryName.seed, SourceRangeStart = startSeed, RangeLength = seedRange });
 
             while (queue.Count > 0)
             {
-                EntryRange currentChainRange = queue.Dequeue();
+                Range currentChainRange = queue.Dequeue();
                 if (currentChainRange.SourceCategory == CategoryName.location)
                 {
                     seedRanges.Add(currentChainRange.SourceRangeStart, currentChainRange.RangeLength);
@@ -163,7 +277,7 @@ namespace AdventOfCode2023
                         {
                             if (currentChainRangeEnd > currentMappingRangeStart)
                             {
-                                queue.Enqueue(new EntryRange()
+                                queue.Enqueue(new Range()
                                 {
                                     SourceCategory = mapEntry.DestinationCategory,
                                     SourceRangeStart = currentMappingRange.DestinationRangeStart,
@@ -171,7 +285,7 @@ namespace AdventOfCode2023
                                 });
                                 if (currentChainRangeEnd < currentMappingRangeEnd)
                                 {
-                                    queue.Enqueue(new EntryRange()
+                                    queue.Enqueue(new Range()
                                     {
                                         SourceCategory = mapEntry.DestinationCategory,
                                         SourceRangeStart = currentMappingRange.DestinationRangeStart,
@@ -180,7 +294,7 @@ namespace AdventOfCode2023
                                 }
                                 else
                                 {
-                                    queue.Enqueue(new EntryRange()
+                                    queue.Enqueue(new Range()
                                     {
                                         SourceCategory = mapEntry.DestinationCategory,
                                         SourceRangeStart = currentMappingRange.DestinationRangeStart,
@@ -193,7 +307,7 @@ namespace AdventOfCode2023
                             {
                                 if (i == lastRangeId)
                                 {
-                                    queue.Enqueue(new EntryRange()
+                                    queue.Enqueue(new Range()
                                     {
                                         SourceCategory = mapEntry.DestinationCategory,
                                         SourceRangeStart = currentChainRangeStart,
@@ -208,7 +322,7 @@ namespace AdventOfCode2023
 
                             if (currentChainRangeEnd < currentMappingRangeEnd)
                             {
-                                queue.Enqueue(new EntryRange()
+                                queue.Enqueue(new Range()
                                 {
                                     SourceCategory = mapEntry.DestinationCategory,
                                     SourceRangeStart = currentMappingRange.DestinationRangeStart,
@@ -218,7 +332,7 @@ namespace AdventOfCode2023
                             }
                             else
                             {
-                                queue.Enqueue(new EntryRange()
+                                queue.Enqueue(new Range()
                                 {
                                     SourceCategory = mapEntry.DestinationCategory,
                                     SourceRangeStart = currentMappingRange.DestinationRangeStart,
@@ -233,7 +347,7 @@ namespace AdventOfCode2023
                         {
                             if (i == lastRangeId)
                             {
-                                queue.Enqueue(new EntryRange()
+                                queue.Enqueue(new Range()
                                 {
                                     SourceCategory = mapEntry.DestinationCategory,
                                     SourceRangeStart = currentChainRangeStart,
