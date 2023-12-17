@@ -48,6 +48,7 @@ namespace AdventOfCode2023
                 {
                     range.RangeLength = mapping.RangeLength;
                 }
+                
                 switch (Math.Sign((double)mapping.SourceRangeStart - SourceRangeStart))
                 {
                     case 0:
@@ -57,6 +58,7 @@ namespace AdventOfCode2023
                         break;
                     case -1:
                         range.SourceRangeStart -= (mapping.SourceRangeStart - SourceRangeStart);
+                        
                         break;
                     default:
                         break;
@@ -75,7 +77,7 @@ namespace AdventOfCode2023
                 if (SourceRangeStart < mapping.SourceRangeStart + mapping.RangeLength && SourceRangeStart + RangeLength > mapping.SourceRangeStart + mapping.RangeLength)
                 {
 
-                    notMapped.Add(new Range() { SourceRangeStart = mapping.SourceRangeStart + mapping.RangeLength, SourceCategory = SourceCategory, RangeLength = SourceRangeStart + RangeLength - mapping.SourceRangeStart + mapping.RangeLength });
+                    notMapped.Add(new Range() { SourceRangeStart = mapping.SourceRangeStart + mapping.RangeLength, SourceCategory = SourceCategory, RangeLength = RangeLength - (mapping.SourceRangeStart - SourceRangeStart) });
                 }
 
                 return notMapped;
