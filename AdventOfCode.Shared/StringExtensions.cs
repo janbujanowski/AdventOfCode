@@ -17,5 +17,14 @@ namespace AdventOfCode.Shared.Extensions
             string[] lines = input.Split(separators, StringSplitOptions.None);
             return lines;
         }
+        public static string RemoveInstances(this string input, params string[] charsToRemove)
+        {
+            foreach (string unnecesary in charsToRemove)
+            {
+                input = input.Replace(unnecesary, "");
+            }
+           
+            return input;
+        }
     }
 }
