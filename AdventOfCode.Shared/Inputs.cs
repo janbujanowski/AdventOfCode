@@ -4,7 +4,7 @@ namespace AdventOfCode.Shared
 {
     public static class Inputs
     {
-        static string homeDirectory = @"C:\REPOS\aoc";
+        static string homeDirectory = @"C:\GIT\aoc";
         public static string GetDayInput(int year, int day)
         {
             return File.ReadAllText($@"{homeDirectory}\AdventOfCode{year}\inputs_{year}\Day{day}.txt");

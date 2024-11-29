@@ -78,6 +78,10 @@
       <Project>{6bdad498-2fa9-42af-b0db-41534555b913}</Project>
       <Name>AdventOfCode2023</Name>
     </ProjectReference>
+    <ProjectReference Include="AdventOfCode2024\AdventOfCode2024.csproj">
+      <Project>{b8e6c492-0d51-4a19-ac91-eb52243f67d6}</Project>
+      <Name>AdventOfCode2024</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
