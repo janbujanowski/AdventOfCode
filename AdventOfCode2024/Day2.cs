@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace AdventOfCode2024
 {
-    public class Day1 : Day66
+    public class Day2 : Day66
     {
         string[] _lines;
         int[] _leftNumbers;

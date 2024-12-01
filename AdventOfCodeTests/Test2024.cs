@@ -1,8 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Security.Policy;
 
 namespace AdventOfCode2024
 {
@@ -17,22 +14,36 @@ namespace AdventOfCode2024
         {
             return AdventOfCode.Shared.Inputs.GetDayInput(2024, day);
         }
+
         [TestMethod]
         public void Day1StarOne()
         {
             var dayObject = new Day1();
-
-            dayObject = new Day1();
             dayObject.ParseInput(GetInput(1));
             Assert.AreEqual(1580061, dayObject.StarOne());
         }
+
         [TestMethod]
         public void Day1StarTwo()
         {
             var dayObject = new Day1();
-            dayObject = new Day1();
             dayObject.ParseInput(GetInput(1));
             dayObject.StarOne();
+            Assert.AreEqual(23046913, dayObject.StarTwo());
+        }
+
+        [TestMethod]
+        public void Day2StarOne()
+        {
+            var dayObject = new Day2();
+            dayObject.ParseInput(GetInput(1));
+            Assert.AreEqual(1580061, dayObject.StarOne());
+        }
+        [TestMethod]
+        public void Day2StarTwo()
+        {
+            var dayObject = new Day2();
+            dayObject.ParseInput(GetInput(1));
             Assert.AreEqual(23046913, dayObject.StarTwo());
         }
     }
