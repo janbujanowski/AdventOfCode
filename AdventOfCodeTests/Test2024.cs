@@ -24,7 +24,7 @@ namespace AdventOfCode2024
 
             dayObject = new Day1();
             dayObject.ParseInput(GetInput(1));
-            Assert.AreEqual(54605, dayObject.StarOne());
+            Assert.AreEqual(1580061, dayObject.StarOne());
         }
         [TestMethod]
         public void Day1StarTwo()
@@ -33,7 +33,7 @@ namespace AdventOfCode2024
             dayObject = new Day1();
             dayObject.ParseInput(GetInput(1));
             dayObject.StarOne();
-            Assert.AreEqual(55429, dayObject.StarTwo());
+            Assert.AreEqual(23046913, dayObject.StarTwo());
         }
     }
 }
