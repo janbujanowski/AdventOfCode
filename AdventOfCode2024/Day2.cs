@@ -9,47 +9,39 @@ namespace AdventOfCode2024
     public class Day2 : Day66
     {
         string[] _lines;
-        int[] _leftNumbers;
-        int[] _rightNumbers;
+        int[][] _reactorReport;
+        int _width;
+
         public override void ParseInput(string input)
         {
             _lines = input.Split("\r\n");
-            _leftNumbers = _lines.Select(line => int.Parse(line.Split(" ")[0])).OrderBy(x => x).ToArray();
-            _rightNumbers = _lines.Select(line => int.Parse(line.Split(" ")[3])).OrderBy(x => x).ToArray();
+            _width = _lines[0].Split(" ").Length;
+            _reactorReport = _lines.Select(line => line.Split(" ").Select(x => int.Parse(x)).ToArray()).ToArray();
         }
 
         public override object StarOne()
         {
-            int sumDistance = 0;
-            for (int i = 0; i < _leftNumbers.Length; i++)
+            int safeReports = 0;
+            for (int i = 0; i < _lines.Length; i++)
             {
-                sumDistance += Math.Abs(_rightNumbers[i] - _leftNumbers[i]);
+                safeReports++;
+                int oldSign = Math.Sign(_reactorReport[i][0] - _reactorReport[i][1]);
+                for (int j = 1; j < _reactorReport[i].Length; j++)
+                {
+                    int difference = _reactorReport[i][j-1] - _reactorReport[i][j];
+                    if (Math.Abs(difference) > 3 || difference == 0 || Math.Sign(difference) != oldSign)
+                    {
+                        safeReports--;
+                        break;
+                    }
+                }
             }
-            return Math.Abs(sumDistance);
+            return safeReports;
         }
 
         public override object StarTwo()
         {
-            Dictionary<int, int> rightCounts = new Dictionary<int, int>();
-            foreach (var rightNumber in _rightNumbers)
-            {
-                if (rightCounts.ContainsKey(rightNumber))
-                {
-                    rightCounts[rightNumber]++;
-                }
-                else
-                {
-                    rightCounts[rightNumber] = 1;
-                }
-            }
             int similarityScore = 0;
-            foreach ( var rightNumber in rightCounts)
-            {
-                if(_leftNumbers.Contains(rightNumber.Key))
-                {
-                    similarityScore += rightNumber.Value * rightNumber.Key;
-                }
-            }
             return similarityScore;
         }
     }
