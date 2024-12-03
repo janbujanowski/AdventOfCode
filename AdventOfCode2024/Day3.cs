@@ -3,6 +3,7 @@ using AdventOfCode.Shared.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace AdventOfCode2024
 {
@@ -11,63 +12,31 @@ namespace AdventOfCode2024
         string[] _lines;
         int[][] _reactorReport;
         int _width;
-
+        MatchCollection _matches;
         public override void ParseInput(string input)
         {
-            _lines = input.Split("\r\n");
-            _width = _lines[0].Split(" ").Length;
-            _reactorReport = _lines.Select(line => line.Split(" ").Select(x => int.Parse(x)).ToArray()).ToArray();
+            string regex = @"mul\((?'firstNumber'\d+),(?'secondNumber'\d+)\)";
+            _matches = Regex.Matches(input, regex);
+            
+            //_lines = input.Split("\r\n");
+            //_width = _lines[0].Split(" ").Length;
+            //_reactorReport = _lines.Select(line => line.Split(" ").Select(x => int.Parse(x)).ToArray()).ToArray();
         }
 
         public override object StarOne()
         {
-            int safeReports = 0;
-            for (int i = 0; i < _lines.Length; i++)
+            int sum = 0;
+            foreach (Match match in _matches)
             {
-                safeReports++;
-                int oldSign = Math.Sign(_reactorReport[i][0] - _reactorReport[i][1]);
-                for (int j = 1; j < _reactorReport[i].Length; j++)
-                {
-                    int difference = _reactorReport[i][j - 1] - _reactorReport[i][j];
-                    if (Math.Abs(difference) > 3 || difference == 0 || Math.Sign(difference) != oldSign)
-                    {
-                        safeReports--;
-                        break;
-                    }
-                }
+                sum += int.Parse(match.Groups["firstNumber"].Value) * int.Parse(match.Groups["secondNumber"].Value);
             }
-            return safeReports;
+            return sum;
         }
 
         public override object StarTwo()
         {
-            int safeReports = 0;
-            for (int i = 0; i < _lines.Length; i++)
-            {
-                safeReports++;
-                List<bool> skippedValidList = new List<bool>();
-                for (int k = 0; k < _reactorReport[i].Length; k++)
-                {
-                    var newReport = SkipElement(_reactorReport[i], k);
-                    var valid = true;
-                    int oldSign = Math.Sign(newReport[0] - newReport[1]);
-                    for (int j = 1; j < newReport.Length; j++)
-                    {
-                        int difference = newReport[j - 1] - newReport[j];
-                        if (Math.Abs(difference) > 3 || difference == 0 || Math.Sign(difference) != oldSign)
-                        {
-                            valid = false;
-                            break;
-                        }
-                    }
-                    skippedValidList.Add(valid);
-                }
-                if (!skippedValidList.Any(x => x))
-                {
-                    safeReports--;
-                }
-            }
-            return safeReports;
+           
+            return 1;
         }
 
         private int[] SkipElement(int[] array, int index)
