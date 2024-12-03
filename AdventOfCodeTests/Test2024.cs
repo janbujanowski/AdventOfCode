@@ -52,7 +52,7 @@ namespace AdventOfCode2024
         {
             var dayObject = new Day3();
             dayObject.ParseInput(GetInput(3));
-            Assert.AreEqual(202, dayObject.StarOne());
+            Assert.AreEqual(170778545, dayObject.StarOne());
         }
 
         [TestMethod]
@@ -60,7 +60,7 @@ namespace AdventOfCode2024
         {
             var dayObject = new Day3();
             dayObject.ParseInput(GetInput(3));
-            Assert.AreEqual(271, dayObject.StarTwo());
+            Assert.AreEqual(82868252, dayObject.StarTwo());
         }
     }
 }
