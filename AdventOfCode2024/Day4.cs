@@ -16,7 +16,6 @@ namespace AdventOfCode2024
         char[][] _plane;
         char X = 'X'; char M = 'M'; char A = 'A'; char S = 'S';
         char[] _targetLetter;
-        int _targetSum;
         List<Point> _modifiers = new List<Point>()
         {
             new Point(1, 0),
@@ -34,7 +33,6 @@ namespace AdventOfCode2024
             _sizeY = input.Split("\r\n")[0].Length;
             _sizeX = input.Split("\r\n")[0].Length;
             _targetLetter = new char[] { X, M, A, S };
-            _targetSum = M + A + S;
             _plane = input.Split("\r\n").Select(x => x.ToCharArray()).ToArray();
         }
 
@@ -60,7 +58,6 @@ namespace AdventOfCode2024
             int xmasCount = 0;
             foreach (var modifier in _modifiers)
             {
-                bool safeIndex = true;
                 bool valid = true;
                 for (int i = 1; i < 4; i++)
                 {
@@ -91,8 +88,51 @@ namespace AdventOfCode2024
         public override object StarTwo()
         {
             int sum = 0;
-
+            for (int y = 0; y < _sizeY; y++)
+            {
+                for (int x = 0; x < _sizeX; x++)
+                {
+                    if (_plane[y][x] == A)
+                    {
+                        sum += MAS_CrossCount(y, x);
+                    }
+                }
+            }
             return sum;
+        }
+        private bool AllCornersAccessible(int y, int x, int arrayY, int arrayX)
+        {
+            return IsInMap(y - 1, x - 1, arrayY, arrayX) && IsInMap(y - 1, x + 1, arrayY, arrayX) && IsInMap(y + 1, x - 1, arrayY, arrayX) && IsInMap(y + 1, x + 1, arrayY, arrayX);
+        }
+        private int MAS_CrossCount(int y, int x)
+        {
+            if (AllCornersAccessible(y, x, _sizeY, _sizeX))
+            {
+                int y1 = _plane[y - 1][x - 1];
+                int y2 = _plane[y - 1][x + 1];
+                int x1 = _plane[y + 1][x - 1];
+                int x2 = _plane[y + 1][x + 1];
+                if (y1 == S && y2 == S && x1 == M && x2 == M)
+                {
+                    return 1;
+                }
+                if (y1 == M && y2 == S && x1 == M && x2 == S)
+                {
+                    return 1;
+                }
+
+                if (y1 == M && y2 == M && x1 == S && x2 == S)
+                {
+                    return 1;
+                }
+                
+                if (y1 == S && y2 == M && x1 == S && x2 == M)
+                {
+                    return 1;
+                }
+               
+            }
+            return 0;
         }
     }
 }
