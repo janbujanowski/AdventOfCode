@@ -13,7 +13,7 @@ namespace AdventOfCodeRunner
         static void Main(string[] args)
         {
             int year = 2024;
-            int day = 4;
+            int day = 5;
 
             List<Day66> solutionContainer = new List<Day66>();
             LoadRiddleSolutions(solutionContainer);
