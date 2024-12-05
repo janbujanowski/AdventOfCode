@@ -10,129 +10,119 @@ namespace AdventOfCode2024
 {
     public class Day5 : Day66
     {
-        string _input;
+        string[] _lines;
         int _sizeY;
         int _sizeX;
-        char[][] _plane;
-        char X = 'X'; char M = 'M'; char A = 'A'; char S = 'S';
-        char[] _targetLetter;
-        List<Point> _modifiers = new List<Point>()
+        int _maxPageNumber = 100;
+        class Rule
         {
-            new Point(1, 0),
-            new Point(-1, 0),
-            new Point(0, 1),
-            new Point(0, -1),
-            new Point(1, 1),
-            new Point(-1, -1),
-            new Point(1, -1),
-            new Point(-1, 1)
-        };
+            internal int Page;
+            internal int BeforePage;
+            internal Rule(string page, string beforePage)
+            {
+                Page = int.Parse(page);
+                BeforePage = int.Parse(beforePage);
+            }
+        }
+        List<Rule> _rulesSet = new List<Rule>();
+        List<Dictionary<int, int>> _updatesOrder;
         public override void ParseInput(string input)
         {
-            _input = input;
-            _sizeY = input.Split("\r\n")[0].Length;
-            _sizeX = input.Split("\r\n")[0].Length;
-            _targetLetter = new char[] { X, M, A, S };
-            _plane = input.Split("\r\n").Select(x => x.ToCharArray()).ToArray();
+            _lines = input.Split("\r\n");
+            int i = 0;
+            do
+            {
+                var line = _lines[i].Split('|');
+                _rulesSet.Add(new Rule(line[0], line[1]));
+                i++;
+            } while (!string.IsNullOrEmpty(_lines[i]) || i == _lines.Length);
+            i++;
+            _updatesOrder = new List<Dictionary<int, int>>();
+            do
+            {
+                var line = _lines[i].Split(',');
+                var update = new Dictionary<int, int>();
+                for (int n = 0; n < line.Length; n++)
+                {
+                    update[int.Parse(line[n])] = n;
+                }
+                _updatesOrder.Add(update);
+                i++;
+            } while (i != _lines.Length);
         }
 
         public override object StarOne()
         {
             int sum = 0;
-            for (int y = 0; y < _sizeY; y++)
+            foreach (var update in _updatesOrder)
             {
-                for (int x = 0; x < _sizeX; x++)
+                if (IsValidOrder(update))
                 {
-                    if (_plane[y][x] == X)
-                    {
-                        sum += XMASCount(y, x);
-                    }
+                    sum += update.ElementAt(update.Count / 2).Key;
                 }
             }
-
             return sum;
         }
 
-        private int XMASCount(int y, int x)
+        private bool IsValidOrder(Dictionary<int, int> update)
         {
-            int xmasCount = 0;
-            foreach (var modifier in _modifiers)
+            bool valid = true;
+            foreach (var rule in _rulesSet)
             {
-                bool valid = true;
-                for (int i = 1; i < 4; i++)
+                if (update.ContainsKey(rule.Page) && update.ContainsKey(rule.BeforePage))
                 {
-                    int newY = y + modifier.Y * i;
-                    int newX = x + modifier.X * i;
-                    if (!IsInMap(newY, newX, _sizeY, _sizeX))
+                    if (update[rule.Page] > update[rule.BeforePage])
                     {
                         valid = false;
                         break;
                     }
-                    if (_plane[y + modifier.Y * i][x + modifier.X * i] != _targetLetter[i])
-                    {
-                        valid = false;
-                    }
-                }
-                if (valid)
-                {
-                    xmasCount++;
                 }
             }
-            return xmasCount;
+            return valid;
         }
-        private bool IsInMap(int newY, int newX, int arrayY, int arrayX)
-        {
-            return newY >= 0 && newX >= 0 && newX < arrayX && newY < arrayY;
-        }
+
 
         public override object StarTwo()
         {
             int sum = 0;
-            for (int y = 0; y < _sizeY; y++)
+            foreach (var update in _updatesOrder)
             {
-                for (int x = 0; x < _sizeX; x++)
+                if (!IsValidOrder(update))
                 {
-                    if (_plane[y][x] == A)
-                    {
-                        sum += MAS_CrossCount(y, x);
-                    }
+                    sum += Sort(update);
                 }
             }
             return sum;
         }
-        private bool AllCornersAccessible(int y, int x, int arrayY, int arrayX)
-        {
-            return IsInMap(y - 1, x - 1, arrayY, arrayX) && IsInMap(y - 1, x + 1, arrayY, arrayX) && IsInMap(y + 1, x - 1, arrayY, arrayX) && IsInMap(y + 1, x + 1, arrayY, arrayX);
-        }
-        private int MAS_CrossCount(int y, int x)
-        {
-            if (AllCornersAccessible(y, x, _sizeY, _sizeX))
-            {
-                int y1 = _plane[y - 1][x - 1];
-                int y2 = _plane[y - 1][x + 1];
-                int x1 = _plane[y + 1][x - 1];
-                int x2 = _plane[y + 1][x + 1];
-                if (y1 == S && y2 == S && x1 == M && x2 == M)
-                {
-                    return 1;
-                }
-                if (y1 == M && y2 == S && x1 == M && x2 == S)
-                {
-                    return 1;
-                }
 
-                if (y1 == M && y2 == M && x1 == S && x2 == S)
+        private int Sort(Dictionary<int, int> update)
+        {
+            int sum = 0;
+            bool valid = true;
+            do
+            {
+                valid = true;
+                foreach (var rule in _rulesSet)
                 {
-                    return 1;
+                    if (update.ContainsKey(rule.Page) && update.ContainsKey(rule.BeforePage))
+                    {
+                        if (update[rule.Page] > update[rule.BeforePage])
+                        {
+                            Swap(update, rule.Page, rule.BeforePage);
+                            valid = false;
+                        }
+                    }
                 }
-                
-                if (y1 == S && y2 == M && x1 == S && x2 == M)
-                {
-                    return 1;
-                }
-               
-            }
-            return 0;
+            } while (!valid);
+
+            return update.First(x=> x.Value == update.Count/2).Key;
+        }
+
+        private void Swap(Dictionary<int, int> update, int page, int beforePage)
+        {
+            int value = update[page];
+            update[page] = update[beforePage];
+            update[beforePage] = value;
         }
     }
 }
