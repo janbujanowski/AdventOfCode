@@ -47,6 +47,7 @@ namespace AdventOfCode2024
             dayObject.ParseInput(GetInput(2));
             Assert.AreEqual(271, dayObject.StarTwo());
         }
+
         [TestMethod]
         public void Day3StarOne()
         {
@@ -62,6 +63,7 @@ namespace AdventOfCode2024
             dayObject.ParseInput(GetInput(3));
             Assert.AreEqual(82868252, dayObject.StarTwo());
         }
+
         [TestMethod]
         public void Day4StarOne()
         {
@@ -76,6 +78,22 @@ namespace AdventOfCode2024
             var dayObject = new Day4();
             dayObject.ParseInput(GetInput(4));
             Assert.AreEqual(1745, dayObject.StarTwo());
+        }
+
+        [TestMethod]
+        public void Day5StarOne()
+        {
+            var dayObject = new Day5();
+            dayObject.ParseInput(GetInput(5));
+            Assert.AreEqual(6951, dayObject.StarOne());
+        }
+
+        [TestMethod]
+        public void Day5StarTwo()
+        {
+            var dayObject = new Day5();
+            dayObject.ParseInput(GetInput(5));
+            Assert.AreEqual(4121, dayObject.StarTwo());
         }
     }
 }

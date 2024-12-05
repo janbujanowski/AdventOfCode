@@ -11,9 +11,6 @@ namespace AdventOfCode2024
     public class Day5 : Day66
     {
         string[] _lines;
-        int _sizeY;
-        int _sizeX;
-        int _maxPageNumber = 100;
         class Rule
         {
             internal int Page;
@@ -81,7 +78,6 @@ namespace AdventOfCode2024
             return valid;
         }
 
-
         public override object StarTwo()
         {
             int sum = 0;
@@ -97,7 +93,6 @@ namespace AdventOfCode2024
 
         private int Sort(Dictionary<int, int> update)
         {
-            int sum = 0;
             bool valid = true;
             do
             {
@@ -115,14 +110,12 @@ namespace AdventOfCode2024
                 }
             } while (!valid);
 
-            return update.First(x=> x.Value == update.Count/2).Key;
+            return update.First(x => x.Value == update.Count / 2).Key;
         }
 
         private void Swap(Dictionary<int, int> update, int page, int beforePage)
         {
-            int value = update[page];
-            update[page] = update[beforePage];
-            update[beforePage] = value;
+            (update[beforePage], update[page]) = (update[page], update[beforePage]);
         }
     }
 }
