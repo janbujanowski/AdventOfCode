@@ -16,7 +16,7 @@ namespace AdventOfCode2024
         int _size;
         char[][] _plane;
         char guard = '^'; char Obstacle = '#'; char X = 'X';
-        char[] _targetLetter;
+        int _maxSize;
         List<Point> _moves = new List<Point>()
         {
             new Point(0, -1),
@@ -27,6 +27,7 @@ namespace AdventOfCode2024
         public override void ParseInput(string input)
         {
             _input = input;
+            _maxSize = input.Length;
             _size = input.Split("\r\n")[0].Length;
             _plane = input.Split("\r\n").Select(x => x.ToCharArray()).ToArray();
         }
@@ -34,32 +35,35 @@ namespace AdventOfCode2024
         public override object StarOne()
         {
             int sum = 0;
-            var guardPos = FindGuard(guard);
+            var _localPlane = _plane.Select(x => x.ToArray()).ToArray();
+            var guardPos = FindGuard(guard, _localPlane);
             int turn = 0;
-            while (IsInMap(guardPos.Y + _moves[turn].Y, guardPos.X + _moves[turn].X, _size, _size))
+            int newAssignments = 0;
+            do
             {
-                _plane[guardPos.Y][guardPos.X] = X;
+                _localPlane[guardPos.Y][guardPos.X] = X;
+                newAssignments++;
                 guardPos.Y += _moves[turn].Y;
                 guardPos.X += _moves[turn].X;
-                if (_plane[guardPos.Y][guardPos.X] == Obstacle)
+                if (_localPlane[guardPos.Y][guardPos.X] == Obstacle)
                 {
                     guardPos.Y -= _moves[turn].Y;
                     guardPos.X -= _moves[turn].X;
                     turn = (turn + 1) % 4;
                 }
-                
-            }
-            
-            return _plane.Select(arr => arr.Count(x => x == X)).Sum() + 1;
+            } while (IsInMap(guardPos.Y + _moves[turn].Y, guardPos.X + _moves[turn].X, _size, _size) && newAssignments < _maxSize * 2);
+           
+
+            return _localPlane.Select(arr => arr.Count(x => x == X)).Sum() + 1;
         }
 
-        private Point FindGuard(char guard)
+        private Point FindGuard(char guard, char[][] _localPlane)
         {
             for (int y = 0; y < _size; y++)
             {
                 for (int x = 0; x < _size; x++)
                 {
-                    if (_plane[y][x] == guard)
+                    if (_localPlane[y][x] == guard)
                     {
                         return new Point(x, y);
                     }
@@ -82,33 +86,6 @@ namespace AdventOfCode2024
             Thread.Sleep(100);
         }
 
-        private int XMASCount(int y, int x)
-        {
-            int xmasCount = 0;
-            foreach (var modifier in _moves)
-            {
-                bool valid = true;
-                for (int i = 1; i < 4; i++)
-                {
-                    int newY = y + modifier.Y * i;
-                    int newX = x + modifier.X * i;
-                    if (!IsInMap(newY, newX, _size, _size))
-                    {
-                        valid = false;
-                        break;
-                    }
-                    if (_plane[y + modifier.Y * i][x + modifier.X * i] != _targetLetter[i])
-                    {
-                        valid = false;
-                    }
-                }
-                if (valid)
-                {
-                    xmasCount++;
-                }
-            }
-            return xmasCount;
-        }
         private bool IsInMap(int newY, int newX, int arrayY, int arrayX)
         {
             return newY >= 0 && newX >= 0 && newX < arrayX && newY < arrayY;
@@ -116,13 +93,41 @@ namespace AdventOfCode2024
 
         public override object StarTwo()
         {
-            int sum = 1;
+            int sum = 0;
+            for (int i = 0; i < _size; i++)
+            {
+                for (int j = 0; j < _size; j++)
+                {
+                    var _localPlane = _plane.Select(x => x.ToArray()).ToArray();
+                    if (_localPlane[i][j] != guard)
+                    {
+                        _localPlane[i][j] = Obstacle;
+                    }
 
+                    var guardPos = FindGuard(guard, _localPlane);
+                    int turn = 0;
+                    int newAssignments = 0;
+                    do
+                    {
+                        _localPlane[guardPos.Y][guardPos.X] = X;
+                        newAssignments++;
+                        guardPos.Y += _moves[turn].Y;
+                        guardPos.X += _moves[turn].X;
+                        if (_localPlane[guardPos.Y][guardPos.X] == Obstacle)
+                        {
+                            guardPos.Y -= _moves[turn].Y;
+                            guardPos.X -= _moves[turn].X;
+                            turn = (turn + 1) % 4;
+                        }
+                    } while (IsInMap(guardPos.Y + _moves[turn].Y, guardPos.X + _moves[turn].X, _size, _size) && newAssignments < _maxSize * 2);
+
+                    if (newAssignments >= _maxSize * 2)
+                    {
+                        sum++;
+                    }
+                }
+            }
             return sum;
-        }
-        private bool AllCornersAccessible(int y, int x, int arrayY, int arrayX)
-        {
-            return IsInMap(y - 1, x - 1, arrayY, arrayX) && IsInMap(y - 1, x + 1, arrayY, arrayX) && IsInMap(y + 1, x - 1, arrayY, arrayX) && IsInMap(y + 1, x + 1, arrayY, arrayX);
         }
     }
 }
